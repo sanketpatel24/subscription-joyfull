@@ -131,10 +131,6 @@
           {% for index in (1..3) %}
             {% assign benefit_key = 'benefit_' | append: index %}
             {% assign benefit = block.settings[benefit_key] %}
-            {% if benefit == blank %}
-              {% assign translation_key = 'products.product.subscription.benefit_' | append: index %}
-              {% assign benefit = translation_key | t %}
-            {% endif %}
             {% if benefit != blank %}
               <li>
                 <span class="subscription-selector__check" aria-hidden="true">✓</span>
