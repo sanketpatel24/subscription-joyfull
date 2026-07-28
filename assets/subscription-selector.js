@@ -23,6 +23,12 @@ class SubscriptionSelector extends HTMLElement {
     this.planSelect?.addEventListener('change', this.handlePlanChange);
   }
 
+  refresh() {
+    this.unbindControls();
+    this.bindControls();
+    this.sync();
+  }
+
   unbindControls() {
     this.purchaseInputs?.forEach((input) => {
       input.removeEventListener('change', this.handlePurchaseChange);
@@ -78,9 +84,9 @@ class SubscriptionSelector extends HTMLElement {
     const oneTimeInput = this.querySelector('[data-purchase-option="onetime"]');
     const selectedPlan = this.planSelect?.selectedOptions[0];
     const price = subscriptionInput?.checked ? selectedPlan?.dataset.price : oneTimeInput?.dataset.onetimePrice;
-    if (!price || !this.sellingPlanInput?.getAttribute('form')) return;
+    if (!price) return;
 
-    const form = document.getElementById(this.sellingPlanInput.getAttribute('form'));
+    const form = this.sellingPlanInput?.form;
     const priceOutput = form?.querySelector('[data-add-to-cart-price]');
     if (priceOutput) priceOutput.textContent = price;
   }

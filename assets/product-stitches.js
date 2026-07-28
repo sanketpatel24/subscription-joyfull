@@ -76,6 +76,12 @@ class ProductStitches extends HTMLElement {
         injectStylesheet: true,
       });
 
+      // The section morph can preserve the subscription-selector custom element
+      // while replacing its controls. Rebind it to the new product's controls
+      // and update the newly rendered add-to-cart price.
+      const section = document.getElementById(`shopify-section-${sectionId}`);
+      section?.querySelector('subscription-selector')?.refresh?.();
+
       if (updateHistory) {
         const cleanPath = `${publicUrl.pathname}${publicUrl.search}${publicUrl.hash}`;
         window.history.pushState({ productStitches: true }, '', cleanPath);
