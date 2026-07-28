@@ -1,0 +1,88 @@
+{% doc %}
+  Renders one entry from custom.pdp_stiches_entries_oh.
+
+  The referenced product is used only as the card link. Product information such
+  as its title, image, price, and availability is intentionally not rendered.
+
+  Expected metaobject fields:
+    text, image, text_color, product, show_badge, badge_text, badge_color,
+    badge_background_color
+
+  @param {metaobject} entry - Stitches metaobject entry
+  @param {product} current_product - Product currently being viewed
+{% enddoc %}
+
+{%- liquid
+  assign card_text = entry.text.value
+  assign card_image = entry.image.value
+  assign card_product = entry.product.value
+  assign text_color = entry.text_color.value | default: '#ffffff'
+  assign badge_color = entry.badge_color.value | default: '#ffffff'
+  assign badge_background_color = entry.badge_background_color.value | default: '#2f261c'
+  assign image_alt = card_image.alt | default: card_text
+  assign show_custom_badge = false
+  assign is_active = false
+
+  if entry.show_badge.value and entry.badge_text.value != blank
+    assign show_custom_badge = true
+  endif
+
+  if card_product != blank and current_product != blank and card_product.id == current_product.id
+    assign is_active = true
+  endif
+-%}
+
+{%- if entry != blank and card_image != blank -%}
+  {%- if card_product != blank -%}
+    <a
+      class="product-stitches-card{% if is_active %} product-stitches-card--active{% endif %}{% if show_custom_badge %} product-stitches-card--has-badge{% endif %}"
+      href="{{ card_product.url }}"
+      data-product-title="{{ card_product.title | escape }}"
+      style="
+        --stitches-card-text: {{ text_color }};
+        --stitches-badge-text: {{ badge_color }};
+        --stitches-badge-background: {{ badge_background_color }};
+      "
+      aria-label="{{ card_text | default: card_product.title | escape }}"
+      {% if is_active %}
+        aria-current="page"
+      {% endif %}
+    >
+  {%- else -%}
+    <div
+      class="product-stitches-card{% if show_custom_badge %} product-stitches-card--has-badge{% endif %}"
+      style="
+        --stitches-card-text: {{ text_color }};
+        --stitches-badge-text: {{ badge_color }};
+        --stitches-badge-background: {{ badge_background_color }};
+      "
+    >
+  {%- endif -%}
+
+    {{
+      card_image
+      | image_url: width: 1000
+      | image_tag:
+        class: 'product-stitches-card__image',
+        widths: '240, 360, 480, 640, 800, 1000',
+        sizes: '(max-width: 749px) 44vw, 240px',
+        loading: 'lazy',
+        alt: image_alt
+    }}
+
+    <span class="product-stitches-card__overlay" aria-hidden="true"></span>
+
+    {%- if show_custom_badge -%}
+      <span class="product-stitches-card__badge">{{ entry.badge_text.value | escape }}</span>
+    {%- endif -%}
+
+    {%- if card_text != blank -%}
+      <span class="product-stitches-card__text">{{ card_text | escape }}</span>
+    {%- endif -%}
+
+  {%- if card_product != blank -%}
+    </a>
+  {%- else -%}
+    </div>
+  {%- endif -%}
+{%- endif -%}

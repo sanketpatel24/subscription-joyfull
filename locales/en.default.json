@@ -367,7 +367,18 @@
       "quantity_maximum": "Maximum of {{ maximum }}",
       "in_cart": "in cart",
       "default_title": "Default Title",
-      "sticky_add_to_cart": "Quick add to cart bar"
+      "sticky_add_to_cart": "Quick add to cart bar",
+      "subscription": {
+        "best_value": "Best Value",
+        "subscribe_and_save": "Subscribe & Save",
+        "one_time_purchase": "One-Time Purchase",
+        "deliver_every": "Deliver every:",
+        "per_packet": "per packet",
+        "benefit_1": "Save an additional 10% on every order",
+        "benefit_2": "Free shipping, always",
+        "benefit_3": "Cancel or pause anytime",
+        "missing_selling_plan": "Add a selling plan to this product to display the subscription selector."
+      }
     }
   }
 }

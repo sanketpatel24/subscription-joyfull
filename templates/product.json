@@ -107,9 +107,34 @@
               },
               "blocks": {}
             },
-            "recharge_subscriptions_subscription_widget_v2_KY3CDH": {
-              "type": "shopify://apps/recharge-subscriptions/blocks/subscription-widget-v2/371eed76-0b44-4869-9813-730372ea378e",
-              "settings": {}
+            "product_stitches_8CfUnm": {
+              "type": "product-stitches",
+              "name": "Stitches",
+              "settings": {
+                "heading": "Flavor:"
+              },
+              "blocks": {}
+            },
+            "subscription_selector_VyTNVP": {
+              "type": "subscription-selector",
+              "name": "t:names.subscription_selector",
+              "settings": {
+                "badge_text": "Best Value",
+                "subscribe_label": "Subscribe & Save",
+                "onetime_label": "One-Time Purchase",
+                "delivery_label": "Deliver every:",
+                "show_per_packet": true,
+                "per_packet_label": "per packet",
+                "benefit_1": "Save an additional 10% on every order",
+                "benefit_2": "Free shipping, always",
+                "benefit_3": "Cancel or pause anytime",
+                "background_color": "#fff3ce",
+                "text_color": "#2f261c",
+                "badge_background": "#2f261c",
+                "badge_text_color": "#ffffff",
+                "border_radius": 12
+              },
+              "blocks": {}
             },
             "buy_buttons_eYQEYi": {
               "type": "buy-buttons",
@@ -189,7 +214,8 @@
             "judgeme_review_stars_H7LenN",
             "product_custom_heading_MR9Prx",
             "variant_picker_R3rGDr",
-            "recharge_subscriptions_subscription_widget_v2_KY3CDH",
+            "product_stitches_8CfUnm",
+            "subscription_selector_VyTNVP",
             "buy_buttons_eYQEYi",
             "product_vet_formulated_FiWJfV",
             "product_customer_quote_aUXqiR"

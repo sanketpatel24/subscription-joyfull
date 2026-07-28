@@ -1,0 +1,271 @@
+{% doc %}
+  Renders subscription and one-time purchase options inside Product Details.
+
+  Uses `closest.product`, its selected or first available variant, the first
+  selling-plan group, and the group's selling-plan allocations. The selected
+  selling-plan ID is connected to the main Buy Buttons product form through a
+  hidden `selling_plan` input.
+
+  The selector displays subscription pricing, delivery frequencies, optional
+  price-per-packet information, configurable benefits, and the one-time price.
+  Price-per-packet calculations use the product's
+  `custom.packet_count` metafield.
+
+  The block renders only when the product has a valid selling-plan allocation.
+  In the theme editor, a missing-plan message is rendered instead.
+
+  Depends on:
+  - assets/subscription-selector.css
+  - assets/subscription-selector.js
+{% enddoc %}
+
+{{ 'subscription-selector.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'subscription-selector.js' | asset_url }}" defer="defer"></script>
+
+{% liquid
+  assign product = closest.product
+  if request.visual_preview_mode and product == blank
+    assign product = collections.all.products.first
+  endif
+
+  assign variant = product.selected_or_first_available_variant
+  assign selling_plan_group = product.selling_plan_groups.first
+  assign first_selling_plan = selling_plan_group.selling_plans.first
+  assign first_allocation = variant.selling_plan_allocations | where: 'selling_plan', first_selling_plan | first
+  assign product_form_id = 'BuyButtons-ProductForm-' | append: section.id
+  assign packet_count = product.metafields.custom.packet_count.value | plus: 0
+  assign frequency_option_name = block.settings.frequency_option_name | default: 'Order Frequency and Unit'
+  assign default_frequency_text = block.settings.default_frequency_text
+  assign badge_text = block.settings.badge_text 
+  assign subscribe_label = block.settings.subscribe_label
+  assign onetime_label = block.settings.onetime_label
+  assign delivery_label = block.settings.delivery_label
+  assign per_packet_label = block.settings.per_packet_label
+%}
+
+{% if product != blank and selling_plan_group != blank and first_allocation != blank %}
+  <subscription-selector
+    class="subscription-selector"
+    style="
+      --subscription-text: {{ block.settings.text_color }};
+      --subscription-background: {{ block.settings.background_color }};
+      --subscription-badge-background: {{ block.settings.badge_background }};
+      --subscription-badge-text: {{ block.settings.badge_text_color }};
+      --subscription-radius: {{ block.settings.border_radius }}px;
+    "
+    {{ block.shopify_attributes }}
+  >
+    <input
+      type="hidden"
+      name="selling_plan"
+      value="{{ first_allocation.selling_plan.id }}"
+      form="{{ product_form_id }}"
+      data-selling-plan-input
+    >
+
+    <div class="subscription-selector__option subscription-selector__option--subscribe">
+      <div class="subscription-selector__badge">
+        <span>{{ badge_text | escape }}</span>
+        {% if block.settings.show_per_packet and packet_count > 0 %}
+          <span class="subscription-selector__badge-price">
+            <span data-plan-output="perPacket">
+              {{ first_allocation.price | divided_by: packet_count | money }}
+            </span>
+            {{ per_packet_label | escape }}
+          </span>
+        {% endif %}
+      </div>
+
+      <label class="subscription-selector__summary">
+        <input
+          type="radio"
+          name="purchase-option-{{ block.id }}"
+          value="subscription"
+          data-purchase-option="subscription"
+          checked
+        >
+        <span class="subscription-selector__radio" aria-hidden="true"></span>
+        <span class="subscription-selector__title">{{ subscribe_label | escape }}</span>
+        <span class="subscription-selector__price">
+          <span data-plan-output="price">{{ first_allocation.price | money }}</span>
+          <span class="subscription-selector__compare-price" data-plan-output="comparePrice">
+            {{- first_allocation.compare_at_price | money -}}
+          </span>
+        </span>
+      </label>
+
+      <div class="subscription-selector__details" data-subscription-details>
+        <div  class="subscription-selector__delivery">
+          <span>{{ delivery_label | escape }}</span>
+          <select data-selling-plan-select aria-label="{{ delivery_label | escape }}">
+            {% for selling_plan in selling_plan_group.selling_plans %}
+              {% assign allocation = variant.selling_plan_allocations | where: 'selling_plan', selling_plan | first %}
+              {% if allocation %}
+                {% liquid
+                  assign delivery_frequency = blank
+                  for selling_plan_option in selling_plan.options
+                    if selling_plan_option.name == frequency_option_name
+                      assign delivery_frequency = selling_plan_option.value
+                      break
+                    endif
+                  endfor
+                  assign delivery_frequency = delivery_frequency | default: selling_plan.name
+                %}
+                <option
+                  value="{{ selling_plan.id }}"
+                  data-price="{{ allocation.price | money | escape }}"
+                  data-compare-price="{{ allocation.compare_at_price | money | escape }}"
+                  data-per-packet="{{ allocation.price | divided_by: packet_count | money | escape }}"
+                  {% if delivery_frequency == default_frequency_text %}
+                    selected
+                  {% endif %}
+                >
+                  {{ delivery_frequency | escape }}
+                </option>
+              {% endif %}
+            {% endfor %}
+          </select>
+        </div>
+
+        <ul class="subscription-selector__benefits">
+          {% for index in (1..3) %}
+            {% assign benefit_key = 'benefit_' | append: index %}
+            {% assign benefit = block.settings[benefit_key] %}
+            {% if benefit == blank %}
+              {% assign translation_key = 'products.product.subscription.benefit_' | append: index %}
+              {% assign benefit = translation_key | t %}
+            {% endif %}
+            {% if benefit != blank %}
+              <li>
+                <span class="subscription-selector__check" aria-hidden="true">✓</span>
+                <span>{{ benefit | escape }}</span>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <div class="subscription-selector__option subscription-selector__option--onetime">
+      <label class="subscription-selector__summary">
+        <input
+          type="radio"
+          name="purchase-option-{{ block.id }}"
+          value="onetime"
+          data-purchase-option="onetime"
+          data-onetime-price="{{ variant.price | money | escape }}"
+        >
+        <span class="subscription-selector__radio" aria-hidden="true"></span>
+        <span class="subscription-selector__title">{{ onetime_label | escape }}</span>
+        <span class="subscription-selector__price">{{ variant.price | money }}</span>
+      </label>
+    </div>
+  </subscription-selector>
+{% elsif request.design_mode %}
+  <div class="subscription-selector" {{ block.shopify_attributes }}>
+    {{ 'products.product.subscription.missing_selling_plan' | t }}
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:names.subscription_selector",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "t:settings.subscription_badge",
+      "default": "Best Value"
+    },
+    {
+      "type": "text",
+      "id": "subscribe_label",
+      "label": "t:settings.subscription_label",
+      "default": "Subscribe & Save"
+    },
+    {
+      "type": "text",
+      "id": "onetime_label",
+      "label": "t:settings.one_time_label",
+      "default": "One-Time Purchase"
+    },
+    {
+      "type": "text",
+      "id": "delivery_label",
+      "label": "t:settings.delivery_label",
+      "default": "Deliver every:"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_per_packet",
+      "label": "t:settings.show_price_per_packet",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "per_packet_label",
+      "label": "t:settings.per_packet_suffix",
+      "default": "per packet"
+    },
+    {
+      "type": "text",
+      "id": "benefit_1",
+      "label": "t:settings.subscription_benefit_1",
+      "default": "Save an additional 10% on every order"
+    },
+    {
+      "type": "text",
+      "id": "benefit_2",
+      "label": "t:settings.subscription_benefit_2",
+      "default": "Free shipping, always"
+    },
+    {
+      "type": "text",
+      "id": "benefit_3",
+      "label": "t:settings.subscription_benefit_3",
+      "default": "Cancel or pause anytime"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:settings.background",
+      "default": "#fff3ce"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:settings.text",
+      "default": "#2f261c"
+    },
+    {
+      "type": "color",
+      "id": "badge_background",
+      "label": "t:settings.badge_background",
+      "default": "#2f261c"
+    },
+    {
+      "type": "color",
+      "id": "badge_text_color",
+      "label": "t:settings.badge_text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "t:settings.corner_radius",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.subscription_selector",
+      "category": "t:categories.product"
+    }
+  ]
+}
+{% endschema %}

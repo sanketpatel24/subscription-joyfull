@@ -1,0 +1,167 @@
+.subscription-selector {
+  display: block;
+  width: 100%;
+  color: var(--subscription-text, var(--color-text-body));
+}
+
+.subscription-selector__option {
+  overflow: hidden;
+  border: var(--spacing-2) solid
+    color-mix(in srgb, var(--subscription-text, var(--color-text-body)) 35%, transparent);
+  border-radius: var(--subscription-radius, var(--spacing-12));
+  background: var(--subscription-background, transparent);
+}
+
+.subscription-selector__option + .subscription-selector__option {
+  margin-block-start: var(--spacing-16);
+}
+
+.subscription-selector__option--subscribe {
+  border-color: var(--subscription-text, var(--color-text-body));
+  background: var(--subscription-background, var(--color-creme));
+}
+
+.subscription-selector__option--onetime {
+  background: transparent;
+}
+
+.subscription-selector__badge {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-12);
+  min-height: var(--spacing-30);
+  padding: var(--spacing-5) var(--spacing-18);
+  color: var(--subscription-badge-text, var(--color-white));
+  background: var(--subscription-badge-background, var(--color-onyx));
+  font-size: var(--font-size-13);
+  font-weight: var(--font-weight-bold);
+}
+
+.subscription-selector__badge-price {
+  padding: var(--spacing-1) var(--spacing-4);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-heading);
+}
+
+.subscription-selector__summary {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-12);
+  width: 100%;
+  min-height: var(--spacing-62);
+  padding: var(--spacing-14) var(--spacing-18);
+  cursor: pointer;
+}
+
+.subscription-selector__summary input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.subscription-selector__radio {
+  flex: 0 0 var(--spacing-24);
+  width: var(--spacing-24);
+  height: var(--spacing-24);
+  border: var(--spacing-2) solid currentcolor;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 var(--spacing-4) var(--subscription-background, var(--color-white));
+}
+
+.subscription-selector__summary input:checked + .subscription-selector__radio {
+  background: currentcolor;
+}
+
+.subscription-selector__summary input:focus-visible + .subscription-selector__radio {
+  outline: var(--spacing-2) solid currentcolor;
+  outline-offset: var(--spacing-3);
+}
+
+.subscription-selector__title {
+  font-size: var(--font-size-18);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-heading);
+}
+
+.subscription-selector__price {
+  margin-inline-start: auto;
+  white-space: nowrap;
+  font-size: var(--font-size-18);
+  font-weight: var(--font-weight-bold);
+}
+
+.subscription-selector__compare-price {
+  margin-inline-start: var(--spacing-4);
+  opacity: var(--opacity-50);
+  text-decoration: line-through;
+}
+
+.subscription-selector__details {
+  padding: 0 var(--spacing-18) var(--spacing-18) var(--spacing-52);
+}
+
+.subscription-selector__delivery {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-8);
+  margin-block-end: var(--spacing-12);
+}
+
+.subscription-selector__delivery select {
+  width: auto;
+  min-width: calc(var(--spacing-100) + var(--spacing-30));
+  padding: var(--spacing-2) var(--spacing-28) var(--spacing-3) var(--spacing-2);
+  border: 0;
+  border-block-end: var(--spacing-2) solid currentcolor;
+  border-radius: 0;
+  color: inherit;
+  background-color: transparent;
+  font: inherit;
+  font-weight: var(--font-weight-semibold);
+}
+
+.subscription-selector__benefits {
+  display: grid;
+  gap: var(--spacing-9);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.subscription-selector__benefits li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-10);
+  line-height: var(--line-height-t2);
+}
+
+.subscription-selector__check {
+  display: inline-grid;
+  flex: 0 0 var(--spacing-24);
+  width: var(--spacing-24);
+  height: var(--spacing-24);
+  place-items: center;
+  border-radius: 50%;
+  color: var(--subscription-background, var(--color-white));
+  background: var(--subscription-text, var(--color-text-body));
+  font-size: var(--font-size-15);
+  font-weight: var(--font-weight-bold);
+}
+
+@media screen and (max-width: 749px) {
+  .subscription-selector__badge,
+  .subscription-selector__summary {
+    padding-inline: var(--spacing-14);
+  }
+
+  .subscription-selector__details {
+    padding-inline: var(--spacing-50) var(--spacing-14);
+  }
+
+  .subscription-selector__title,
+  .subscription-selector__price {
+    font-size: var(--font-size-16);
+  }
+}

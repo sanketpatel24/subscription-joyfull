@@ -252,6 +252,7 @@
     "media_type_info": "Features are populated from your menu links"
   },
   "names": {
+    "subscription_selector": "Subscription selector",
     "column": "Column",
     "product_title": "Product title",
     "custom_liquid": "Custom Liquid",
@@ -769,6 +770,20 @@
     "below_media": "Below media"
   },
   "settings": {
+    "subscription_badge": "Badge",
+    "subscription_label": "Subscription label",
+    "one_time_label": "One-time label",
+    "delivery_label": "Delivery label",
+    "frequency_option_name": "Frequency option property",
+    "default_frequency_text": "Default frequency text",
+    "show_price_per_packet": "Show price per packet",
+    "packets_per_order": "Packets per order",
+    "per_packet_suffix": "Per-packet suffix",
+    "subscription_benefit_1": "Benefit 1",
+    "subscription_benefit_2": "Benefit 2",
+    "subscription_benefit_3": "Benefit 3",
+    "badge_background": "Badge background",
+    "badge_text": "Badge text",
     "accordion": "Accordion",
     "account": "Account",
     "actions_display_style": "Menu style",

@@ -1,0 +1,71 @@
+{% doc %}
+  Renders the product flavor/stitches selector inside Product Details.
+
+  Reads the current product's `custom.pdp_stiches_entries_oh` list metafield.
+  Each referenced metaobject is rendered with
+  `product-stitches-metaobject-card` and is expected to contain:
+  `text`, `image`, `text_color`, `product`, `show_badge`, `badge_text`,
+  `badge_color`, and `badge_background_color`.
+
+  The `product-stitches` custom element changes the Product Information section
+  and browser URL through AJAX when another product card is selected. The card
+  whose product reference matches `closest.product` is marked as active.
+
+  Depends on:
+  - assets/product-stitches.css
+  - assets/product-stitches.js
+  - snippets/product-stitches-metaobject-card.liquid
+{% enddoc %}
+
+{%- liquid
+  assign stitches_entries = closest.product.metafields.custom.pdp_stiches_entries_oh.value
+-%}
+
+{%- if stitches_entries != blank -%}
+  {{ 'product-stitches.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'product-stitches.js' | asset_url }}" type="module"></script>
+
+  <product-stitches
+    class="product-stitches"
+    data-section-id="{{ section.id }}"
+    data-current-url="{{ closest.product.url }}"
+    {{ block.shopify_attributes }}
+  >
+    {%- if block.settings.heading != blank -%}
+      <h2 class="product-stitches__heading">{{ block.settings.heading | escape }}</h2>
+    {%- endif -%}
+
+    <div class="product-stitches__grid">
+      {%- for entry in stitches_entries -%}
+        {% render 'product-stitches-metaobject-card',
+          entry: entry,
+          current_product: closest.product
+        %}
+      {%- endfor -%}
+    </div>
+    <span class="product-stitches__status" role="status" aria-live="polite"></span>
+  </product-stitches>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Stitches",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "FLAVOR:"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Stitches",
+      "settings": {
+        "heading": "FLAVOR:"
+      }
+    }
+  ]
+}
+{% endschema %}

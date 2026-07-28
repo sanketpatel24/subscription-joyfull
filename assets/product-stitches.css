@@ -1,0 +1,165 @@
+.product-stitches {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.product-stitches[aria-busy='true'] {
+  pointer-events: none;
+}
+
+.product-stitches[aria-busy='true'] .product-stitches__grid {
+  opacity: var(--opacity-50);
+}
+
+.product-stitches__grid {
+  transition: opacity var(--animation-speed) var(--animation-easing);
+}
+
+.product-stitches__heading {
+  margin: 0 0 var(--spacing-10);
+  color: rgb(var(--color-foreground-rgb));
+  font-size: var(--font-size-14);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-heading);
+  text-transform: uppercase;
+}
+
+.product-stitches__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--spacing-12);
+  padding-block: var(--spacing-9);
+}
+
+.product-stitches-card {
+  position: relative;
+  display: block;
+  min-width: 0;
+  aspect-ratio: 2 / 1;
+  overflow: visible;
+  border: var(--spacing-1) solid
+    color-mix(in srgb, var(--color-black) 25%, transparent);
+  border-radius: var(--spacing-13);
+  color: var(--stitches-card-text);
+  background: var(--color-surface-alt);
+  text-decoration: none;
+  isolation: isolate;
+}
+
+.product-stitches-card--active {
+  border-color: var(--color-onyx);
+}
+
+.product-stitches-card__image {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--spacing-11);
+  object-fit: cover;
+  transition: transform var(--animation-speed) var(--animation-easing);
+}
+
+.product-stitches-card__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: var(--layer-flat);
+  background: linear-gradient(
+    180deg,
+    transparent 58%,
+    color-mix(in srgb, var(--color-black) 30%, transparent) 100%
+  );
+  border-radius: var(--spacing-11);
+  pointer-events: none;
+}
+
+.product-stitches-card__badge {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: var(--layer-heightened);
+  max-width: calc(100% - var(--spacing-16));
+  padding: var(--spacing-5) var(--spacing-14);
+  border-radius: var(--spacing-4);
+  color: var(--stitches-badge-text);
+  background: var(--stitches-badge-background);
+  font-size: var(--font-size-13);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-heading);
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+}
+
+.product-stitches-card__text {
+  position: absolute;
+  right: var(--spacing-12);
+  bottom: var(--spacing-12);
+  left: var(--spacing-12);
+  z-index: var(--layer-raised);
+  color: var(--stitches-card-text);
+  text-align: center;
+  font-size: var(--font-size-16);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-t1);
+}
+
+.product-stitches-card--has-badge::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: var(--layer-raised);
+  border-radius: var(--spacing-11);
+  background: rgb(var(--color-white-rgb) / var(--opacity-15));
+  pointer-events: none;
+}
+
+.product-stitches-card--has-badge :is(.product-stitches-card__image, .product-stitches-card__text) {
+  filter: blur(var(--spacing-3));
+}
+
+.product-stitches-card--has-badge .product-stitches-card__text {
+  z-index: var(--layer-flat);
+}
+
+a.product-stitches-card:focus-visible {
+  outline: var(--focus-outline-width) solid currentcolor;
+  outline-offset: var(--focus-outline-offset);
+}
+
+.product-stitches__status {
+  position: absolute;
+  width: var(--spacing-1);
+  height: var(--spacing-1);
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media screen and (max-width: 389px) {
+  .product-stitches__grid {
+    display: flex;
+    gap: var(--spacing-10);
+    margin-inline: calc(var(--spacing-16) * -1);
+    padding-inline: var(--spacing-16);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .product-stitches__grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .product-stitches-card {
+    flex: 0 0 68%;
+    scroll-snap-align: start;
+  }
+
+  .product-stitches-card__text {
+    right: var(--spacing-10);
+    bottom: var(--spacing-10);
+    left: var(--spacing-10);
+    font-size: var(--font-size-13);
+  }
+}
