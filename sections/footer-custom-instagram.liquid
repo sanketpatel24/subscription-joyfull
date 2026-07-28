@@ -1,0 +1,146 @@
+{%- if section.settings.instagram_item != blank -%}
+    {%- assign instagram_item = section.settings.instagram_item -%}
+{%- endif -%}
+
+{%- liquid
+    assign background_color = section.settings.background_color
+    assign information_color = section.settings.information_color
+    assign desktop_top_padding = section.settings.desktop_top_padding
+    assign desktop_bottom_padding = section.settings.desktop_bottom_padding
+    assign mobile_top_padding = section.settings.mobile_top_padding
+    assign mobile_bottom_padding = section.settings.mobile_bottom_padding
+-%}
+
+{%- if instagram_item != blank -%}
+    {{ 'footer-custom-instagram.css' | asset_url | stylesheet_tag }}
+    <script src="{{ 'footer-custom-instagram.js' | asset_url }}" defer></script>
+
+    {%- style -%}
+        #shopify-section-{{ section.id }} .instagram {
+            {%- if background_color != blank -%}
+                --background-color: {{ background_color }};
+            {%- endif -%}
+            {%- if information_color != blank -%}
+                --information-color: {{ information_color }};
+            {%- endif -%}
+            {%- if desktop_top_padding != blank -%}
+                --desktop-top-padding: {{ desktop_top_padding }}px;
+            {%- endif -%}
+            {%- if desktop_bottom_padding != blank -%}
+                --desktop-bottom-padding: {{ desktop_bottom_padding }}px;
+            {%- endif -%}
+            {%- if mobile_top_padding != blank -%}
+                --mobile-top-padding: {{ mobile_top_padding }}px;
+            {%- endif -%}
+            {%- if mobile_bottom_padding != blank -%}
+                --mobile-bottom-padding: {{ mobile_bottom_padding }}px;
+            {%- endif -%}
+        }
+    {%- endstyle -%}
+
+    <section class="instagram">
+        <div class="instagram__body">
+            <div class="instagram__loop">
+                <div class="footer-custom-instagram-marquee">
+                    <span>
+                        {%- for selected_instagram_lists in instagram_item.selected_instagram_lists.value -%}
+                            {%- assign column_image_video = selected_instagram_lists.column_image_video.value -%}
+                            {%- assign column_redirect_link = selected_instagram_lists.column_redirect_link.value -%}
+                            {%- if column_image_video != blank -%}
+                                <div class="instagram__loop-media">
+                                    {%- if column_redirect_link != blank -%}
+                                        <a href="{{ column_redirect_link }}">
+                                    {%- endif -%}
+                                            <div class="instagram__loop-media-wrap">
+                                                {%- if column_image_video contains "files" -%}
+                                                    {% render 'responsive-image-lazyload',
+                                                        desktop_image: column_image_video,
+                                                        mobile_image: column_image_video,
+                                                        class: 'custom--image',
+                                                        sizes: '(max-width: 749px) 100vw, 100vw'
+                                                    %}
+                                                {%- else -%}
+                                                    {% render 'responsive-video-lazyload',
+                                                        video_url: column_image_video,
+                                                        class: 'video--desktop video--mobile'
+                                                    %} 
+                                                {%- endif -%}
+                                            </div>
+                                    {%- if column_redirect_link != blank -%}
+                                        </a>
+                                    {%- endif -%}
+                                </div>
+                            {%- endif -%}
+                        {%- endfor -%}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </section>
+{%- endif -%}
+
+{% schema %}
+{
+    "name": "Footer Custom Instagram",
+    "class": "footer-custom-instagram__section",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Color Settings"
+        },
+        {
+            "type": "color",
+            "id": "background_color",
+            "label": "Background Color"
+        },
+        {
+            "type": "color",
+            "id": "information_color",
+            "label": "Information Color"
+        },
+        {
+            "type": "header",
+            "content": "Layout Settings"
+        },
+        {
+            "type": "number",
+            "id": "desktop_top_padding",
+            "label": "Desktop Top Padding",
+            "default": 56
+        },
+        {
+            "type": "number",
+            "id": "desktop_bottom_padding",
+            "label": "Desktop Bottom Padding",
+            "default": 0
+        },
+        {
+            "type": "number",
+            "id": "mobile_top_padding",
+            "label": "Mobile Top Padding",
+            "default": 12
+        },
+        {
+            "type": "number",
+            "id": "mobile_bottom_padding",
+            "label": "Mobile Bottom Padding",
+            "default": 0
+        },
+        {
+            "type": "header",
+            "content": "Content Settings"
+        },
+        {
+            "type": "metaobject",
+            "id": "instagram_item",
+            "label": "Select Instagram Item List",
+            "metaobject_type": "global_instagram_selections"
+        }
+    ],
+    "presets": [
+        {
+            "name": "Footer Custom Instagram"
+        }
+    ]
+}
+{% endschema %}

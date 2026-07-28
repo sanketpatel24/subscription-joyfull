@@ -1,0 +1,393 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "index_custom_slideshow_f9CrAt": {
+      "type": "index-custom-slideshow",
+      "blocks": {
+        "split_banner_content_yKErD7": {
+          "type": "split_banner_content",
+          "settings": {
+            "main_background_color": "#ffefc8",
+            "main_information_color": "",
+            "main_desktop_video": "shopify://files/videos/Dummy Video For Website.mp4",
+            "main_mobile_image": "shopify://shop_images/d7c1c079-f216-42f3-b296-bc1a2e3ff9c8.jpg",
+            "custom_text": "Vet-Formulated + Research-Backed",
+            "heading_text": "Treat your pet to better gut health",
+            "details_text": "<p>Treats with benefits, gut-supporting supplements. We did the research so you can enjoy the belly rubs.</p>",
+            "button_text": "Shop Now",
+            "button_link": "/",
+            "button_style": "primary-button",
+            "main_common_video": "shopify://files/videos/v12044gd0000d2cc5f7og65ptfdlucgg.MP4",
+            "main_custom_image_1": "shopify://shop_images/Slideshow-Image-New-1.png",
+            "main_custom_text_1": "Treats with\nbenefits",
+            "main_custom_image_2": "shopify://shop_images/Slideshow-Image-New-2.png",
+            "main_custom_text_2": "Science-backed\nSupplements"
+          }
+        },
+        "full_bleed_with_box_mgr3wC": {
+          "type": "full_bleed_with_box",
+          "settings": {
+            "main_background_color": "#ffefc8",
+            "inner_background_color": "#fff9f0",
+            "main_information_color": "",
+            "main_desktop_video": "shopify://files/videos/Dummy Video For Website.mp4",
+            "main_mobile_image": "shopify://shop_images/IMG_4748_-_Edited.jpg",
+            "custom_text": "Vet-Formulated + Research-Backed",
+            "heading_text": "Happy gut, happy pet",
+            "details_text": "<p>Treats with benefits and gut-supporting supplements.</p>",
+            "button_text": "Shop Now",
+            "button_link": "/",
+            "button_style": "primary-button"
+          }
+        },
+        "full_bleed_with_text_pGE9BR": {
+          "type": "full_bleed_with_text",
+          "settings": {
+            "main_background_color": "#ffefc8",
+            "main_information_color": "#fff9f0",
+            "main_desktop_video": "shopify://files/videos/Dummy Video For Website.mp4",
+            "main_mobile_video": "shopify://files/videos/v12044gd0000d5gm5kvog65k9mbv8njg.MP4",
+            "custom_text": "Vet-Formulated + Research-Backed",
+            "heading_text": "Joy starts in the gut",
+            "details_text": "<p>Treats with benefits and gut-supporting supplements. We did the research so you can enjoy the belly rubs.</p>",
+            "button_text": "Shop Now",
+            "button_link": "/",
+            "button_style": "primary-button",
+            "custom_image_1": "shopify://shop_images/Slideshow-Logo-Image-New-1.svg",
+            "custom_image_2": "shopify://shop_images/Slideshow-Logo-Image-New-2.svg"
+          }
+        }
+      },
+      "block_order": [
+        "split_banner_content_yKErD7",
+        "full_bleed_with_box_mgr3wC",
+        "full_bleed_with_text_pGE9BR"
+      ],
+      "name": "Index Custom Slideshow",
+      "settings": {
+        "desktop_top_padding": 0,
+        "desktop_bottom_padding": 0,
+        "mobile_top_padding": 0,
+        "mobile_bottom_padding": 0,
+        "main_heading_size": "h1"
+      }
+    },
+    "index_treats_logos_lists_4jJ83f": {
+      "type": "index-treats-logos-lists",
+      "blocks": {
+        "logo_ygq4CY": {
+          "type": "logo",
+          "settings": {
+            "main_logo_image": "shopify://shop_images/Treats-Logo-Image-New-1.svg"
+          }
+        },
+        "logo_YqtRWD": {
+          "type": "logo",
+          "settings": {
+            "main_logo_image": "shopify://shop_images/Treats-Logo-Image-New-2.svg"
+          }
+        },
+        "logo_ndtAn6": {
+          "type": "logo",
+          "settings": {
+            "main_logo_image": "shopify://shop_images/Treats-Logo-Image-New-3.svg"
+          }
+        },
+        "logo_emAqyJ": {
+          "type": "logo",
+          "settings": {
+            "main_logo_image": "shopify://shop_images/Treats-Logo-Image-New-4.svg"
+          }
+        },
+        "logo_DK6Fwx": {
+          "type": "logo",
+          "settings": {
+            "main_logo_image": "shopify://shop_images/Treats-Logo-Image-New-5.svg"
+          }
+        }
+      },
+      "block_order": [
+        "logo_ygq4CY",
+        "logo_YqtRWD",
+        "logo_ndtAn6",
+        "logo_emAqyJ",
+        "logo_DK6Fwx"
+      ],
+      "name": "Index Treats Logos Lists",
+      "settings": {
+        "background_color": "",
+        "information_color": "",
+        "desktop_top_padding": 67,
+        "desktop_bottom_padding": 56,
+        "mobile_top_padding": 91,
+        "mobile_bottom_padding": 24,
+        "main_common_video": "shopify://files/videos/Dummy Video For Website.mp4",
+        "left_desktop_video": "shopify://files/videos/wTKtmQ_mQ.MP4",
+        "logo_custom_image": "shopify://shop_images/Treats_image-new.png",
+        "right_desktop_video": "shopify://files/videos/Prebiotics vs. Probiotics.mov",
+        "top_mobile_video": "shopify://files/videos/v12044gd0000d2cc5f7og65ptfdlucgg.MP4",
+        "main_heading_size": "h2",
+        "main_heading_text": "Vet-formulated treats and supplements even picky eaters go feral for",
+        "inner_heading_text": "As Seen In"
+      }
+    },
+    "index_why_subscribe_block_h4WtMX": {
+      "type": "index-why-subscribe-block",
+      "name": "Index Why Subscribe Block",
+      "settings": {
+        "background_color": "",
+        "information_color": "",
+        "inner_background_color": "",
+        "desktop_top_padding": 0,
+        "desktop_bottom_padding": 0,
+        "mobile_top_padding": 0,
+        "mobile_bottom_padding": 0,
+        "main_desktop_image": "shopify://shop_images/blog_post_11.png",
+        "main_mobile_image": "shopify://shop_images/IMG_3754.heic",
+        "heading_size": "h2",
+        "heading_text": "Why subscribe?",
+        "details_text_1": "<p>Consistent daily use of probiotics and prebiotics helps maintain a balanced gut microbiome.</p>",
+        "details_text_2": "<ul><li>Save 10% on every order</li><li>Free shipping, always</li><li>Cancel or pause anytime</li></ul>",
+        "button_text": "Shop Now",
+        "button_link": "/",
+        "button_style": "primary-button"
+      }
+    },
+    "index_the_science_benefit_L8c6Pg": {
+      "type": "index-the-science-benefit",
+      "blocks": {
+        "information_7qCBna": {
+          "type": "information",
+          "settings": {
+            "icon": "shopify://shop_images/Science-icon-image-new-1.svg",
+            "title": "Vet-formulated",
+            "detail": "<p>Every recipe is science-backed to deliver what we say it will.</p>"
+          }
+        },
+        "information_c9HULh": {
+          "type": "information",
+          "settings": {
+            "icon": "shopify://shop_images/Science-icon-image-new-2.svg",
+            "title": "Transparent ingredients",
+            "detail": "<p>No \"natural flavors\" loophole. <br/>No undisclosed additives.</p>"
+          }
+        },
+        "information_EFXVAy": {
+          "type": "information",
+          "settings": {
+            "icon": "shopify://shop_images/Science-icon-image-new-3.svg",
+            "title": "Clinically dosed",
+            "detail": "<p>Functional ingredients delivered at doses shown to actually work.</p>"
+          }
+        },
+        "information_EkWYWN": {
+          "type": "information",
+          "settings": {
+            "icon": "shopify://shop_images/Science-icon-image-new-4.svg",
+            "title": "Picky-pet approved",
+            "detail": "<p>No convincing required – even the pickiest pets come back for more.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "information_7qCBna",
+        "information_c9HULh",
+        "information_EFXVAy",
+        "information_EkWYWN"
+      ],
+      "name": "Index The Science Benefit",
+      "settings": {
+        "background_color": "",
+        "information_color": "",
+        "desktop_top_padding": 80,
+        "desktop_bottom_padding": 116,
+        "mobile_top_padding": 32,
+        "mobile_bottom_padding": 32,
+        "main_desktop_image": "shopify://shop_images/Science-desktop-new.png",
+        "main_mobile_image": "shopify://shop_images/Science-mobile-new.png",
+        "heading_size": "h2",
+        "heading_text": "Built from the gut up",
+        "details_text": "<p>We did the research, read the labels, and couldn't ignore what we saw. Some brands aren't just missing the mark on gut health, they're formulated in ways that actively disrupt it. So we built Joyfull from the gut up, with ingredients chosen to support it.</p>",
+        "button_text": "The Science",
+        "button_link": "/",
+        "button_style": "secondary-button"
+      }
+    },
+    "index_object_testimonials_fCi4xj": {
+      "type": "index-object-testimonials",
+      "name": "Index Object Testimonials",
+      "settings": {
+        "background_color": "",
+        "information_color": "",
+        "desktop_top_padding": 80,
+        "desktop_bottom_padding": 80,
+        "mobile_top_padding": 40,
+        "mobile_bottom_padding": 112,
+        "main_heading_size": "h2",
+        "follow_us_text": "Follow us",
+        "testimonial_item": "home-page"
+      }
+    },
+    "index_media_with_content_DF39Vg": {
+      "type": "index-media-with-content",
+      "blocks": {
+        "image_NPAVMP": {
+          "type": "image",
+          "settings": {
+            "logo_image": "shopify://shop_images/Media-Logo-Image-New-1.svg"
+          }
+        },
+        "image_B4VVxn": {
+          "type": "image",
+          "settings": {
+            "logo_image": "shopify://shop_images/Media-Logo-Image-New-2.svg"
+          }
+        }
+      },
+      "block_order": [
+        "image_NPAVMP",
+        "image_B4VVxn"
+      ],
+      "name": "Index Media With Content",
+      "settings": {
+        "background_color": "#d2c6b7",
+        "information_color": "",
+        "desktop_top_padding": 56,
+        "desktop_bottom_padding": 56,
+        "mobile_top_padding": 32,
+        "mobile_bottom_padding": 40,
+        "media_position": "left",
+        "main_common_video": "shopify://files/videos/Dummy Video For Website.mp4",
+        "left_common_video": "shopify://files/videos/1030(2) (1) (1).mp4",
+        "heading_size": "h2",
+        "heading_text": "Formulated by\na veterinarian",
+        "details_text_1": "<p>“The research is clear: supporting your pet's <br/>gut health is one of the most impactful things <br/>you can do for their overall wellbeing.”</p><p><strong>Dr. Natascha Hedegaard, BVetMed, GPCert(SAM)</strong><br/>JoyFull’s Veterinary Advisor</p>",
+        "details_text_2": "<p>“The research is clear: supporting your pet's <br/>gut health is one of the most impactful things <br/>you can do for their overall wellbeing.”</p><p><strong>Dr. Natascha Hedegaard, <br/>BVetMed, GPCert(SAM)</strong><br/>JoyFull’s Veterinary Advisor</p>",
+        "button_text": "Our Story",
+        "button_link": "",
+        "button_style": "secondary-button"
+      }
+    },
+    "index_media_with_content_4wTccc": {
+      "type": "index-media-with-content",
+      "blocks": {
+        "image_neMfA6": {
+          "type": "image",
+          "settings": {
+            "logo_image": "shopify://shop_images/Media-Logo-Image-New-1.svg"
+          }
+        },
+        "image_MVyPQy": {
+          "type": "image",
+          "settings": {
+            "logo_image": "shopify://shop_images/Media-Logo-Image-New-2.svg"
+          }
+        }
+      },
+      "block_order": [
+        "image_neMfA6",
+        "image_MVyPQy"
+      ],
+      "name": "Index Media With Content",
+      "settings": {
+        "background_color": "#d2c6b7",
+        "information_color": "",
+        "desktop_top_padding": 56,
+        "desktop_bottom_padding": 56,
+        "mobile_top_padding": 32,
+        "mobile_bottom_padding": 40,
+        "media_position": "right",
+        "main_desktop_image": "shopify://shop_images/JoyFull-36.jpg",
+        "main_mobile_image": "shopify://shop_images/JoyFull-January2026-5_1.jpg",
+        "left_common_video": "shopify://files/videos/1030(2) (1) (1).mp4",
+        "heading_size": "h2",
+        "heading_text": "Formulated by\na veterinarian",
+        "details_text_1": "<p>“The research is clear: supporting your pet's <br/>gut health is one of the most impactful things <br/>you can do for their overall wellbeing.”</p><p><strong>Dr. Natascha Hedegaard, BVetMed, GPCert(SAM)</strong><br/>JoyFull’s Veterinary Advisor</p>",
+        "details_text_2": "<p>“The research is clear: supporting your pet's <br/>gut health is one of the most impactful things <br/>you can do for their overall wellbeing.”</p><p><strong>Dr. Natascha Hedegaard, <br/>BVetMed, GPCert(SAM)</strong><br/>JoyFull’s Veterinary Advisor</p>",
+        "button_text": "Our Story",
+        "button_link": "",
+        "button_style": "secondary-button"
+      }
+    },
+    "index_meta_faqs_accordion_Eyiyhn": {
+      "type": "index-meta-faqs-accordion",
+      "name": "Index Meta FAQs Accordion",
+      "settings": {
+        "background_color": "",
+        "information_color": "",
+        "inner_background_color": "",
+        "desktop_top_padding": 56,
+        "desktop_bottom_padding": 56,
+        "mobile_top_padding": 32,
+        "mobile_bottom_padding": 32,
+        "main_heading_size": "h2",
+        "faqs_accordions": "home-page"
+      }
+    },
+    "index_media_with_content_jXdqbB": {
+      "type": "index-media-with-content",
+      "name": "Index Media With Content",
+      "settings": {
+        "background_color": "#d2c6b7",
+        "information_color": "",
+        "desktop_top_padding": 56,
+        "desktop_bottom_padding": 56,
+        "mobile_top_padding": 32,
+        "mobile_bottom_padding": 46,
+        "media_position": "left",
+        "main_common_video": "shopify://files/videos/Dummy Video For Website.mp4",
+        "left_common_video": "shopify://files/videos/v12044gd0000d5gm5kvog65k9mbv8njg.MP4",
+        "heading_size": "h2",
+        "heading_text": "From one obsessed \npet parent to another",
+        "details_text_1": "<p>The moment I adopted my first pet as an adult (we now have 3), I became obsessed. That obsession eventually developed into being a full-fledged crazy pet mom who couldn't stop digging into what was actually in the products I was buying. Hint: things you can’t unsee after you see them.</p><p>So I set off to do things differently and build the brand I couldn’t find. I called my friend Natascha — a veterinarian who stops to pet every animal she sees, no matter where she is – and we built JoyFull to put science first.</p><p>The result: Clean ingredients. Functional benefits.<br/>No compromises.</p>",
+        "details_text_2": "<p>The moment I adopted my first pet as an adult (we now have 3), I became obsessed. That obsession eventually developed into being a full-fledged crazy pet mom who couldn't stop digging into what was actually in the products I was buying. Hint: things you can’t unsee after you see them.</p><p>So I set off to do things differently and build the brand I couldn’t find. I called my friend Natascha — a veterinarian who stops to pet every animal she sees, no matter where she is – and we built JoyFull to put science first.</p><p>The result: Clean ingredients. <br/>Functional benefits. No compromises.</p>",
+        "button_text": "Our Story",
+        "button_link": "shopify://collections",
+        "button_style": "secondary-button"
+      }
+    },
+    "index_media_with_content_Nbf3Ay": {
+      "type": "index-media-with-content",
+      "name": "Index Media With Content",
+      "settings": {
+        "background_color": "#d2c6b7",
+        "information_color": "",
+        "desktop_top_padding": 56,
+        "desktop_bottom_padding": 56,
+        "mobile_top_padding": 32,
+        "mobile_bottom_padding": 46,
+        "media_position": "right",
+        "main_desktop_image": "shopify://shop_images/JoyFull-29.jpg",
+        "main_mobile_image": "shopify://shop_images/JoyFull-January2026-8_1.jpg",
+        "left_common_video": "shopify://files/videos/v12044gd0000d5gm5kvog65k9mbv8njg.MP4",
+        "heading_size": "h2",
+        "heading_text": "From one obsessed \npet parent to another",
+        "details_text_1": "<p>The moment I adopted my first pet as an adult (we now have 3), I became obsessed. That obsession eventually developed into being a full-fledged crazy pet mom who couldn't stop digging into what was actually in the products I was buying. Hint: things you can’t unsee after you see them.</p><p>So I set off to do things differently and build the brand I couldn’t find. I called my friend Natascha — a veterinarian who stops to pet every animal she sees, no matter where she is – and we built JoyFull to put science first.</p><p>The result: Clean ingredients. Functional benefits.<br/>No compromises.</p>",
+        "details_text_2": "<p>The moment I adopted my first pet as an adult (we now have 3), I became obsessed. That obsession eventually developed into being a full-fledged crazy pet mom who couldn't stop digging into what was actually in the products I was buying. Hint: things you can’t unsee after you see them.</p><p>So I set off to do things differently and build the brand I couldn’t find. I called my friend Natascha — a veterinarian who stops to pet every animal she sees, no matter where she is – and we built JoyFull to put science first.</p><p>The result: Clean ingredients. <br/>Functional benefits. No compromises.</p>",
+        "button_text": "Our Story",
+        "button_link": "shopify://collections",
+        "button_style": "secondary-button"
+      }
+    }
+  },
+  "order": [
+    "index_custom_slideshow_f9CrAt",
+    "index_treats_logos_lists_4jJ83f",
+    "index_why_subscribe_block_h4WtMX",
+    "index_the_science_benefit_L8c6Pg",
+    "index_object_testimonials_fCi4xj",
+    "index_media_with_content_DF39Vg",
+    "index_media_with_content_4wTccc",
+    "index_meta_faqs_accordion_Eyiyhn",
+    "index_media_with_content_jXdqbB",
+    "index_media_with_content_Nbf3Ay"
+  ]
+}

@@ -1,0 +1,285 @@
+{%- liquid
+    assign background_color = section.settings.background_color
+    assign information_color = section.settings.information_color
+    assign inner_background_color = section.settings.inner_background_color
+    assign desktop_top_padding = section.settings.desktop_top_padding
+    assign desktop_bottom_padding = section.settings.desktop_bottom_padding
+    assign mobile_top_padding = section.settings.mobile_top_padding
+    assign mobile_bottom_padding = section.settings.mobile_bottom_padding
+
+    assign main_common_video = section.settings.main_common_video
+    assign main_desktop_image = section.settings.main_desktop_image
+    assign main_mobile_image = section.settings.main_mobile_image
+
+    assign heading_size = section.settings.heading_size
+    assign heading_text = section.settings.heading_text
+    assign details_text_1 = section.settings.details_text_1
+    assign details_text_2 = section.settings.details_text_2
+    assign button_text = section.settings.button_text
+    assign button_link = section.settings.button_link
+    assign button_style = section.settings.button_style
+-%}
+
+{%- if main_common_video != blank or main_desktop_image != blank or main_mobile_image != blank or heading_text != blank or details_text_1 != blank or details_text_2 != blank or button_link != blank -%}
+    {{ 'index-why-subscribe-block.css' | asset_url | stylesheet_tag }}
+    <script src="{{ 'index-why-subscribe-block.js' | asset_url }}" defer></script>
+
+    {%- style -%}
+        #shopify-section-{{ section.id }} .subscribe {
+            {%- if background_color != blank -%}
+                --background-color: {{ background_color }};
+            {%- endif -%}
+            {%- if information_color != blank -%}
+                --information-color: {{ information_color }};
+            {%- endif -%}
+            {%- if desktop_top_padding != blank -%}
+                --desktop-top-padding: {{ desktop_top_padding }}px;
+            {%- endif -%}
+            {%- if desktop_bottom_padding != blank -%}
+                --desktop-bottom-padding: {{ desktop_bottom_padding }}px;
+            {%- endif -%}
+            {%- if mobile_top_padding != blank -%}
+                --mobile-top-padding: {{ mobile_top_padding }}px;
+            {%- endif -%}
+            {%- if mobile_bottom_padding != blank -%}
+                --mobile-bottom-padding: {{ mobile_bottom_padding }}px;
+            {%- endif -%}
+        }
+    {%- endstyle -%}
+
+    <section class="subscribe">
+        <div class="page-width">
+            <div class="subscribe__body" style="background: {% if inner_background_color != blank %}{{ inner_background_color }}{% else %}#D2C6B7{% endif %};">
+                {%- if main_common_video != blank or main_desktop_image != blank or main_mobile_image != blank -%}
+                    <div class="subscribe__media">
+                        <div class="subscribe__media-wrap">
+                            {%- if main_common_video != blank -%}
+                                {% render 'responsive-video-lazyload',
+                                    video_url: main_common_video,
+                                    class: 'video--desktop video--mobile'
+                                %}
+                            {%- elsif main_desktop_image != blank and main_mobile_image != blank -%}
+                                {% render 'responsive-image-lazyload',
+                                    desktop_image: main_desktop_image,
+                                    mobile_image: main_mobile_image,
+                                    class: 'custom--image',
+                                    sizes: '(max-width: 749px) 100vw, 100vw'
+                                %}
+                            {%- endif -%}
+                        </div>
+                    </div>
+                {%- endif -%}
+                {%- if heading_text != blank or details_text_1 != blank or details_text_2 != blank or button_link != blank -%}
+                    <div class="subscribe__content">
+                        <div class="subscribe__content-wrap">
+                            {%- if heading_text != blank or details_text_1 != blank or details_text_2 != blank -%}
+                                <div class="subscribe__detail">
+                                    <div class="subscribe__detail-wrap">
+                                        {%- if heading_text != blank or details_text_1 != blank -%}
+                                            <div class="subscribe__group">
+                                                {%- if heading_text != blank -%}
+                                                    <div class="heading-m subscribe__group-title">
+                                                        <{{ heading_size }}>
+                                                            {{ heading_text | newline_to_br }}
+                                                        </{{ heading_size }}>
+                                                    </div>
+                                                {%- endif -%}
+                                                {%- if details_text_1 != blank -%}
+                                                    <div class="text-common subscribe__group-infos">
+                                                        {{ details_text_1 }}
+                                                    </div>
+                                                {%- endif -%}
+                                            </div>
+                                        {%- endif -%}
+                                        {%- if details_text_2 != blank -%}
+                                            <div class="text-common subscribe__group-lists">
+                                                {{ details_text_2 }}
+                                            </div>
+                                        {%- endif -%}
+                                    </div>
+                                </div>
+                            {%- endif -%}
+                            {%- if button_text != blank and button_link != blank -%}
+                                <div class="subscribe__button">
+                                    <div class="subscribe__button-wrap">
+                                        {%- render 'button-common-style',
+                                            main_button_text: button_text,
+                                            main_button_link: button_link,
+                                            main_button_style: button_style
+                                        -%}
+                                    </div>
+                                </div>
+                            {%- endif -%}
+                        </div>
+                    </div>
+                {%- endif -%}
+            </div>
+        </div>
+    </section>
+{%- endif -%}
+
+{% schema %}
+{
+    "name": "Index Why Subscribe Block",
+    "class": "index-why-subscribe-block__section",
+    "settings": [
+        {
+            "type": "header",
+            "content": "==== Color Settings ===="
+        },
+        {
+            "type": "color",
+            "id": "background_color",
+            "label": "Background Color"
+        },
+        {
+            "type": "color",
+            "id": "information_color",
+            "label": "Information Color"
+        },
+        {
+            "type": "color",
+            "id": "inner_background_color",
+            "label": "Inner Background Color"
+        },
+        {
+            "type": "header",
+            "content": "==== Layout Settings ===="
+        },
+        {
+            "type": "number",
+            "id": "desktop_top_padding",
+            "label": "Desktop Top Padding",
+            "default": 0
+        },
+        {
+            "type": "number",
+            "id": "desktop_bottom_padding",
+            "label": "Desktop Bottom Padding",
+            "default": 0
+        },
+        {
+            "type": "number",
+            "id": "mobile_top_padding",
+            "label": "Mobile Top Padding",
+            "default": 0
+        },
+        {
+            "type": "number",
+            "id": "mobile_bottom_padding",
+            "label": "Mobile Bottom Padding",
+            "default": 0
+        },
+        {
+            "type": "header",
+            "content": "==== Media Settings ===="
+        },
+        {
+            "type": "video",
+            "id": "main_common_video",
+            "label": "Add Main Common Video"
+        },
+        {
+            "type": "image_picker",
+            "id": "main_desktop_image",
+            "label": "Add Main Desktop Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "main_mobile_image",
+            "label": "Add Main Mobile Image"
+        },
+        {
+            "type": "header",
+            "content": "==== Content Settings ===="
+        },
+        {
+            "type": "select",
+            "id": "heading_size",
+            "label": "Heading Size",
+            "default": "h2",
+            "options": [
+                {
+                    "label": "H1",
+                    "value": "h1"
+                },
+                {
+                    "label": "H2",
+                    "value": "h2"
+                },
+                {
+                    "label": "H3",
+                    "value": "h3"
+                },
+                {
+                    "label": "H4",
+                    "value": "h4"
+                },
+                {
+                    "label": "H5",
+                    "value": "h5"
+                },
+                {
+                    "label": "H6",
+                    "value": "h6"
+                },
+                {
+                    "label": "Span",
+                    "value": "span"
+                }
+            ]
+        },
+        {
+            "type": "textarea",
+            "id": "heading_text",
+            "label": "Heading Text",
+            "default": "Why subscribe?"
+        },
+        {
+            "type": "richtext",
+            "id": "details_text_1",
+            "label": "Details Text-1",
+            "default": "<p>Consistent daily use of probiotics and prebiotics helps maintain a balanced gut microbiome.</p>"
+        },
+        {
+            "type": "richtext",
+            "id": "details_text_2",
+            "label": "Details Text-2",
+            "default": "<ul><li>Save 10% on every order</li><li>Free shipping, always</li><li>Cancel or pause anytime</li></ul>"
+        },
+        {
+            "type": "text",
+            "id": "button_text",
+            "label": "Button Text",
+            "default": "Shop Now"
+        },
+        {
+            "type": "url",
+            "id": "button_link",
+            "label": "Button Link",
+            "default": "/"
+        },
+        {
+            "type": "select",
+            "id": "button_style",
+            "label": "Button Style",
+            "default": "primary-button",
+            "options": [
+                {
+                    "label": "Primary Button",
+                    "value": "primary-button"
+                },
+                {
+                    "label": "Secondary Button",
+                    "value": "secondary-button"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Index Why Subscribe Block"
+        }
+    ]
+}
+{% endschema %}

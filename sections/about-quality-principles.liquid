@@ -1,0 +1,207 @@
+{{ 'about-quality-principles.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign desktop_image = section.settings.desktop_image
+  assign mobile_image = section.settings.mobile_image | default: desktop_image
+  assign desktop_video = section.settings.video
+  assign mobile_video = section.settings.mobile_video | default: desktop_video
+-%}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    --about-principles-background: {{ section.settings.background_color }};
+    --about-principles-desktop-padding-top: {{ section.settings.desktop_top_padding }}px;
+    --about-principles-desktop-padding-bottom: {{ section.settings.desktop_bottom_padding }}px;
+    --about-principles-mobile-padding-top: {{ section.settings.mobile_top_padding }}px;
+    --about-principles-mobile-padding-bottom: {{ section.settings.mobile_bottom_padding }}px;
+  }
+{%- endstyle -%}
+
+<section
+  class="about-quality-principles"
+  {% if section.settings.heading != blank %}
+    aria-labelledby="AboutQualityPrinciplesHeading-{{ section.id }}"
+  {% endif %}
+>
+  <div class="about-quality-principles__inner page-width">
+    <div class="about-quality-principles__media">
+      <div class="about-quality-principles__media-frame">
+        {%- render 'responsive-media-asset',
+          desktop_video: desktop_video,
+          mobile_video: mobile_video,
+          desktop_image: desktop_image,
+          mobile_image: mobile_image,
+          wrapper_class: 'about-quality-principles__asset',
+          picture_class: 'about-quality-principles__picture',
+          video_class: 'about-quality-principles__video',
+          image_class: 'about-quality-principles__image',
+          placeholder_class: 'about-quality-principles__placeholder',
+          desktop_width: 1400,
+          desktop_widths: '480, 720, 960, 1200, 1400',
+          desktop_sizes: '40vw',
+          mobile_widths: '480, 749, 980',
+          mobile_sizes: 'calc(100vw - 40px)',
+          desktop_media: '(min-width: 990px)',
+          mobile_media: '(max-width: 989px)',
+          show_placeholder: true
+        -%}
+      </div>
+    </div>
+
+    <div class="about-quality-principles__content">
+      {%- if section.settings.heading != blank -%}
+        <h2 class="about-quality-principles__heading heading-m" id="AboutQualityPrinciplesHeading-{{ section.id }}">
+          {{- section.settings.heading | escape -}}
+        </h2>
+      {%- endif -%}
+
+      {%- if section.blocks.size > 0 -%}
+        <ol class="about-quality-principles__list" role="list">
+          {%- for block in section.blocks -%}
+            <li class="about-quality-principles__item" {{ block.shopify_attributes }}>
+              {%- render 'about-quality-number-badge', number: forloop.index -%}
+              <div class="about-quality-principles__item-content">
+                {%- if block.settings.heading != blank -%}
+                  <h3 class="about-quality-principles__item-heading subtitle-2 subtitle-2--caps">
+                    {{- block.settings.heading | escape -}}
+                  </h3>
+                {%- endif -%}
+                {%- if block.settings.text != blank -%}
+                  <div class="about-quality-principles__text text-common">
+                    {{- block.settings.text -}}
+                  </div>
+                {%- endif -%}
+              </div>
+            </li>
+          {%- endfor -%}
+        </ol>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+    "name": "About Quality Principles",
+    "class": "about-quality-principles__section",
+    "max_blocks": 10,
+    "settings": [
+        {
+            "type": "header",
+            "content": "==== Color Settings ===="
+        },
+        {
+            "type": "color",
+            "id": "background_color",
+            "label": "Background Color",
+            "default": "#FFF9F0"
+        },
+        {
+            "type": "header",
+            "content": "==== Media Settings ===="
+        },
+        {
+            "type": "video",
+            "id": "video",
+            "label": "Desktop Video"
+        },
+        {
+            "type": "video",
+            "id": "mobile_video",
+            "label": "Mobile Video"
+        },
+        {
+            "type": "image_picker",
+            "id": "desktop_image",
+            "label": "Desktop Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "mobile_image",
+            "label": "Mobile Image"
+        },
+        {
+            "type": "header",
+            "content": "==== Content Settings ===="
+        },
+        {
+            "type": "text",
+            "id": "heading",
+            "label": "Heading Text",
+            "default": "We don't cut corners. Ever."
+        },
+        {
+            "type": "header",
+            "content": "==== Layout Settings ===="
+        },
+        {
+            "type": "number",
+            "id": "desktop_top_padding",
+            "label": "Desktop Top Padding",
+            "default": 128
+        },
+        {
+            "type": "number",
+            "id": "desktop_bottom_padding",
+            "label": "Desktop Bottom Padding",
+            "default": 68
+        },
+        {
+            "type": "number",
+            "id": "mobile_top_padding",
+            "label": "Mobile Top Padding",
+            "default": 60
+        },
+        {
+            "type": "number",
+            "id": "mobile_bottom_padding",
+            "label": "Mobile Bottom Padding",
+            "default": 32
+        }
+    ],
+    "blocks": [
+        {
+            "type": "principle",
+            "name": "Principle",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "heading",
+                    "label": "Heading",
+                    "default": "We start with clean ingredients"
+                },
+                {
+                    "type": "richtext",
+                    "id": "text",
+                    "label": "Text",
+                    "default": "<p>No byproducts, no fillers, no artificial anything. Just high-quality ingredients checked against the Environmental Working Group database – because what's in the bag matters.</p>"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "About Quality Principles",
+            "blocks": [
+                {
+                    "type": "principle"
+                },
+                {
+                    "type": "principle",
+                    "settings": {
+                        "heading": "We add in extra health benefits",
+                        "text": "<p>Sure, we could have just made a clean treat and stopped there. But of course a veterinarian and crazy pet mom would take it farther. Every product delivers a concrete science-backed health benefit on top of being a treat your pet loves.</p>"
+                    }
+                },
+                {
+                    "type": "principle",
+                    "settings": {
+                        "heading": "We undergo third-party testing",
+                        "text": "<p>We voluntarily test for efficacy, safety, and purity beyond what's required. We hold ourselves to a higher standard because our pets are worth it.</p>"
+                    }
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

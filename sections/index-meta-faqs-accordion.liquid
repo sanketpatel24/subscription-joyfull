@@ -1,0 +1,246 @@
+{%- if product.metafields.custom.global_faqs_accordions_selections.value != blank -%}
+    {%- assign faqs_accordions = product.metafields.custom.global_faqs_accordions_selections.value -%}
+{%- elsif section.settings.faqs_accordions != blank -%}
+    {%- assign faqs_accordions = section.settings.faqs_accordions -%}
+{%- endif -%}
+
+{%- liquid
+    assign background_color = section.settings.background_color    
+    assign information_color = section.settings.information_color
+    assign desktop_top_padding = section.settings.desktop_top_padding
+    assign desktop_bottom_padding = section.settings.desktop_bottom_padding
+    assign mobile_top_padding = section.settings.mobile_top_padding
+    assign mobile_bottom_padding = section.settings.mobile_bottom_padding
+    
+    assign main_heading_size = section.settings.main_heading_size
+    assign inner_background_color = section.settings.inner_background_color
+
+    assign main_left_heading_text = faqs_accordions.main_left_heading_text.value
+    assign select_faqs_accordions = faqs_accordions.select_faqs_accordions.value
+    assign left_custom_button_text = faqs_accordions.left_custom_button_text.value
+    assign left_custom_button_link = faqs_accordions.left_custom_button_link.value
+    assign left_custom_button_style = faqs_accordions.left_custom_button_style.value
+    assign custom_image_or_video = faqs_accordions.custom_image_or_video.value
+-%}
+
+{%- if main_left_heading_text != blank or select_faqs_accordions != blank or left_custom_button_link != blank or custom_image_or_video != blank -%}
+    {{ 'index-meta-faqs-accordion.css' | asset_url | stylesheet_tag }}
+    <script src="{{ 'index-meta-faqs-accordion.js' | asset_url }}" defer></script>
+
+    {%- style -%}
+        #shopify-section-{{ section.id }} .faqs {
+            {%- if background_color != blank -%}
+                --background-color: {{ background_color }};
+            {%- endif -%}
+            {%- if information_color != blank -%}
+                --information-color: {{ information_color }};
+            {%- endif -%}
+            {%- if desktop_top_padding != blank -%}
+                --desktop-top-padding: {{ desktop_top_padding }}px;
+            {%- endif -%}
+            {%- if desktop_bottom_padding != blank -%}
+                --desktop-bottom-padding: {{ desktop_bottom_padding }}px;
+            {%- endif -%}
+            {%- if mobile_top_padding != blank -%}
+                --mobile-top-padding: {{ mobile_top_padding }}px;
+            {%- endif -%}
+            {%- if mobile_bottom_padding != blank -%}
+                --mobile-bottom-padding: {{ mobile_bottom_padding }}px;
+            {%- endif -%}
+        }
+    {%- endstyle -%}
+
+    <section class="faqs">
+        <div class="page-width">
+            <div class="faqs__body">
+                <div class="faqs__side">
+                    {%- if main_left_heading_text != blank or select_faqs_accordions != blank or left_custom_button_link != blank -%}
+                        <div class="faqs__block" style="background: {% if inner_background_color != blank %}{{ inner_background_color }}{% else %}#FFEFC8{% endif %};">
+                            <div class="faqs__block-wrap">
+                                {%- if main_left_heading_text != blank -%}
+                                    <div class="faqs__title">
+                                        <div class="heading-m faqs__title-wrap">
+                                            <{{ main_heading_size }}>
+                                                {{ main_left_heading_text }}
+                                            </{{ main_heading_size }}>
+                                        </div>
+                                    </div>
+                                {%- endif -%}
+                                {%- if select_faqs_accordions != blank -%}
+                                    <div class="faqs__loops">
+                                        <div class="faqs__loops-wrap">
+                                            <div class="accordion">
+                                                <ul class="list-unstyled">
+                                                    {%- for select_faqs_accordions in select_faqs_accordions -%}
+                                                        {%- liquid
+                                                            assign question = select_faqs_accordions.question.value
+                                                            assign answers = select_faqs_accordions.answers
+                                                        -%}
+                                                        {%- if question != blank and answers != blank -%}
+                                                            <li>
+                                                                {%- if question != blank -%}
+                                                                    <div class="question">
+                                                                        <h3>{{ question }}</h3>
+                                                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 5.75L7.5 10.25L3 5.75" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                                                                    </div>
+                                                                {%- endif -%}
+                                                                {%- if answers != blank -%}
+                                                                    <div class="answer">
+                                                                        <div class="text-common accordion__answer-common">
+                                                                            {{ answers | metafield_tag }}
+                                                                        </div>
+                                                                    </div>
+                                                                {%- endif -%}
+                                                            </li>
+                                                        {%- endif -%}
+                                                    {%- endfor -%}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {%- endif -%}
+                                {%- if left_custom_button_text != blank and left_custom_button_link != blank -%}
+                                    <div class="faqs__links">
+                                        <div class="faqs__links-wrap">
+                                            {%- render 'button-common-style',                                                  
+                                                main_button_text: left_custom_button_text, 
+                                                main_button_link: left_custom_button_link,
+                                                main_button_style: left_custom_button_style
+                                            -%}
+                                        </div>
+                                    </div>
+                                {%- endif -%}
+                            </div>
+                        </div>
+                    {%- endif -%}
+                    {%- if custom_image_or_video != blank -%}
+                        <div class="faqs__media">
+                            <div class="faqs__media-wrap">
+                                {%- if custom_image_or_video contains "files" -%}
+                                    {% render 'responsive-image-lazyload',
+                                        desktop_image: custom_image_or_video,
+                                        mobile_image: custom_image_or_video,
+                                        class: 'custom--image',
+                                        sizes: '(max-width: 749px) 100vw, 100vw'
+                                    %}
+                                {%- else -%}
+                                    {% render 'responsive-video-lazyload',
+                                        video_url: custom_image_or_video,
+                                        class: 'video--desktop video--mobile'
+                                    %} 
+                                {%- endif -%}
+                            </div>
+                        </div>
+                    {%- endif -%}
+                </div>
+            </div>
+        </div>
+    </section>
+{%- endif -%}
+
+{% schema %}
+{
+    "name": "Index Meta FAQs Accordion",
+    "class": "index-meta-faqs-accordion__section",
+    "settings": [
+        {
+            "type": "header",
+            "content": "==== Color Settings ===="
+        },
+        {
+            "type": "color",
+            "id": "background_color",
+            "label": "Background Color"
+        },
+        {
+            "type": "color",
+            "id": "information_color",
+            "label": "Information Color"
+        },
+        {
+            "type": "color",
+            "id": "inner_background_color",
+            "label": "Inner Background Color"
+        },
+        {
+            "type": "header",
+            "content": "==== Layout Settings ===="
+        },
+        {
+            "type": "number",
+            "id": "desktop_top_padding",
+            "label": "Desktop Top Padding",
+            "default": 56
+        },
+        {
+            "type": "number",
+            "id": "desktop_bottom_padding",
+            "label": "Desktop Bottom Padding",
+            "default": 56
+        },
+        {
+            "type": "number",
+            "id": "mobile_top_padding",
+            "label": "Mobile Top Padding",
+            "default": 32
+        },
+        {
+            "type": "number",
+            "id": "mobile_bottom_padding",
+            "label": "Mobile Bottom Padding",
+            "default": 32
+        },
+        {
+            "type": "header",
+            "content": "==== Content Settings ===="
+        },
+        {
+            "type": "select",
+            "id": "main_heading_size",
+            "label": "Main Heading Size",
+            "default": "h2",
+            "options": [
+                {
+                    "label": "H1",
+                    "value": "h1"
+                },
+                {
+                    "label": "H2",
+                    "value": "h2"
+                },
+                {
+                    "label": "H3",
+                    "value": "h3"
+                },
+                {
+                    "label": "H4",
+                    "value": "h4"
+                },
+                {
+                    "label": "H5",
+                    "value": "h5"
+                },
+                {
+                    "label": "H6",
+                    "value": "h6"
+                },
+                {
+                    "label": "Span",
+                    "value": "span"
+                }
+            ]
+        },
+        {
+            "type": "metaobject",
+            "id": "faqs_accordions",
+            "label": "Select FAQs Accordions",
+            "metaobject_type": "global_faqs_accordions_selections"
+        }
+    ],
+    "presets": [
+        {
+            "name": "Index Meta FAQs Accordion"
+        }
+    ]
+}
+{% endschema %}

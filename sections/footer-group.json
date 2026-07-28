@@ -1,0 +1,43 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "footer",
+  "name": "Footer",
+  "sections": {
+    "footer_custom_instagram_4etr7g": {
+      "type": "footer-custom-instagram",
+      "name": "Footer Custom Instagram",
+      "settings": {
+        "background_color": "",
+        "information_color": "",
+        "desktop_top_padding": 56,
+        "desktop_bottom_padding": 0,
+        "mobile_top_padding": 12,
+        "mobile_bottom_padding": 0,
+        "instagram_item": "home-page"
+      }
+    },
+    "footer_m9NzUG": {
+      "type": "footer",
+      "name": "t:names.footer",
+      "settings": {
+        "section_width": "page-width",
+        "gap": 20,
+        "background_color": "{{ settings.color_palette.background }}",
+        "padding-block-start": 30,
+        "padding-block-end": 30
+      }
+    }
+  },
+  "order": [
+    "footer_custom_instagram_4etr7g",
+    "footer_m9NzUG"
+  ]
+}

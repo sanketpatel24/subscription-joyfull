@@ -1,0 +1,30 @@
+{%- doc -%}
+  Renders the decorative numbered badge used by the About quality principles section.
+
+  @param {number} number - The one-based principle number.
+
+  @example
+  {% render 'about-quality-number-badge', number: forloop.index %}
+{%- enddoc -%}
+
+<div class="about-quality-principles__number-badge" aria-hidden="true">
+  <svg
+    class="about-quality-principles__number-shape"
+    viewBox="0 0 78 79"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    focusable="false"
+  >
+    <path
+      class="about-quality-principles__number-fill"
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M50.2157 4.70063C60.2657 8.37088 68.878 16.1261 72.7763 26.1899C76.2783 35.0566 76.266 45.3449 72.3685 54.1003C70.3779 58.4549 67.2399 62.132 63.9221 65.5258C53.5888 75.6103 37.4563 78.6931 24.2544 72.6589C15.9739 68.9541 10.1195 64.3093 6.04146 56.0426C-5.83327 31.2978 12.2207 2.95191 39.6474 3.40119C43.2001 3.49795 46.7943 3.61546 50.2157 4.70063Z"
+    />
+    <path
+      class="about-quality-principles__number-outline"
+      d="M75.2232 25.236C78.9349 34.7745 78.5063 45.6678 74.3937 54.992C72.2787 59.6368 69.7696 64.1641 65.975 67.6616C54.902 78.4788 37.2627 81.3611 23.1762 75.1058C19.6926 73.5091 16.5269 71.3249 13.7483 68.6984C9.16566 64.3577 5.26732 59.2912 2.90343 53.3884C-7.68567 27.8211 12.0756 -0.732159 39.7234 0.0143316C43.5941 0.131835 47.292 1.32069 50.9622 2.4266C62.0421 5.73052 71.152 14.4396 75.2232 25.2291V25.236ZM72.7763 26.1899C68.878 16.1261 60.2657 8.37088 50.2157 4.70063C46.7943 3.61546 43.2001 3.49796 39.6474 3.40119C12.2207 2.95191 -5.83327 31.2978 6.04146 56.0426C10.1195 64.3093 15.9739 68.9541 24.2544 72.6589C37.4563 78.6931 53.5888 75.6103 63.9221 65.5258C67.2399 62.132 70.3779 58.4549 72.3685 54.1003C76.2669 45.3429 76.2807 35.051 72.7763 26.183V26.1899Z"
+    />
+  </svg>
+  <span class="about-quality-principles__number">{{ number }}</span>
+</div>

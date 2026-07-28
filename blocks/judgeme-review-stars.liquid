@@ -1,0 +1,73 @@
+{%- liquid
+  assign product = closest.product
+  assign judgeme_badge = product.metafields.judgeme.badge
+-%}
+
+{{ 'judgeme-review-stars.css' | asset_url | stylesheet_tag }}
+
+{%- if product != blank -%}
+  <div
+    class="product-judgeme-stars"
+    style="
+      --jdgm-product-star-color: {{ block.settings.star_color }};
+      --jdgm-product-text-color: {{ block.settings.text_color }};
+      --jdgm-product-star-size: {{ block.settings.star_size }}px;
+      --jdgm-product-text-size: {{ block.settings.text_size }}px;
+    "
+    {{ block.shopify_attributes }}
+  >
+    <div
+      class="jdgm-widget jdgm-preview-badge"
+      data-id="{{ product.id }}"
+      data-auto-install="false"
+    >
+      {{ judgeme_badge }}
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Judge.me review stars",
+  "tag": null,
+  "settings": [
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Star color",
+      "default": "#2F261C"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Review text color",
+      "default": "#2F261C"
+    },
+    {
+      "type": "range",
+      "id": "star_size",
+      "label": "Star size",
+      "min": 12,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Review text size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    }
+  ],
+  "presets": [
+    {
+      "name": "Judge.me review stars"
+    }
+  ]
+}
+{% endschema %}

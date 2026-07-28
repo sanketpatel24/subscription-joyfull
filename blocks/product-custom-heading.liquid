@@ -1,0 +1,52 @@
+{%- liquid
+  assign product = closest.product
+  assign selected_variant = product.selected_or_first_available_variant
+  assign custom_title = product.metafields.custom.product_display_title.value
+  assign supporting_text = product.metafields.custom.product_supporting_text.value
+  assign packet_count = product.metafields.custom.packet_count.value | plus: 0
+  assign display_title = custom_title | default: product.title
+
+  if selected_variant != blank and packet_count > 0
+    assign price_per_packet = selected_variant.price | divided_by: packet_count
+  endif
+-%}
+
+{{ 'product-custom-heading.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'product-custom-heading.js' | asset_url }}" type="module"></script>
+
+<product-custom-heading
+  class="product-custom-heading"
+  data-block-id="{{ block.id }}"
+  data-product-id="{{ product.id }}"
+  {{ block.shopify_attributes }}
+>
+  <h1 class="product-custom-heading__title">{{ display_title | escape }}</h1>
+
+  {%- if supporting_text != blank or price_per_packet != blank -%}
+    <div class="product-custom-heading__meta">
+      {%- if supporting_text != blank -%}
+        <span class="product-custom-heading__supporting">{{ supporting_text | escape }}</span>
+      {%- endif -%}
+
+      {%- if price_per_packet != blank -%}
+        <span class="product-custom-heading__packet-price">
+          {{ price_per_packet | money }}
+          <span>per packet</span>
+        </span>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+</product-custom-heading>
+
+{% schema %}
+{
+  "name": "Custom product heading",
+  "tag": null,
+  "settings": [],
+  "presets": [
+    {
+      "name": "Custom product heading"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,134 @@
+{%- liquid
+    assign main_background_color = block.settings.main_background_color
+    assign inner_background_color = block.settings.inner_background_color
+    assign main_information_color = block.settings.main_information_color
+
+    assign main_desktop_video = block.settings.main_desktop_video
+    assign main_desktop_image = block.settings.main_desktop_image
+    assign main_mobile_video = block.settings.main_mobile_video
+    assign main_mobile_image = block.settings.main_mobile_image
+
+    assign custom_text = block.settings.custom_text
+    assign heading_text = block.settings.heading_text
+    assign details_text = block.settings.details_text
+    assign button_text = block.settings.button_text
+    assign button_link = block.settings.button_link
+    assign button_style = block.settings.button_style
+-%}
+
+{%- style -%}
+    #shopify-section-{{ section.id }} .slideshow-box__{{ block.id }} {
+        {%- if main_background_color != blank -%}
+            --background-color: {{ main_background_color }};
+        {%- endif -%}
+        {%- if main_information_color != blank -%}
+            --information-color: {{ main_information_color }};
+        {%- endif -%}
+    }
+
+    #shopify-section-{{ section.id }} .slideshow-box__{{ block.id }} .slideshow-box__block-wrap {
+        {%- if inner_background_color != blank -%}
+            --inner-background-color: {{ inner_background_color }};
+        {%- endif -%}
+    }
+{%- endstyle -%}
+
+{%- if main_desktop_video != blank or main_desktop_image != blank or main_mobile_video != blank or main_mobile_image != blank or custom_text != blank or heading_text != blank or details_text != blank or button_link != blank -%}
+    <div class="swiper-slide slideshow-box slideshow-box__{{ block.id }}">
+        <div class="slideshow-box__body">
+            {%- if main_desktop_video != blank or main_desktop_image != blank or main_mobile_video != blank or main_mobile_image != blank -%}
+                {% if main_mobile_video != blank or main_mobile_image != blank %}
+                    {% assign video_class = "video--desktop" %}
+                {% else %}
+                    {% assign video_class = "video--desktop video--mobile" %}
+                {% endif %}
+                {%- if main_desktop_video != blank or main_desktop_image != blank -%}
+                    <div class="slideshow-box__media{% if main_mobile_video != blank or main_mobile_image != blank %} show--desktop{% endif %}">
+                        <div class="slideshow-box__media-wrap">
+                            {%- if main_desktop_video != blank -%}
+                                {% render 'responsive-video-lazyload',
+                                    video_url: main_desktop_video,
+                                    class: video_class
+                                %}
+                            {%- elsif main_desktop_image != blank -%}
+                                {% render 'responsive-image-lazyload',
+                                    desktop_image: main_desktop_image,
+                                    mobile_image: main_desktop_image,
+                                    class: 'custom--image',
+                                    sizes: '(max-width: 749px) 100vw, 100vw',
+                                    fetchpriority: 'high',
+                                    loading: 'eager',
+                                    rel: 'preload'                                                                            
+                                %}
+                            {%- endif -%}
+                        </div>
+                    </div>
+                {%- endif -%}
+                {%- if main_mobile_video != blank or main_mobile_image != blank -%}
+                    <div class="slideshow-box__media show--mobile">
+                        <div class="slideshow-box__media-wrap">
+                            {%- if main_mobile_video != blank -%}
+                                {% render 'responsive-video-lazyload',
+                                    video_url: main_mobile_video,
+                                    class: 'video--mobile'
+                                %}
+                            {%- elsif main_mobile_image != blank -%}
+                                {% render 'responsive-image-lazyload',
+                                    desktop_image: main_mobile_image,
+                                    mobile_image: main_mobile_image,
+                                    class: 'custom--image',
+                                    sizes: '(max-width: 749px) 100vw, 100vw',
+                                    fetchpriority: 'high',
+                                    loading: 'eager',
+                                    rel: 'preload'                                                                            
+                                %}
+                            {%- endif -%}
+                        </div>
+                    </div>
+                {%- endif -%}
+            {%- endif -%}
+            {%- if custom_text != blank or heading_text != blank or details_text != blank or button_link != blank -%}
+                <div class="slideshow-box__block">
+                    <div class="page-width">
+                        <div class="slideshow-box__block-wrap">
+                            {%- if custom_text != blank -%}
+                                <div class="title-small title-small--caps slideshow-box__block-wrap-text">
+                                    {{ custom_text | newline_to_br }}
+                                </div>                                    
+                            {%- endif -%}
+                            {%- if heading_text != blank -%}
+                                <div class="heading-l slideshow-box__block-wrap-title">
+                                    {%- if forloop_index == 1 -%}
+                                        <{{ main_heading_size }}>
+                                    {%- else -%}
+                                        <span>
+                                    {%- endif -%}
+                                            {{ heading_text | newline_to_br }}
+                                    {%- if forloop_index == 1 -%}
+                                        </{{ main_heading_size }}>
+                                    {%- else -%}
+                                        </span>
+                                    {%- endif -%}
+                                </div>                                    
+                            {%- endif -%}
+                            {%- if details_text != blank -%}
+                                <div class="text-common slideshow-box__block-wrap-info">
+                                    {{ details_text }}
+                                </div>                                    
+                            {%- endif -%}
+                            {%- if button_text != blank and button_link != blank -%}                                    
+                                <div class="slideshow-box__block-wrap-link">
+                                    {%- render 'button-common-style',                                                  
+                                        main_button_text: button_text, 
+                                        main_button_link: button_link,
+                                        main_button_style: button_style
+                                    -%}
+                                </div>                                    
+                            {%- endif -%}
+                        </div>
+                    </div>
+                </div>
+            {%- endif -%}
+        </div>
+    </div>
+{%- endif -%}

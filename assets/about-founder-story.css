@@ -1,0 +1,173 @@
+.about-founder-story {
+  position: relative;
+  z-index: var(--layer-flat);
+  min-height: calc(var(--spacing-120) * 4 - var(--spacing-12));
+  padding-block: var(--about-founder-mobile-padding-top) var(--about-founder-mobile-padding-bottom);
+  color: var(--color-text-body);
+  background: var(--about-founder-background, var(--color-creme));
+}
+
+.about-founder-story::after {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  z-index: var(--layer-raised);
+  width: 100%;
+  height: clamp(var(--spacing-18), 5vw, var(--spacing-72));
+  background: var(--about-founder-shape-background, var(--color-creme));
+  clip-path: polygon(0 0,
+      100% 0,
+      100% 72%,
+      97.5% 68.5%,
+      95% 65%,
+      92.5% 61%,
+      90% 57%,
+      87.5% 53%,
+      85% 49%,
+      82.5% 46%,
+      80% 43%,
+      77.5% 41.5%,
+      75% 40%,
+      72.5% 39.5%,
+      70% 39%,
+      67.5% 40%,
+      65% 41%,
+      62.5% 43.5%,
+      60% 46%,
+      57.5% 50%,
+      55% 54%,
+      52.5% 59%,
+      50% 64%,
+      47.5% 70%,
+      45% 76%,
+      42.5% 82%,
+      40% 88%,
+      37.5% 92%,
+      35% 96%,
+      32.5% 98%,
+      30% 100%,
+      27.5% 100%,
+      25% 100%,
+      22.5% 99%,
+      20% 98%,
+      17.5% 95.5%,
+      15% 93%,
+      12.5% 89.5%,
+      10% 86%,
+      7.5% 82.5%,
+      5% 79%,
+      2.5% 75.5%,
+      0 72%);
+  transform: translateY(100%);
+  pointer-events: none;
+  content: '';
+}
+
+.about-founder-story__inner {
+  position: relative;
+  z-index: var(--layer-heightened);
+  min-height: inherit;
+  max-width: 1920px;
+  margin: 0 auto;
+}
+
+.about-founder-story__heading {
+  max-width: calc(var(--spacing-120) * 3 - var(--spacing-25));
+  margin: 0 auto;
+  padding-block-start: var(--spacing-35);
+  letter-spacing: var(--letter-spacing-normal);
+  text-align: center;
+  line-height: calc(var(--line-height-s1) * 0.875);
+}
+
+.about-founder-story__media {
+  --about-founder-media-padding-bottom: 101.5%;
+  position: absolute;
+  inset-block-start: calc(var(--spacing-120) * 2 + var(--spacing-26));
+  inset-inline-end: 50.5%;
+  width: calc(var(--spacing-120) * 2);
+  transform: translateX(50%);
+}
+
+.about-founder-story__media-frame {
+  position: relative;
+  box-sizing: content-box;
+  width: var(--about-founder-media-padding-bottom);
+  height: 0;
+  margin-inline: auto;
+  padding-bottom: var(--about-founder-media-padding-bottom);
+}
+
+.about-founder-story__media-clip {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.about-founder-story__asset,
+.about-founder-story__image,
+.about-founder-story__video {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.about-founder-story__icon {
+  position: absolute;
+  inset-block-start: 64%;
+  inset-inline-start: calc(var(--spacing-36) * -1);
+  width: var(--spacing-30);
+  height: auto;
+}
+
+.about-founder-story__icon-image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@media (min-width: 990px) {
+  .about-founder-story {
+    min-height: calc(var(--spacing-120) * 3 - var(--spacing-8));
+    padding-block: var(--about-founder-desktop-padding-top) var(--about-founder-desktop-padding-bottom);
+  }
+
+  .about-founder-story__heading {
+    max-width: calc(var(--spacing-120) * 4 + var(--spacing-64));
+    margin-inline: 0;
+    padding-block-start: var(--spacing-87);
+    text-align: start;
+    line-height: var(--line-height-heading);
+  }
+
+  .about-founder-story__media {
+    --about-founder-media-padding-bottom: 111%;
+    inset-block-start: var(--spacing-32);
+    inset-inline-start: 58.3%;
+    inset-inline-end: auto;
+    width: min(34vw, calc(var(--spacing-120) * 4 + var(--spacing-64)));
+    transform: none;
+  }
+
+  .about-founder-story__icon {
+    inset-block-start: 41%;
+    inset-inline-start: calc(var(--spacing-40) * -2);
+    width: var(--spacing-40);
+  }
+}
+
+@media (min-width: 990px) and (max-width: 1199px) {
+  .about-founder-story__media {
+    inset-inline-start: 63.3%;
+    --about-founder-media-padding-bottom: 100%;
+  }
+}
+@media (min-width: 750px) and (max-width: 992px) {
+  .about-founder-story__heading{
+    font-size: 32px;
+  }
+}

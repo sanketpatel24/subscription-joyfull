@@ -1,0 +1,363 @@
+{%- liquid
+    assign background_color = section.settings.background_color
+    assign information_color = section.settings.information_color
+    assign desktop_top_padding = section.settings.desktop_top_padding
+    assign desktop_bottom_padding = section.settings.desktop_bottom_padding
+    assign mobile_top_padding = section.settings.mobile_top_padding
+    assign mobile_bottom_padding = section.settings.mobile_bottom_padding
+
+    assign media_position = section.settings.media_position
+
+    assign main_common_video = section.settings.main_common_video
+    assign main_desktop_image = section.settings.main_desktop_image
+    assign main_mobile_image = section.settings.main_mobile_image
+
+    assign left_common_video = section.settings.left_common_video
+    assign left_desktop_image = section.settings.left_desktop_image
+    assign left_mobile_image = section.settings.left_mobile_image
+
+    assign heading_size = section.settings.heading_size
+    assign heading_text = section.settings.heading_text
+    assign details_text_1 = section.settings.details_text_1
+    assign details_text_2 = section.settings.details_text_2
+    assign button_text = section.settings.button_text
+    assign button_link = section.settings.button_link
+    assign button_style = section.settings.button_style
+-%}
+
+{%- if left_common_video != blank or left_desktop_image != blank or left_mobile_image != blank or heading_text != blank or details_text_1 != blank or details_text_2 != blank or button_link != blank or section.blocks.size > 0 -%}
+    {{ 'index-media-with-content.css' | asset_url | stylesheet_tag }}
+    <script src="{{ 'index-media-with-content.js' | asset_url }}" defer></script>
+
+    {%- style -%}
+        #shopify-section-{{ section.id }} .media-content {
+            {%- if background_color != blank -%}
+                --background-color: {{ background_color }};
+            {%- endif -%}
+            {%- if information_color != blank -%}
+                --information-color: {{ information_color }};
+            {%- endif -%}
+            {%- if desktop_top_padding != blank -%}
+                --desktop-top-padding: {{ desktop_top_padding }}px;
+            {%- endif -%}
+            {%- if desktop_bottom_padding != blank -%}
+                --desktop-bottom-padding: {{ desktop_bottom_padding }}px;
+            {%- endif -%}
+            {%- if mobile_top_padding != blank -%}
+                --mobile-top-padding: {{ mobile_top_padding }}px;
+            {%- endif -%}
+            {%- if mobile_bottom_padding != blank -%}
+                --mobile-bottom-padding: {{ mobile_bottom_padding }}px;
+            {%- endif -%}
+        }
+    {%- endstyle -%}
+
+    <section class="media-content{% if media_position == 'right' %} media-content__reverse{% endif %}">
+        <div class="media-content__body">
+            {%- if main_common_video != blank or main_desktop_image != blank or main_mobile_image != blank -%}
+                <div class="media-content__media">
+                    <div class="media-content__media-wrap">
+                        {%- if main_common_video != blank -%}
+                            {% render 'responsive-video-lazyload',
+                                video_url: main_common_video,
+                                class: 'video--desktop video--mobile'
+                            %}
+                        {%- elsif main_desktop_image != blank and main_mobile_image != blank -%}
+                            {% render 'responsive-image-lazyload',
+                                desktop_image: main_desktop_image,
+                                mobile_image: main_mobile_image,
+                                class: 'custom--image',
+                                sizes: '(max-width: 749px) 100vw, 100vw'
+                            %}
+                        {%- endif -%}
+                    </div>
+                </div>
+            {%- endif -%}
+            {%- if left_common_video != blank or left_desktop_image != blank or left_mobile_image != blank or heading_text != blank or details_text_1 != blank or details_text_2 != blank or button_link != blank or section.blocks.size > 0 -%}
+                <div class="media-content__detail">
+                    <div class="page-width">
+                        <div class="media-content__detail-wrap">
+                            {%- if left_common_video != blank or left_desktop_image != blank or left_mobile_image != blank -%}
+                                <div class="media-content__left">
+                                    <div class="media-content__left-media">
+                                        {%- if left_common_video != blank -%}
+                                            {% render 'responsive-video-lazyload',
+                                                video_url: left_common_video,
+                                                class: 'video--desktop video--mobile'
+                                            %}
+                                        {%- elsif left_desktop_image != blank and left_mobile_image != blank -%}
+                                            {% render 'responsive-image-lazyload',
+                                                desktop_image: left_desktop_image,
+                                                mobile_image: left_mobile_image,
+                                                class: 'custom--image',
+                                                sizes: '(max-width: 749px) 100vw, 100vw'
+                                            %}
+                                        {%- endif -%}
+                                    </div>
+                                </div>
+                            {%- endif -%}
+                            {%- if heading_text != blank or details_text_1 != blank or details_text_2 != blank or button_link != blank or section.blocks.size > 0 -%}
+                                <div class="media-content__right">
+                                    <div class="media-content__right-wrap">
+                                        {%- if heading_text != blank -%}
+                                            <div class="heading-m media-content__title">
+                                                <{{ heading_size }}>
+                                                    {{ heading_text | newline_to_br }}
+                                                </{{ heading_size }}>
+                                            </div>
+                                        {%- endif -%}
+                                        {%- if details_text_1 != blank -%}
+                                            <div class="text-common media-content__detail{% if details_text_2 != blank %} show--desktop{% endif %}">
+                                                {{ details_text_1 }}
+                                            </div>
+                                        {%- endif -%}
+                                        {%- if details_text_2 != blank -%}
+                                            <div class="text-common media-content__detail show--mobile">
+                                                {{ details_text_2 }}
+                                            </div>
+                                        {%- endif -%}
+                                        {%- if button_text != blank and button_link != blank -%}
+                                            <div class="media-content__button">
+                                                {%- render 'button-common-style',
+                                                    main_button_text: button_text,
+                                                    main_button_link: button_link,
+                                                    main_button_style: button_style
+                                                -%}
+                                            </div>
+                                        {%- endif -%}
+                                        {%- if section.blocks.size > 0 -%}
+                                            <div class="media-content__loop">
+                                                {%- for block in section.blocks -%}
+                                                    {%- assign logo_image = block.settings.logo_image -%}
+                                                    {%- if logo_image != blank -%}
+                                                        <div class="media-content__logo">
+                                                            {% render 'responsive-image-lazyload',
+                                                                desktop_image: logo_image,
+                                                                mobile_image: logo_image,
+                                                                class: 'custom--icon',
+                                                                sizes: '(max-width: 749px) 100vw, 100vw',
+                                                                alt: 'custom--image'
+                                                            %}
+                                                        </div>
+                                                    {%- endif -%}
+                                                {%- endfor -%}
+                                            </div>
+                                        {%- endif -%}
+                                    </div>
+                                </div>
+                            {%- endif -%}
+                        </div>
+                    </div>
+                </div>
+            {%- endif -%}
+        </div>
+    </section>
+{%- endif -%}
+
+{% schema %}
+{
+    "name": "Index Media With Content",
+    "class": "index-media-with-content__section",
+    "settings": [
+        {
+            "type": "header",
+            "content": "==== Color Settings ===="
+        },
+        {
+            "type": "color",
+            "id": "background_color",
+            "label": "Background Color",
+            "default": "#D2C6B7"
+        },
+        {
+            "type": "color",
+            "id": "information_color",
+            "label": "Information Color"
+        },
+        {
+            "type": "header",
+            "content": "==== Layout Settings ===="
+        },
+        {
+            "type": "number",
+            "id": "desktop_top_padding",
+            "label": "Desktop Top Padding",
+            "default": 56
+        },
+        {
+            "type": "number",
+            "id": "desktop_bottom_padding",
+            "label": "Desktop Bottom Padding",
+            "default": 56
+        },
+        {
+            "type": "number",
+            "id": "mobile_top_padding",
+            "label": "Mobile Top Padding",
+            "default": 32
+        },
+        {
+            "type": "number",
+            "id": "mobile_bottom_padding",
+            "label": "Mobile Bottom Padding",
+            "default": 40
+        },
+        {
+            "type": "select",
+            "id": "media_position",
+            "label": "Media Position",
+            "options": [
+                {
+                    "value": "left",
+                    "label": "Left"
+                },
+                {
+                    "value": "right",
+                    "label": "Right"
+                }
+            ],
+            "default": "left"
+        },
+        {
+            "type": "header",
+            "content": "==== Media Settings ===="
+        },
+        {
+            "type": "video",
+            "id": "main_common_video",
+            "label": "Add Main Common Video"
+        },
+        {
+            "type": "image_picker",
+            "id": "main_desktop_image",
+            "label": "Add Main Desktop Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "main_mobile_image",
+            "label": "Add Main Mobile Image"
+        },
+        {
+            "type": "header",
+            "content": "==== Left Side Settings ===="
+        },
+        {
+            "type": "video",
+            "id": "left_common_video",
+            "label": "Add Left Common Video"
+        },
+        {
+            "type": "image_picker",
+            "id": "left_desktop_image",
+            "label": "Add Left Desktop Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "left_mobile_image",
+            "label": "Add Left Mobile Image"
+        },
+        {
+            "type": "header",
+            "content": "==== Content Settings ===="
+        },
+        {
+            "type": "select",
+            "id": "heading_size",
+            "label": "Heading Size",
+            "default": "h2",
+            "options": [
+                {
+                    "label": "H1",
+                    "value": "h1"
+                },
+                {
+                    "label": "H2",
+                    "value": "h2"
+                },
+                {
+                    "label": "H3",
+                    "value": "h3"
+                },
+                {
+                    "label": "H4",
+                    "value": "h4"
+                },
+                {
+                    "label": "H5",
+                    "value": "h5"
+                },
+                {
+                    "label": "H6",
+                    "value": "h6"
+                },
+                {
+                    "label": "Span",
+                    "value": "span"
+                }
+            ]
+        },
+        {
+            "type": "textarea",
+            "id": "heading_text",
+            "label": "Heading Text",
+            "default": "Lorem Ipsum is simply dummy text"
+        },
+        {
+            "type": "richtext",
+            "id": "details_text_1",
+            "label": "Details Text-1",
+            "default": "<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>"
+        },
+        {
+            "type": "richtext",
+            "id": "details_text_2",
+            "label": "Details Text-2(Mobile Optional)"
+        },
+        {
+            "type": "text",
+            "id": "button_text",
+            "label": "Button Text",
+            "default": "Our Story"
+        },
+        {
+            "type": "url",
+            "id": "button_link",
+            "label": "Button Link"
+        },
+        {
+            "type": "select",
+            "id": "button_style",
+            "label": "Button Style",
+            "default": "secondary-button",
+            "options": [
+                {
+                    "label": "Primary Button",
+                    "value": "primary-button"
+                },
+                {
+                    "label": "Secondary Button",
+                    "value": "secondary-button"
+                }
+            ]
+        }
+    ],
+    "blocks": [
+        {
+            "type": "image",
+            "name": "Image",
+            "settings": [
+                {
+                    "type": "image_picker",
+                    "id": "logo_image",
+                    "label": "Logo Image"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Index Media With Content"
+        }
+    ]
+}
+{% endschema %}

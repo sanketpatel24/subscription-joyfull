@@ -1,0 +1,207 @@
+.about-quality-principles {
+  padding-block: var(--about-principles-mobile-padding-top) var(--about-principles-mobile-padding-bottom);
+  background: var(--about-principles-background, var(--color-off-white));
+}
+
+.about-quality-principles__inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-16);
+  max-width: 1920px;
+  margin: 0 auto;
+}
+
+.about-quality-principles__media {
+  width: 100%;
+  margin-block-start: var(--spacing-6);
+}
+
+.about-quality-principles__media-frame {
+  box-sizing: content-box;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--spacing-12);
+  background: var(--color-sand);
+}
+
+.about-quality-principles__asset {
+  position: relative;
+  padding-bottom: 108%;
+  height: 100%;
+}
+
+.about-quality-principles__image,
+.about-quality-principles__video,
+.about-quality-principles__placeholder {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.about-quality-principles__content {
+  display: contents;
+}
+
+.about-quality-principles__heading {
+  order: -2;
+  max-width: calc(var(--spacing-120) * 2);
+  margin: 0 auto var(--spacing-8);
+  letter-spacing: var(--letter-spacing-normal);
+  color: var(--color-black);
+  text-align: center;
+}
+
+.about-quality-principles__list {
+  display: grid;
+  order: -1;
+  gap: var(--spacing-22);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.about-quality-principles__item {
+  display: grid;
+  grid-template-columns: var(--spacing-37) 1fr;
+  gap: var(--spacing-4) var(--spacing-8);
+  align-items: start;
+}
+
+.about-quality-principles__number-badge {
+  position: relative;
+  width: var(--spacing-39);
+  height: var(--spacing-40);
+}
+
+.about-quality-principles__number-shape {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.about-quality-principles__number-fill {
+  fill: var(--color-azure);
+}
+
+.about-quality-principles__number-outline {
+  fill: var(--color-onyx);
+}
+
+
+.about-quality-principles__number {
+  position: absolute;
+  top: calc(var(--spacing-9) * -1);
+  /* top: calc(var(--spacing-3) * -1); */
+  right: 0;
+  bottom: 0;
+  left: calc(var(--spacing-4) * -1);
+  display: grid;
+  place-items: center;
+  color: var(--color-off-white);
+  font-family: var(--font-burned-pancakes--family);
+  font-size: var(--font-size-32);
+  line-height: var(--line-height-tight);
+}
+
+.about-quality-principles__item-content {
+  display: contents;
+}
+
+.about-quality-principles__item-heading {
+  align-self: center;
+  margin: 0;
+  font-size: var(--font-size-16);
+  font-family: var(--font-body--family);
+  color: var(--color-black);
+}
+
+.about-quality-principles__text {
+  grid-column: 1 / -1;
+  margin-block-start: var(--spacing-4);
+}
+
+.about-quality-principles__text p {
+  margin: 0;
+  color: var(--color-black);
+}
+
+@media (min-width: 990px) {
+  .about-quality-principles {
+    padding-block: var(--about-principles-desktop-padding-top) var(--about-principles-desktop-padding-bottom);
+  }
+
+  .about-quality-principles__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--spacing-56);
+    align-items:center;
+  }
+
+  .about-quality-principles__media {
+    width: auto;
+    margin-block-start: 0;
+  }
+
+  .about-quality-principles__media-frame {
+    border-radius: var(--spacing-16);
+  }
+
+  .about-quality-principles__content {
+    display: block;
+    align-self: center;
+    transform: translateY(calc(var(--spacing-8) * -1));
+    padding-block: var(--spacing-120);
+    margin-block-start: var(--spacing-17);
+  }
+
+  .about-quality-principles__heading {
+    max-width: none;
+    margin: 0 0 var(--spacing-33);
+    text-align:start;
+  }
+
+  .about-quality-principles__list {
+    gap: var(--spacing-40);
+    max-width: calc(var(--spacing-120) * 5 + var(--spacing-35));
+  }
+
+  .about-quality-principles__item {
+    grid-template-columns: var(--spacing-80) 1fr;
+    gap: var(--spacing-22);
+    align-items: center;
+  }
+
+  .about-quality-principles__number-badge {
+    width: var(--spacing-77);
+    height: var(--spacing-80);
+  }
+
+  .about-quality-principles__number {
+    font-size: var(--font-size-49);
+    top: calc(var(--spacing-11) * -1);
+    right: 0;
+    bottom: 0;
+  }
+
+  .about-quality-principles__item-content {
+    display: block;
+  }
+
+  .about-quality-principles__item-heading {
+    margin: 0 0 var(--spacing-8);
+
+  }
+
+  .about-quality-principles__text {
+    margin-block-start: 0;
+  }
+}
+@media (min-width: 990px) and (max-width: 1190px) {
+.about-quality-principles__content{
+  padding-block:0;
+}
+}

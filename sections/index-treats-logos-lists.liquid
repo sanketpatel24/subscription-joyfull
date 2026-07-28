@@ -1,0 +1,398 @@
+{%- liquid
+    assign background_color = section.settings.background_color
+    assign information_color = section.settings.information_color
+    assign desktop_top_padding = section.settings.desktop_top_padding
+    assign desktop_bottom_padding = section.settings.desktop_bottom_padding
+    assign mobile_top_padding = section.settings.mobile_top_padding
+    assign mobile_bottom_padding = section.settings.mobile_bottom_padding
+
+    assign main_common_video = section.settings.main_common_video
+    assign main_desktop_image = section.settings.main_desktop_image
+    assign main_mobile_image = section.settings.main_mobile_image
+
+    assign main_heading_size = section.settings.main_heading_size
+    assign main_heading_text = section.settings.main_heading_text    
+    assign left_desktop_video = section.settings.left_desktop_video
+    assign left_desktop_image = section.settings.left_desktop_image
+    assign logo_custom_image = section.settings.logo_custom_image
+    assign right_desktop_video = section.settings.right_desktop_video
+    assign right_desktop_image = section.settings.right_desktop_image
+    assign top_mobile_video = section.settings.top_mobile_video
+    assign top_mobile_image = section.settings.top_mobile_image
+
+    assign inner_heading_text = section.settings.inner_heading_text
+-%}
+
+{%- if main_heading_text != blank or left_desktop_video != blank or left_desktop_image != blank or logo_custom_image != blank or right_desktop_video != blank or right_desktop_image != blank or top_mobile_video != blank or top_mobile_image != blank or section.blocks.size > 0 -%}
+    {{ 'index-treats-logos-lists.css' | asset_url | stylesheet_tag }}
+    <script src="{{ 'index-treats-logos-lists.js' | asset_url }}" defer></script>
+
+    {%- style -%}
+        #shopify-section-{{ section.id }} .treats {
+            {%- if background_color != blank -%}
+                --background-color: {{ background_color }};
+            {%- endif -%}
+            {%- if information_color != blank -%}
+                --information-color: {{ information_color }};
+            {%- endif -%}
+            {%- if desktop_top_padding != blank -%}
+                --desktop-top-padding: {{ desktop_top_padding }}px;
+            {%- endif -%}
+            {%- if desktop_bottom_padding != blank -%}
+                --desktop-bottom-padding: {{ desktop_bottom_padding }}px;
+            {%- endif -%}
+            {%- if mobile_top_padding != blank -%}
+                --mobile-top-padding: {{ mobile_top_padding }}px;
+            {%- endif -%}
+            {%- if mobile_bottom_padding != blank -%}
+                --mobile-bottom-padding: {{ mobile_bottom_padding }}px;
+            {%- endif -%}
+        }
+    {%- endstyle -%}
+
+    <section class="treats">
+        <div class="treats__body">
+            {%- if main_common_video != blank or main_desktop_image != blank or main_mobile_image != blank -%}
+                <div class="treats__media">
+                    <div class="treats__media-wrap">
+                        {%- if main_common_video != blank -%}
+                            {% render 'responsive-video-lazyload',
+                                video_url: main_common_video,
+                                class: 'video--desktop video--mobile'
+                            %}
+                        {%- elsif main_desktop_image != blank and main_mobile_image != blank -%}
+                            {% render 'responsive-image-lazyload',
+                                desktop_image: main_desktop_image,
+                                mobile_image: main_mobile_image,
+                                class: 'custom--image',
+                                sizes: '(max-width: 749px) 100vw, 100vw'
+                            %}
+                        {%- endif -%}
+                    </div>
+                </div>
+            {%- endif -%}
+            {%- if main_heading_text != blank or left_desktop_video != blank or left_desktop_image != blank or logo_custom_image != blank or right_desktop_video != blank or right_desktop_image != blank or top_mobile_video != blank or top_mobile_image != blank -%}
+                <div class="treats__detail">
+                    <div class="page-width">
+                        <div class="treats__detail-wrap">
+                            {%- if main_heading_text != blank -%}
+                                <div class="treats__title">
+                                    <div class="heading-l treats__title-text">
+                                        <{{ main_heading_size }}>
+                                            {{ main_heading_text | newline_to_br }}
+                                        </{{ main_heading_size }}>
+                                    </div>
+                                </div>
+                            {%- endif -%}
+                            {%- if left_desktop_video != blank or left_desktop_image != blank -%}
+                                <div class="treats__left show--desktop">
+                                    <div class="treats__left-media">
+                                        {%- if left_desktop_video != blank -%}
+                                            {% render 'responsive-video-lazyload',
+                                                video_url: left_desktop_video,
+                                                class: 'video--desktop video--mobile'
+                                            %}
+                                        {%- elsif left_desktop_image != blank -%}
+                                            {% render 'responsive-image-lazyload',
+                                                desktop_image: left_desktop_image,
+                                                mobile_image: left_desktop_image,
+                                                class: 'custom--image',
+                                                sizes: '(max-width: 749px) 100vw, 100vw'
+                                            %}
+                                        {%- endif -%}
+                                    </div>
+                                </div>
+                            {%- endif -%}
+                            {%- if logo_custom_image != blank -%}
+                                <div class="treats__image show--desktop">
+                                    <div class="treats__image-wrap">
+                                        {% render 'responsive-image-lazyload',
+                                            desktop_image: logo_custom_image,
+                                            mobile_image: logo_custom_image,
+                                            class: 'custom--image',
+                                            sizes: '(max-width: 749px) 100vw, 100vw'
+                                        %}
+                                    </div>
+                                </div>
+                            {%- endif -%}
+                            {%- if right_desktop_video != blank or right_desktop_image != blank -%}
+                                <div class="treats__right show--desktop">
+                                    <div class="treats__right-media">
+                                        {%- if right_desktop_video != blank -%}
+                                            {% render 'responsive-video-lazyload',
+                                                video_url: right_desktop_video,
+                                                class: 'video--desktop video--mobile'
+                                            %}
+                                        {%- elsif right_desktop_image != blank -%}
+                                            {% render 'responsive-image-lazyload',
+                                                desktop_image: right_desktop_image,
+                                                mobile_image: right_desktop_image,
+                                                class: 'custom--image',
+                                                sizes: '(max-width: 749px) 100vw, 100vw'
+                                            %}
+                                        {%- endif -%}
+                                    </div>
+                                </div>
+                            {%- endif -%}
+                            {%- if top_mobile_video != blank or top_mobile_image != blank -%}
+                                <div class="treats__mobile show--mobile">
+                                    <div class="treats__mobile-wrap">
+                                        {%- if top_mobile_video != blank -%}
+                                            {% render 'responsive-video-lazyload',
+                                                video_url: top_mobile_video,
+                                                class: 'video--desktop video--mobile'
+                                            %}
+                                        {%- elsif top_mobile_image != blank -%}
+                                            {% render 'responsive-image-lazyload',
+                                                desktop_image: top_mobile_image,
+                                                mobile_image: top_mobile_image,
+                                                class: 'custom--image',
+                                                sizes: '(max-width: 749px) 100vw, 100vw'
+                                            %}
+                                        {%- endif -%}
+                                    </div>
+                                </div>
+                            {%- endif -%}
+                        </div>
+                    </div>
+                </div>
+            {%- endif -%}
+            {%- if section.blocks.size > 0 -%}
+                <div class="treats__block">
+                    <div class="page-width">
+                        <div class="treats__block-wrap">
+                            {%- if inner_heading_text != blank -%}
+                                <div class="title-small title-small--caps treats__text">
+                                    {{ inner_heading_text | newline_to_br }}
+                                </div>
+                            {%- endif -%}
+                            {%- if section.blocks.size > 0 -%}
+                                <div class="treats__loop">
+                                    <div class="index-treats-logos-lists-marquee">
+                                        <span>
+                                            {%- for block in section.blocks -%}
+                                                {%- assign main_logo_image = block.settings.main_logo_image -%}
+                                                {%- if main_logo_image != blank -%}
+                                                    <div class="treats__logo">
+                                                        <div class="treats__logo-wrap">
+                                                            {% render 'responsive-image-lazyload',
+                                                                desktop_image: main_logo_image,
+                                                                mobile_image: main_logo_image,
+                                                                class: 'custom--image',
+                                                                sizes: '(max-width: 749px) 100vw, 100vw'
+                                                            %}
+                                                        </div>
+                                                    </div>
+                                                {%- endif -%}
+                                            {%- endfor -%}
+                                        </span>
+                                    </div>
+                                </div>
+                            {%- endif -%}
+                        </div>
+                    </div>
+                </div>
+            {%- endif -%}
+        </div>
+    </section>
+{%- endif -%}
+
+{% schema %}
+{
+    "name": "Index Treats Logos Lists",
+    "class": "index-treats-logos-lists__section",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Color Settings"
+        },
+        {
+            "type": "color",
+            "id": "background_color",
+            "label": "Background Color"
+        },
+        {
+            "type": "color",
+            "id": "information_color",
+            "label": "Information Color"
+        },
+        {
+            "type": "header",
+            "content": "Layout Settings"
+        },
+        {
+            "type": "number",
+            "id": "desktop_top_padding",
+            "label": "Desktop Top Padding",
+            "default": 67
+        },
+        {
+            "type": "number",
+            "id": "desktop_bottom_padding",
+            "label": "Desktop Bottom Padding",
+            "default": 56
+        },
+        {
+            "type": "number",
+            "id": "mobile_top_padding",
+            "label": "Mobile Top Padding",
+            "default": 91
+        },
+        {
+            "type": "number",
+            "id": "mobile_bottom_padding",
+            "label": "Mobile Bottom Padding",
+            "default": 24
+        },
+        {
+            "type": "header",
+            "content": "Media Settings"
+        },
+        {
+            "type": "video",
+            "id": "main_common_video",
+            "label": "Main Common Video"
+        },
+        {
+            "type": "image_picker",
+            "id": "main_desktop_image",
+            "label": "Main Desktop Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "main_mobile_image",
+            "label": "Main Mobile Image"
+        },
+        {
+            "type": "header",
+            "content": "Desktop Settings"
+        },
+        {
+            "type": "video",
+            "id": "left_desktop_video",
+            "label": "Left Desktop Video"
+        },
+        {
+            "type": "image_picker",
+            "id": "left_desktop_image",
+            "label": "Left Desktop Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "logo_custom_image",
+            "label": "Logo Custom Image"
+        },
+        {
+            "type": "video",
+            "id": "right_desktop_video",
+            "label": "Right Desktop Video"
+        },
+        {
+            "type": "image_picker",
+            "id": "right_desktop_image",
+            "label": "Right Desktop Image"
+        },
+        {
+            "type": "header",
+            "content": "Mobile Settings"
+        },
+        {
+            "type": "video",
+            "id": "top_mobile_video",
+            "label": "Top Mobile Video"
+        },
+        {
+            "type": "image_picker",
+            "id": "top_mobile_image",
+            "label": "Top Mobile Image"
+        },
+        {
+            "type": "header",
+            "content": "Content Settings"
+        },
+        {
+            "type": "select",
+            "id": "main_heading_size",
+            "label": "Main Heading Size",
+            "default": "h2",
+            "options": [
+                {
+                    "label": "H1",
+                    "value": "h1"
+                },
+                {
+                    "label": "H2",
+                    "value": "h2"
+                },
+                {
+                    "label": "H3",
+                    "value": "h3"
+                },
+                {
+                    "label": "H4",
+                    "value": "h4"
+                },
+                {
+                    "label": "H5",
+                    "value": "h5"
+                },
+                {
+                    "label": "H6",
+                    "value": "h6"
+                },
+                {
+                    "label": "Span",
+                    "value": "span"
+                }
+            ]
+        },
+        {
+            "type": "textarea",
+            "id": "main_heading_text",
+            "label": "Main Heading Text",
+            "default": "Vet-formulated treats and supplements even picky eaters go feral for"
+        },
+        {
+            "type": "textarea",
+            "id": "inner_heading_text",
+            "label": "Inner Heading Text",
+            "default": "As Seen In"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "logo",
+            "name": "Logo",
+            "settings": [
+                {
+                    "type": "image_picker",
+                    "id": "main_logo_image",
+                    "label": "Main Logo Image"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Index Treats Logos Lists",
+            "blocks": [
+                {
+                    "type": "logo"
+                },
+                {
+                    "type": "logo"
+                },
+                {
+                    "type": "logo"
+                },
+                {
+                    "type": "logo"
+                },
+                {
+                    "type": "logo"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

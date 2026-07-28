@@ -1,0 +1,88 @@
+{%- comment -%}
+  Renders responsive desktop and mobile Shopify images with native picture source selection.
+
+  Usage:
+  {% render 'responsive-image-lazyload',
+    desktop_image: section.settings.desktop_image,
+    mobile_image: section.settings.mobile_image,
+    class: 'feature__picture',
+    image_class: 'feature__image',
+    desktop_width: 1200,
+    desktop_widths: '640, 960, 1200',
+    desktop_sizes: '50vw',
+    mobile_widths: '360, 540, 720',
+    mobile_sizes: 'calc(100vw - 40px)'
+  %}
+{%- endcomment -%}
+
+{%- liquid
+  assign desktop = desktop_image | default: mobile_image
+  assign mobile = mobile_image | default: desktop
+  assign picture_class = class | default: ''
+  assign image_class = image_class | default: ''
+  assign shared_sizes = sizes | default: '100vw'
+  assign desktop_sizes = desktop_sizes | default: shared_sizes
+  assign mobile_sizes = mobile_sizes | default: shared_sizes
+  assign desktop_width = desktop_width | default: 1600
+  assign desktop_widths = desktop_widths | default: '1200, 1600, 2000'
+  assign mobile_widths = mobile_widths | default: '480, 749'
+  assign desktop_width_values = desktop_widths | split: ','
+  assign mobile_width_values = mobile_widths | split: ','
+  assign desktop_media = desktop_media | default: '(min-width: 750px)'
+  assign mobile_media = mobile_media | default: '(max-width: 749px)'
+  assign loading = loading | default: 'lazy'
+  assign alt_text = alt | default: desktop.alt | default: mobile.alt | default: ''
+
+  if decorative
+    assign alt_text = ''
+  endif
+-%}
+
+{%- if desktop != blank -%}
+  <picture class="{{ picture_class }}">
+    <source
+      media="{{ mobile_media }}"
+      sizes="{{ mobile_sizes }}"
+      srcset="
+        {%- for width_value in mobile_width_values -%}
+          {%- assign source_width = width_value | strip | plus: 0 -%}
+          {{ mobile | image_url: width: source_width }} {{ source_width }}w{% unless forloop.last %}, {% endunless %}
+        {%- endfor -%}
+      "
+    >
+    <source
+      media="{{ desktop_media }}"
+      sizes="{{ desktop_sizes }}"
+      srcset="
+        {%- for width_value in desktop_width_values -%}
+          {%- assign source_width = width_value | strip | plus: 0 -%}
+          {{ desktop | image_url: width: source_width }} {{ source_width }}w{% unless forloop.last %}, {% endunless %}
+        {%- endfor -%}
+      "
+    >
+    {%- if fetchpriority != blank -%}
+      {{- desktop
+        | image_url: width: desktop_width
+        | image_tag:
+          widths: desktop_widths,
+          sizes: desktop_sizes,
+          loading: loading,
+          fetchpriority: fetchpriority,
+          decoding: 'async',
+          class: image_class,
+          alt: alt_text
+      -}}
+    {%- else -%}
+      {{- desktop
+        | image_url: width: desktop_width
+        | image_tag:
+          widths: desktop_widths,
+          sizes: desktop_sizes,
+          loading: loading,
+          decoding: 'async',
+          class: image_class,
+          alt: alt_text
+      -}}
+    {%- endif -%}
+  </picture>
+{%- endif -%}

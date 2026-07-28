@@ -1,0 +1,66 @@
+{%- unless settings.type_body_font.system? -%}
+  {{ settings.type_body_font | font_url | preload_tag: as: 'font', type: 'font/woff2', fetchpriority: 'high' }}
+{%- endunless -%}
+{%- unless settings.type_subheading_font.system? -%}
+  {{ settings.type_subheading_font | font_url | preload_tag: as: 'font', type: 'font/woff2', fetchpriority: 'high' }}
+{%- endunless -%}
+{%- unless settings.type_heading_font.system? -%}
+  {{ settings.type_heading_font | font_url | preload_tag: as: 'font', type: 'font/woff2', fetchpriority: 'auto' }}
+{%- endunless -%}
+{%- unless settings.type_accent_font.system? -%}
+  {{ settings.type_accent_font | font_url | preload_tag: as: 'font', type: 'font/woff2', fetchpriority: 'low' }}
+{%- endunless -%}
+
+<link rel="preload" as="font" type="font/woff2" crossorigin href="{{ 'Figtree-Regular.woff2' | file_url }}" fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="{{ 'Figtree-Bold.woff2' | file_url }}" fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="{{ 'DaimitoCondensed-Bold.woff2' | file_url }}" fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="{{ 'BurnedPancakes-Regular.woff2' | file_url }}" fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="{{ 'BurnedPancakes-Bold.woff2' | file_url }}" fetchpriority="high">
+
+{%- style -%}
+  @font-face {
+      font-family: 'Figtree';
+      src: url("{{'Figtree-Regular.woff2' | file_url }}") format('woff2'),
+          url("{{'Figtree-Regular.woff' | file_url }}" ) format('woff');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+  }
+
+  @font-face {
+      font-family: 'Figtree';
+      src: url("{{'Figtree-Bold.woff2' | file_url }}") format('woff2'),
+          url("{{'Figtree-Bold.woff' | file_url }}" ) format('woff');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+  }
+
+  @font-face {
+      font-family: 'Daimito Condensed';
+      src: url("{{'DaimitoCondensed-Bold.woff2' | file_url }}") format('woff2'),
+          url("{{'DaimitoCondensed-Bold.woff' | file_url }}" ) format('woff');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+  }
+
+  @font-face {
+      font-family: 'Burned Pancakes';
+      src: url("{{'BurnedPancakes-Regular.woff2' | file_url }}") format('woff2'),
+          url("{{'BurnedPancakes-Regular.woff' | file_url }}" ) format('woff');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+  }
+
+  @font-face {
+      font-family: 'Burned Pancakes';
+      src: url("{{'BurnedPancakes-Bold.woff2' | file_url }}") format('woff2'),
+          url("{{'BurnedPancakes-Bold.woff' | file_url }}" ) format('woff');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+  }
+
+{%- endstyle -%}

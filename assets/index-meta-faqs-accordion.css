@@ -1,0 +1,8 @@
+.faqs{
+  background: var(--background-color);
+  color: var(--information-color);
+  padding: var(--desktop-top-padding) 0 var(--desktop-bottom-padding);  
+  @media (max-width: 989px) {
+    padding: var(--mobile-top-padding) 0 var(--mobile-bottom-padding);
+  }
+}

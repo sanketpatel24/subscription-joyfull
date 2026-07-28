@@ -1,0 +1,218 @@
+{%- liquid
+    assign main_background_color = block.settings.main_background_color
+    assign main_information_color = block.settings.main_information_color
+
+    assign main_desktop_video = block.settings.main_desktop_video
+    assign main_desktop_image = block.settings.main_desktop_image
+    assign main_mobile_video = block.settings.main_mobile_video
+    assign main_mobile_image = block.settings.main_mobile_image
+
+    assign custom_text = block.settings.custom_text
+    assign heading_text = block.settings.heading_text
+    assign details_text = block.settings.details_text
+    assign button_text = block.settings.button_text
+    assign button_link = block.settings.button_link
+    assign button_style = block.settings.button_style
+
+    assign main_common_video = block.settings.main_common_video
+    assign main_common_image = block.settings.main_common_image
+    assign main_custom_image_1 = block.settings.main_custom_image_1
+    assign main_custom_text_1 = block.settings.main_custom_text_1
+    assign main_custom_image_2 = block.settings.main_custom_image_2
+    assign main_custom_text_2 = block.settings.main_custom_text_2
+-%}
+
+{%- style -%}
+    #shopify-section-{{ section.id }} .slideshow-split__{{ block.id }} {
+        {%- if main_background_color != blank -%}
+            --background-color: {{ main_background_color }};
+        {%- endif -%}
+        {%- if main_information_color != blank -%}
+            --information-color: {{ main_information_color }};
+        {%- endif -%}
+    }
+{%- endstyle -%}
+
+{%- if main_desktop_video != blank or main_desktop_image != blank or main_mobile_video != blank or main_mobile_image != blank or custom_text != blank or heading_text != blank or details_text != blank or button_link != blank or main_common_video != blank or main_common_image != blank or main_custom_image_1 != blank or main_custom_text_1 != blank or main_custom_image_2 != blank or main_custom_text_2 != blank -%}
+    <div class="swiper-slide slideshow-split slideshow-split__{{ block.id }}">
+        <div class="slideshow-split__body">
+            {%- if main_desktop_video != blank or main_desktop_image != blank or main_mobile_video != blank or main_mobile_image != blank -%}
+                {% if main_mobile_video != blank or main_mobile_image != blank %}
+                    {% assign video_class = "video--desktop" %}
+                {% else %}
+                    {% assign video_class = "video--desktop video--mobile" %}
+                {% endif %}
+                {%- if main_desktop_video != blank or main_desktop_image != blank -%}
+                    <div class="slideshow-split__media{% if main_mobile_video != blank or main_mobile_image != blank %} show--desktop{% endif %}">
+                        <div class="slideshow-split__media-wrap">
+                            {%- if main_desktop_video != blank -%}
+                                {% render 'responsive-video-lazyload',
+                                    video_url: main_desktop_video,
+                                    class: video_class
+                                %}
+                            {%- elsif main_desktop_image != blank -%}
+                                {% render 'responsive-image-lazyload',
+                                    desktop_image: main_desktop_image,
+                                    mobile_image: main_desktop_image,
+                                    class: 'custom--image',
+                                    sizes: '(max-width: 749px) 100vw, 100vw',
+                                    fetchpriority: 'high',
+                                    loading: 'eager',
+                                    rel: 'preload'                                                                            
+                                %}
+                            {%- endif -%}
+                        </div>
+                    </div>
+                {%- endif -%}
+                {%- if main_mobile_video != blank or main_mobile_image != blank -%}
+                    <div class="slideshow-split__media show--mobile">
+                        <div class="slideshow-split__media-wrap">
+                            {%- if main_mobile_video != blank -%}
+                                {% render 'responsive-video-lazyload',
+                                    video_url: main_mobile_video,
+                                    class: 'video--mobile'
+                                %}
+                            {%- elsif main_mobile_image != blank -%}
+                                {% render 'responsive-image-lazyload',
+                                    desktop_image: main_mobile_image,
+                                    mobile_image: main_mobile_image,
+                                    class: 'custom--image',
+                                    sizes: '(max-width: 749px) 100vw, 100vw',
+                                    fetchpriority: 'high',
+                                    loading: 'eager',
+                                    rel: 'preload'                                                                            
+                                %}
+                            {%- endif -%}
+                        </div>
+                    </div>
+                {%- endif -%}
+            {%- endif -%}
+            {%- if custom_text != blank or heading_text != blank or details_text != blank or button_link != blank or main_common_video != blank or main_common_image != blank or main_custom_image_1 != blank or main_custom_text_1 != blank or main_custom_image_2 != blank or main_custom_text_2 != blank -%}
+                <div class="slideshow-split__right">
+                    <div class="slideshow-split__right-wrap">
+                        {%- if custom_text != blank or heading_text != blank or details_text != blank or button_link != blank -%}
+                            <div class="slideshow-split__list">
+                                <div class="slideshow-split__list-wrap">
+                                    {%- if custom_text != blank -%}
+                                        <div class="title-small title-small--caps slideshow-split__list-text">
+                                            {{ custom_text | newline_to_br }}
+                                        </div>                                    
+                                    {%- endif -%}
+                                    {%- if heading_text != blank -%}
+                                        <div class="heading-l slideshow-split__list-title">
+                                            {%- if forloop_index == 1 -%}
+                                                <{{ main_heading_size }}>
+                                            {%- else -%}
+                                                <span>
+                                            {%- endif -%}
+                                                    {{ heading_text | newline_to_br }}
+                                            {%- if forloop_index == 1 -%}
+                                                </{{ main_heading_size }}>
+                                            {%- else -%}
+                                                </span>
+                                            {%- endif -%}
+                                        </div>                                    
+                                    {%- endif -%}
+                                    {%- if details_text != blank -%}
+                                        <div class="text-common slideshow-split__list-info">
+                                            {{ details_text }}
+                                        </div>                                    
+                                    {%- endif -%}
+                                    {%- if button_text != blank and button_link != blank -%}                                    
+                                        <div class="slideshow-split__list-link">
+                                            {%- render 'button-common-style',                                                  
+                                                main_button_text: button_text, 
+                                                main_button_link: button_link,
+                                                main_button_style: button_style
+                                            -%}
+                                        </div>                                    
+                                    {%- endif -%}
+                                </div>
+                            </div>
+                        {%- endif -%}
+                        {%- if main_common_video != blank or main_common_image != blank or main_custom_image_1 != blank or main_custom_text_1 != blank or main_custom_image_2 != blank or main_custom_text_2 != blank -%}
+                            <div class="slideshow-split__part">
+                                <div class="slideshow-split__part-wrap">
+                                    {%- if main_common_video != blank or main_common_image != blank -%}
+                                        <div class="slideshow-split__part-media">
+                                            <div class="slideshow-split__part-media-wrap">
+                                                {%- if main_common_video != blank -%}
+                                                    {% render 'responsive-video-lazyload',
+                                                        video_url: main_common_video,
+                                                        class: 'video--desktop video--mobile'
+                                                    %}
+                                                {%- elsif main_common_image != blank -%}
+                                                    {% render 'responsive-image-lazyload',
+                                                        desktop_image: main_common_image,
+                                                        mobile_image: main_common_image,
+                                                        class: 'custom--image',
+                                                        sizes: '(max-width: 749px) 100vw, 100vw',
+                                                        fetchpriority: 'high',
+                                                        loading: 'eager',
+                                                        rel: 'preload'
+                                                    %}
+                                                {%- endif -%}
+                                            </div>
+                                        </div>
+                                    {%- endif -%}
+                                    {%- if main_custom_image_1 != blank or main_custom_text_1 != blank or main_custom_image_2 != blank or main_custom_text_2 != blank -%}
+                                        <div class="slideshow-split__part-block">
+                                            <div class="slideshow-split__part-block-wrap">
+                                                {%- if main_custom_image_1 != blank or main_custom_text_1 != blank -%}
+                                                    <div class="slideshow-split__part-block-both">
+                                                        {%- if main_custom_image_1 != blank -%}
+                                                            <div class="slideshow-split__part-block-both-image">
+                                                                {% render 'responsive-image-lazyload',
+                                                                    desktop_image: main_custom_image_1,
+                                                                    mobile_image: main_custom_image_1,
+                                                                    class: 'Custom_icon_new',
+                                                                    sizes: '(max-width: 749px) 100vw, 100vw',
+                                                                    alt: 'custom--image',
+                                                                    fetchpriority: 'high',
+                                                                    loading: 'eager',
+                                                                    rel: 'preload'
+                                                                %}
+                                                            </div>
+                                                        {%- endif -%}
+                                                        {%- if main_custom_text_1 != blank -%}
+                                                            <div class="slideshow-split__part-block-both-title">
+                                                                {{ main_custom_text_1 | newline_to_br }}
+                                                            </div>
+                                                        {%- endif -%}
+                                                    </div>
+                                                {%- endif -%}
+                                                {%- if main_custom_image_2 != blank or main_custom_text_2 != blank -%}
+                                                    <div class="slideshow-split__part-block-both">
+                                                        {%- if main_custom_image_2 != blank -%}
+                                                            <div class="slideshow-split__part-block-both-image">
+                                                                {% render 'responsive-image-lazyload',
+                                                                    desktop_image: main_custom_image_2,
+                                                                    mobile_image: main_custom_image_2,
+                                                                    class: 'Custom_icon_new',
+                                                                    sizes: '(max-width: 749px) 100vw, 100vw',
+                                                                    alt: 'custom--image',
+                                                                    fetchpriority: 'high',
+                                                                    loading: 'eager',
+                                                                    rel: 'preload'
+                                                                %}
+                                                            </div>
+                                                        {%- endif -%}
+                                                        {%- if main_custom_text_2 != blank -%}
+                                                            <div class="slideshow-split__part-block-both-title">
+                                                                {{ main_custom_text_2 | newline_to_br }}
+                                                            </div>
+                                                        {%- endif -%}
+                                                    </div>
+                                                {%- endif -%}
+                                            </div>
+                                        </div>
+                                    {%- endif -%}
+                                </div>
+                            </div>
+                        {%- endif -%}
+                    </div>
+                </div>
+            {%- endif -%}
+        </div>
+    </div>
+{%- endif -%}

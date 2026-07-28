@@ -1,0 +1,182 @@
+{{ 'about-founder-story.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign desktop_image = section.settings.desktop_image
+  assign mobile_image = section.settings.mobile_image | default: desktop_image
+  assign desktop_video = section.settings.video
+  assign mobile_video = section.settings.mobile_video | default: desktop_video
+  assign desktop_icon = section.settings.icon
+  assign mobile_icon = section.settings.mobile_icon | default: desktop_icon
+-%}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    --about-founder-background: {{ section.settings.background_color }};
+    --about-founder-shape-background: {{ section.settings.shape_background_color }};
+    --about-founder-desktop-padding-top: {{ section.settings.desktop_top_padding }}px;
+    --about-founder-desktop-padding-bottom: {{ section.settings.desktop_bottom_padding }}px;
+    --about-founder-mobile-padding-top: {{ section.settings.mobile_top_padding }}px;
+    --about-founder-mobile-padding-bottom: {{ section.settings.mobile_bottom_padding }}px;
+  }
+{%- endstyle -%}
+
+<section
+  class="about-founder-story"
+  {% if section.settings.heading != blank %}
+    aria-labelledby="AboutFounderStoryHeading-{{ section.id }}"
+  {% endif %}
+>
+  <div class="about-founder-story__inner page-width">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="about-founder-story__heading heading-m" id="AboutFounderStoryHeading-{{ section.id }}">
+        {{- section.settings.heading | escape | newline_to_br -}}
+      </h2>
+    {%- endif -%}
+
+    {%- if desktop_video != blank or mobile_video != blank or desktop_image != blank or mobile_image != blank -%}
+      <div class="about-founder-story__media">
+        <div class="about-founder-story__media-frame">
+          <div class="about-founder-story__media-clip">
+            {%- render 'responsive-media-asset',
+              desktop_video: desktop_video,
+              mobile_video: mobile_video,
+              desktop_image: desktop_image,
+              mobile_image: mobile_image,
+              wrapper_class: 'about-founder-story__asset',
+              picture_class: 'about-founder-story__picture',
+              video_class: 'about-founder-story__video',
+              image_class: 'about-founder-story__image',
+              desktop_width: 1200,
+              desktop_widths: '480, 720, 900, 1200',
+              desktop_sizes: '34vw',
+              mobile_widths: '320, 480, 640',
+              mobile_sizes: '240px',
+              desktop_media: '(min-width: 990px)',
+              mobile_media: '(max-width: 989px)'
+            -%}
+          </div>
+
+          {%- if desktop_icon != blank or mobile_icon != blank -%}
+            {%- render 'responsive-media-asset',
+              desktop_image: desktop_icon,
+              mobile_image: mobile_icon,
+              wrapper_class: 'about-founder-story__icon',
+              picture_class: 'about-founder-story__icon-picture',
+              image_class: 'about-founder-story__icon-image',
+              desktop_width: 240,
+              desktop_widths: '80, 120, 180, 240',
+              desktop_sizes: '40px',
+              mobile_widths: '80, 120, 180',
+              mobile_sizes: '48px',
+              desktop_media: '(min-width: 990px)',
+              mobile_media: '(max-width: 989px)',
+              decorative: true
+            -%}
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+    "name": "About Founder Story",
+    "class": "about-founder-story__section",
+    "settings": [
+        {
+            "type": "header",
+            "content": "==== Color Settings ===="
+        },
+        {
+            "type": "color",
+            "id": "background_color",
+            "label": "Background Color",
+            "default": "#FFEFC8"
+        },
+        {
+            "type": "color",
+            "id": "shape_background_color",
+            "label": "Decorative Shape Background Color",
+            "default": "#FFEFC8"
+        },
+        {
+            "type": "header",
+            "content": "==== Media Settings ===="
+        },
+        {
+            "type": "video",
+            "id": "video",
+            "label": "Desktop Video"
+        },
+        {
+            "type": "video",
+            "id": "mobile_video",
+            "label": "Mobile Video"
+        },
+        {
+            "type": "image_picker",
+            "id": "desktop_image",
+            "label": "Desktop Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "mobile_image",
+            "label": "Mobile Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "icon",
+            "label": "Desktop Decorative Icon"
+        },
+        {
+            "type": "image_picker",
+            "id": "mobile_icon",
+            "label": "Mobile Decorative Icon"
+        },
+        {
+            "type": "header",
+            "content": "==== Content Settings ===="
+        },
+        {
+            "type": "textarea",
+            "id": "heading",
+            "label": "Heading Text",
+            "default": "Founded by a helicopter dog parent and an animal-lover-turned-veterinarian, we set out to do things differently."
+        },
+        {
+            "type": "header",
+            "content": "==== Layout Settings ===="
+        },
+        {
+            "type": "number",
+            "id": "desktop_top_padding",
+            "label": "Desktop Top Padding",
+            "default": 0
+        },
+        {
+            "type": "number",
+            "id": "desktop_bottom_padding",
+            "label": "Desktop Bottom Padding",
+            "default": 0
+        },
+        {
+            "type": "number",
+            "id": "mobile_top_padding",
+            "label": "Mobile Top Padding",
+            "default": 0
+        },
+        {
+            "type": "number",
+            "id": "mobile_bottom_padding",
+            "label": "Mobile Bottom Padding",
+            "default": 0
+        }
+    ],
+    "presets": [
+        {
+            "name": "About Founder Story"
+        }
+    ]
+}
+{% endschema %}

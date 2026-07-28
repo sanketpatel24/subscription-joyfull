@@ -1,0 +1,153 @@
+{%- doc -%}
+  Renders responsive Shopify-hosted videos, a native responsive picture, or an optional placeholder.
+
+  @param {object} [desktop_video] - Desktop Shopify video object. Takes priority over images.
+  @param {object} [mobile_video] - Mobile Shopify video object. Falls back to the desktop video.
+  @param {object} [desktop_image] - Desktop Shopify image object.
+  @param {object} [mobile_image] - Mobile Shopify image object. Falls back to the desktop image.
+  @param {string} wrapper_class - BEM class or classes applied to the asset wrapper.
+  @param {string} [picture_class] - BEM class applied to the picture element.
+  @param {string} [video_class] - BEM class applied to the video element.
+  @param {string} image_class - BEM class applied to the image element.
+  @param {string} [placeholder_class] - BEM class applied to the placeholder SVG.
+  @param {number} desktop_width - Maximum desktop image URL width.
+  @param {string} desktop_widths - Comma-separated desktop image widths.
+  @param {string} desktop_sizes - Desktop sizes attribute.
+  @param {string} mobile_widths - Comma-separated mobile image widths.
+  @param {string} mobile_sizes - Mobile sizes attribute.
+  @param {string} [desktop_media] - Desktop picture source media query.
+  @param {string} [mobile_media] - Mobile picture source media query.
+  @param {string} [alt] - Image alt-text override.
+  @param {boolean} [decorative] - Uses empty alt text when true.
+  @param {boolean} [preserve_vector] - Serves original vector URLs without CDN width transformations.
+  @param {string} [loading] - Image loading strategy. Defaults to lazy.
+  @param {string} [fetchpriority] - Optional image fetch priority.
+  @param {boolean} [show_placeholder] - Renders a placeholder when both media values are blank.
+
+  @example
+  {% render 'responsive-media-asset',
+    desktop_video: section.settings.video,
+    mobile_video: section.settings.mobile_video,
+    desktop_image: section.settings.desktop_image,
+    mobile_image: section.settings.mobile_image,
+    wrapper_class: 'feature__asset',
+    video_class: 'feature__video',
+    image_class: 'feature__image',
+    desktop_width: 1200,
+    desktop_widths: '720, 900, 1200',
+    desktop_sizes: '50vw',
+    mobile_widths: '320, 480, 640',
+    mobile_sizes: '100vw',
+  %}
+{%- enddoc -%}
+
+{%- liquid
+  assign desktop_video = desktop_video | default: mobile_video
+  assign mobile_video = mobile_video | default: desktop_video
+  assign desktop_image = desktop_image | default: mobile_image
+  assign mobile_image = mobile_image | default: desktop_image
+  assign desktop_media = desktop_media | default: '(min-width: 750px)'
+  assign mobile_media = mobile_media | default: '(max-width: 749px)'
+  assign loading = loading | default: 'lazy'
+  assign alt_text = alt | default: desktop_image.alt | default: mobile_image.alt | default: ''
+  assign desktop_width_values = desktop_widths | split: ','
+  assign mobile_width_values = mobile_widths | split: ','
+  assign video_poster = desktop_video.preview_image | default: mobile_video.preview_image
+
+  if decorative
+    assign alt_text = ''
+  endif
+-%}
+
+{%- if desktop_video != blank -%}
+  <div class="{{ wrapper_class }}">
+    <video
+      class="{{ video_class }}"
+      autoplay
+      loop
+      muted
+      playsinline
+      preload="none"
+      {% if video_poster != blank %}
+        poster="{{ video_poster | image_url: width: 1200 }}"
+      {% endif %}
+    >
+      {%- for source in mobile_video.sources -%}
+        <source src="{{ source.url }}" type="{{ source.mime_type }}" media="{{ mobile_media }}">
+      {%- endfor -%}
+      {%- for source in desktop_video.sources -%}
+        <source src="{{ source.url }}" type="{{ source.mime_type }}" media="{{ desktop_media }}">
+      {%- endfor -%}
+    </video>
+  </div>
+{%- elsif desktop_image != blank or mobile_image != blank -%}
+  <div class="{{ wrapper_class }}">
+    <picture class="{{ picture_class }}">
+      {%- if preserve_vector -%}
+        <source media="{{ mobile_media }}" srcset="{{ mobile_image | image_url }}">
+        <source media="{{ desktop_media }}" srcset="{{ desktop_image | image_url }}">
+        <img
+          src="{{ desktop_image | image_url }}"
+          class="{{ image_class }}"
+          alt="{{ alt_text | escape }}"
+          width="{{ desktop_image.width }}"
+          height="{{ desktop_image.height }}"
+          loading="{{ loading }}"
+          decoding="async"
+          {% if fetchpriority != blank %}
+            fetchpriority="{{ fetchpriority }}"
+          {% endif %}
+        >
+      {%- else -%}
+        <source
+          media="{{ mobile_media }}"
+          sizes="{{ mobile_sizes }}"
+          srcset="
+            {%- for width_value in mobile_width_values -%}
+              {%- assign source_width = width_value | strip | plus: 0 -%}
+              {{ mobile_image | image_url: width: source_width }} {{ source_width }}w{% unless forloop.last %}, {% endunless %}
+            {%- endfor -%}
+          "
+        >
+        <source
+          media="{{ desktop_media }}"
+          sizes="{{ desktop_sizes }}"
+          srcset="
+            {%- for width_value in desktop_width_values -%}
+              {%- assign source_width = width_value | strip | plus: 0 -%}
+              {{ desktop_image | image_url: width: source_width }} {{ source_width }}w{% unless forloop.last %}, {% endunless %}
+            {%- endfor -%}
+          "
+        >
+        {%- if fetchpriority != blank -%}
+          {{- desktop_image
+            | image_url: width: desktop_width
+            | image_tag:
+              widths: desktop_widths,
+              sizes: desktop_sizes,
+              loading: loading,
+              fetchpriority: fetchpriority,
+              decoding: 'async',
+              class: image_class,
+              alt: alt_text
+          -}}
+        {%- else -%}
+          {{- desktop_image
+            | image_url: width: desktop_width
+            | image_tag:
+              widths: desktop_widths,
+              sizes: desktop_sizes,
+              loading: loading,
+              decoding: 'async',
+              class: image_class,
+              alt: alt_text
+          -}}
+        {%- endif -%}
+      {%- endif -%}
+    </picture>
+  </div>
+{%- elsif show_placeholder -%}
+  <div class="{{ wrapper_class }}">
+    {{- 'image' | placeholder_svg_tag: placeholder_class -}}
+  </div>
+{%- endif -%}

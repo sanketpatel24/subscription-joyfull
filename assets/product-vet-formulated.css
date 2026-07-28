@@ -1,0 +1,184 @@
+.product-vet-card {
+  overflow: hidden;
+  color: var(--color-text-body);
+  background: linear-gradient(0deg, rgba(255, 255, 255, 0.20) 0%, rgba(255, 255, 255, 0.20) 100%), linear-gradient(80deg, #EEE5DA -5.86%, #E0D1BE 83.39%);
+  border-radius: var(--spacing-16);
+}
+
+.product-vet-card__media {
+  min-width: 0;
+}
+
+.product-vet-card__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center bottom;
+}
+
+.product-vet-card__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--spacing-24);
+}
+
+.product-vet-card__heading {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-8);
+  margin: 0 0 var(--spacing-16);
+  font-family: var(--font-heading--family);
+  font-size: var(--font-size-24);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-heading);
+  letter-spacing: 0;
+  color:var(--color-onyx);
+}
+
+.product-vet-card__verified {
+  display: inline-flex;
+  flex: 0 0 var(--spacing-18);
+  width: var(--spacing-18);
+  color: var(--color-azure);
+}
+
+.product-vet-card__verified svg {
+  width: 100%;
+  height: auto;
+  fill: currentColor;
+}
+
+.product-vet-card__verified .product-vet-card__check {
+  fill: none;
+  stroke: var(--color-white);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.product-vet-card__quote {
+  font-family: var(--font-body--family);
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-body);
+  margin-bottom:var(--spacing-16);
+  max-width: 21rem;
+  color:var(--color-black);
+}
+
+.product-vet-card__quote > * {
+  margin: 0;
+}
+
+.product-vet-card__expert,
+.product-vet-card__role {
+  margin: 0;
+  font-family: var(--font-body--family);
+  font-size: var(--font-size-12);
+  line-height: 128%;
+  color:var(--color-onyx);
+}
+.product-vet-card__expert{
+    margin-bottom:var(--spacing-2);
+}
+
+.product-vet-card__mobile-image {
+  display: none;
+}
+
+@media screen and (max-width: 749px) {
+  .product-information__media .product-vet-card--desktop {
+    display: none !important;
+  }
+
+  .product-vet-card--mobile {
+    display: block;
+    margin-top: 0;
+    border-radius: var(--spacing-8);
+    background: linear-gradient(0deg, rgba(255, 255, 255, 0.20) 0%, rgba(255, 255, 255, 0.20) 100%), linear-gradient(80deg, #EEE5DA -5.86%, #E0D1BE 83.39%);
+    margin-bottom:var(--spacing-24);
+  }
+
+  .product-vet-card--mobile > .product-vet-card__media {
+    display: none;
+  }
+
+  .product-vet-card--mobile .product-vet-card__content {
+    padding: var(--spacing-16);
+  }
+
+  .product-vet-card--mobile .product-vet-card__heading {
+    gap: var(--spacing-4);
+    margin-bottom: var(--spacing-16);
+    font-size: var(--font-size-18);
+  }
+
+  .product-vet-card--mobile .product-vet-card__verified {
+    flex-basis: var(--spacing-20);
+    width: var(--spacing-20);
+  }
+
+  .product-vet-card--mobile .product-vet-card__quote {
+    font-size: var(--font-size-14);
+    line-height: 136%;
+    max-width:100%;
+    margin-bottom:var(--spacing-8)
+  }
+
+  .product-vet-card__footer {
+    display: grid;
+    grid-template-columns: var(--spacing-58) minmax(0, 1fr);
+    align-items: center;
+    gap: var(--spacing-12);
+    margin-top: 0;
+  }
+
+  .product-vet-card__mobile-image {
+    display: block;
+    width: var(--spacing-58);
+    height: var(--spacing-58);
+    object-fit: cover;
+    object-position: center top;
+    border-radius: var(--spacing-8);
+  }
+
+  .product-vet-card--mobile .product-vet-card__expert,
+  .product-vet-card--mobile .product-vet-card__role {
+    font-size: var(--font-size-14);
+    line-height: 128%;
+  }
+
+  .product-vet-card--mobile .product-vet-card__expert {
+    margin-top: 0;
+  }
+  .product-vet-card--mobile .product-vet-card__expert strong{
+    display:block;
+  }
+
+  .product-vet-card--mobile .product-vet-card__role {
+    margin-top: var(--spacing-4);
+  }
+}
+
+@media screen and (min-width: 750px) {
+  .product-details .product-vet-card--mobile {
+    display: none !important;
+  }
+
+  .product-information__media .product-vet-card--desktop {
+    display: grid;
+    grid-template-columns: 14.9375rem minmax(0, 1fr);
+    margin-top: var(--spacing-16);
+    padding:0 0 0 var(--spacing-9);
+  }
+
+  .product-vet-card--desktop .product-vet-card__content {
+    padding:var(--spacing-35) var(--spacing-41) var(--spacing-34) var(--spacing-30);
+  }
+
+  .product-vet-card--desktop .product-vet-card__footer {
+    display: block;
+  }
+}
+

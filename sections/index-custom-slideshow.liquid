@@ -1,0 +1,486 @@
+{%- liquid
+    assign desktop_top_padding = section.settings.desktop_top_padding
+    assign desktop_bottom_padding = section.settings.desktop_bottom_padding
+    assign mobile_top_padding = section.settings.mobile_top_padding
+    assign mobile_bottom_padding = section.settings.mobile_bottom_padding
+    assign main_heading_size = section.settings.main_heading_size
+-%}
+
+{%- if section.blocks.size > 0 -%}
+    {{ 'index-custom-slideshow.css' | asset_url | stylesheet_tag }}
+    <script src="{{ 'index-custom-slideshow.js' | asset_url }}" defer></script>
+
+    {%- style -%}
+        #shopify-section-{{ section.id }} .slideshow {
+            {%- if desktop_top_padding != blank -%}
+                --desktop-top-padding: {{ desktop_top_padding }}px;
+            {%- endif -%}
+            {%- if desktop_bottom_padding != blank -%}
+                --desktop-bottom-padding: {{ desktop_bottom_padding }}px;
+            {%- endif -%}
+            {%- if mobile_top_padding != blank -%}
+                --mobile-top-padding: {{ mobile_top_padding }}px;
+            {%- endif -%}
+            {%- if mobile_bottom_padding != blank -%}
+                --mobile-bottom-padding: {{ mobile_bottom_padding }}px;
+            {%- endif -%}
+        }
+    {%- endstyle -%}
+
+    <section class="slideshow">
+        <div class="slideshow__body">
+            <div class="swiper{% if section.blocks.size > 1 %} index-custom-slideshow-slider{% endif %}">
+                <div class="swiper-wrapper">
+                    {%- for block in section.blocks -%}
+                        {%- case block.type -%} 
+                            {% when 'split_banner_content' %}
+                                {%- render 'slideshow-split-banner-content', block: block, main_heading_size: main_heading_size, forloop_index: forloop.index -%}                                
+
+                            {% when 'full_bleed_with_box' %}
+                                {%- render 'slideshow-full-bleed-with-box', block: block, main_heading_size: main_heading_size, forloop_index: forloop.index -%}                                
+
+                            {% when 'full_bleed_with_text' %}
+                                {%- render 'slideshow-full-bleed-with-text', block: block, main_heading_size: main_heading_size, forloop_index: forloop.index -%}                                
+
+                        {%- endcase -%}
+                    {%- endfor -%}
+                </div>
+            </div>
+        </div>
+    </section>
+{%- endif -%}
+
+{% schema %}
+{
+    "name": "Index Custom Slideshow",
+    "class": "index-custom-slideshow__section",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Layout Settings"
+        },
+        {
+            "type": "number",
+            "id": "desktop_top_padding",
+            "label": "Desktop Top Padding",
+            "default": 0
+        },
+        {
+            "type": "number",
+            "id": "desktop_bottom_padding",
+            "label": "Desktop Bottom Padding",
+            "default": 0
+        },
+        {
+            "type": "number",
+            "id": "mobile_top_padding",
+            "label": "Mobile Top Padding",
+            "default": 0
+        },
+        {
+            "type": "number",
+            "id": "mobile_bottom_padding",
+            "label": "Mobile Bottom Padding",
+            "default": 0
+        },
+        {
+            "type": "header",
+            "content": "Content Settings"
+        },
+        {
+            "type": "select",
+            "id": "main_heading_size",
+            "label": "Main Heading Size",
+            "default": "h1",
+            "options": [
+                {
+                    "label": "H1",
+                    "value": "h1"
+                },
+                {
+                    "label": "H2",
+                    "value": "h2"
+                },
+                {
+                    "label": "H3",
+                    "value": "h3"
+                },
+                {
+                    "label": "H4",
+                    "value": "h4"
+                },
+                {
+                    "label": "H5",
+                    "value": "h5"
+                },
+                {
+                    "label": "H6",
+                    "value": "h6"
+                },
+                {
+                    "label": "Span",
+                    "value": "span"
+                }
+            ]
+        }
+    ],
+    "blocks": [
+        {
+            "type": "split_banner_content",
+            "name": "Split Banner Content",
+            "settings": [
+                {
+                    "type": "header",
+                    "content": "Color Settings"
+                },
+                {
+                    "type": "color",
+                    "id": "main_background_color",
+                    "label": "Main Background Color",
+                    "default": "#FFEFC8"
+                },
+                {
+                    "type": "color",
+                    "id": "main_information_color",
+                    "label": "Main Information Color"
+                },
+                {
+                    "type": "header",
+                    "content": "Media Settings"
+                },
+                {
+                    "type": "video",
+                    "id": "main_desktop_video",
+                    "label": "Add Main Desktop Video"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "main_desktop_image",
+                    "label": "Add Main Desktop Image"
+                },
+                {
+                    "type": "video",
+                    "id": "main_mobile_video",
+                    "label": "Add Main Mobile Video"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "main_mobile_image",
+                    "label": "Add Main Mobile Image"
+                },
+                {
+                    "type": "header",
+                    "content": "Content Settings"
+                },
+                {
+                    "type": "textarea",
+                    "id": "custom_text",
+                    "label": "Custom Text",
+                    "default": "Vet-Formulated + Research-Backed"
+                },
+                {
+                    "type": "textarea",
+                    "id": "heading_text",
+                    "label": "Heading Text",
+                    "default": "Treat your pet to better gut health"
+                },
+                {
+                    "type": "richtext",
+                    "id": "details_text",
+                    "label": "Details Text",
+                    "default": "<p>Treats with benefits, gut-supporting supplements. We did the research so you can enjoy the belly rubs.</p>"
+                },
+                {
+                    "type": "text",
+                    "id": "button_text",
+                    "label": "Button Text",
+                    "default": "Shop Now"
+                },
+                {
+                    "type": "url",
+                    "id": "button_link",
+                    "label": "Button Link",
+                    "default": "/"
+                },
+                {
+                    "type": "select",
+                    "id": "button_style",
+                    "label": "Button Style",
+                    "default": "primary-button",
+                    "options": [
+                        {
+                            "label": "Primary Button",
+                            "value": "primary-button"
+                        },
+                        {
+                            "label": "Secondary Button",
+                            "value": "secondary-button"
+                        }
+                    ]
+                },
+                {
+                    "type": "header",
+                    "content": "Block Settings"
+                },
+                {
+                    "type": "video",
+                    "id": "main_common_video",
+                    "label": "Main Common Video"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "main_common_image",
+                    "label": "Main Common Image"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "main_custom_image_1",
+                    "label": "Main Custom Image-1"
+                },
+                {
+                    "type": "textarea",
+                    "id": "main_custom_text_1",
+                    "label": "Main Custom Text-1"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "main_custom_image_2",
+                    "label": "Main Custom Image-2"
+                },
+                {
+                    "type": "textarea",
+                    "id": "main_custom_text_2",
+                    "label": "Main Custom Text-2"
+                }
+            ]
+        },
+        {
+            "type": "full_bleed_with_box",
+            "name": "Full Bleed With Box",
+            "settings": [
+                {
+                    "type": "header",
+                    "content": "Color Settings"
+                },
+                {
+                    "type": "color",
+                    "id": "main_background_color",
+                    "label": "Main Background Color",
+                    "default": "#FFEFC8"
+                },
+                {
+                    "type": "color",
+                    "id": "inner_background_color",
+                    "label": "Inner Background Color",
+                    "default": "#FFF9F0"
+                },
+                {
+                    "type": "color",
+                    "id": "main_information_color",
+                    "label": "Main Information Color"
+                },
+                {
+                    "type": "header",
+                    "content": "Media Settings"
+                },
+                {
+                    "type": "video",
+                    "id": "main_desktop_video",
+                    "label": "Add Main Desktop Video"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "main_desktop_image",
+                    "label": "Add Main Desktop Image"
+                },
+                {
+                    "type": "video",
+                    "id": "main_mobile_video",
+                    "label": "Add Main Mobile Video"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "main_mobile_image",
+                    "label": "Add Main Mobile Image"
+                },
+                {
+                    "type": "header",
+                    "content": "Content Settings"
+                },
+                {
+                    "type": "textarea",
+                    "id": "custom_text",
+                    "label": "Custom Text",
+                    "default": "Vet-Formulated + Research-Backed"
+                },
+                {
+                    "type": "textarea",
+                    "id": "heading_text",
+                    "label": "Heading Text",
+                    "default": "Happy gut, happy pet"
+                },
+                {
+                    "type": "richtext",
+                    "id": "details_text",
+                    "label": "Details Text",
+                    "default": "<p>Treats with benefits and gut-supporting supplements.</p>"
+                },
+                {
+                    "type": "text",
+                    "id": "button_text",
+                    "label": "Button Text",
+                    "default": "Shop Now"
+                },
+                {
+                    "type": "url",
+                    "id": "button_link",
+                    "label": "Button Link",
+                    "default": "/"
+                },
+                {
+                    "type": "select",
+                    "id": "button_style",
+                    "label": "Button Style",
+                    "default": "primary-button",
+                    "options": [
+                        {
+                            "label": "Primary Button",
+                            "value": "primary-button"
+                        },
+                        {
+                            "label": "Secondary Button",
+                            "value": "secondary-button"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "full_bleed_with_text",
+            "name": "Full Bleed With Text",
+            "settings": [
+                {
+                    "type": "header",
+                    "content": "Color Settings"
+                },
+                {
+                    "type": "color",
+                    "id": "main_background_color",
+                    "label": "Main Background Color",
+                    "default": "#FFEFC8"
+                },
+                {
+                    "type": "color",
+                    "id": "main_information_color",
+                    "label": "Main Information Color",
+                    "default": "#FFF9F0"
+                },
+                {
+                    "type": "header",
+                    "content": "Media Settings"
+                },
+                {
+                    "type": "video",
+                    "id": "main_desktop_video",
+                    "label": "Add Main Desktop Video"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "main_desktop_image",
+                    "label": "Add Main Desktop Image"
+                },
+                {
+                    "type": "video",
+                    "id": "main_mobile_video",
+                    "label": "Add Main Mobile Video"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "main_mobile_image",
+                    "label": "Add Main Mobile Image"
+                },
+                {
+                    "type": "header",
+                    "content": "Content Settings"
+                },
+                {
+                    "type": "textarea",
+                    "id": "custom_text",
+                    "label": "Custom Text",
+                    "default": "Vet-Formulated + Research-Backed"
+                },
+                {
+                    "type": "textarea",
+                    "id": "heading_text",
+                    "label": "Heading Text",
+                    "default": "Joy starts in the gut"
+                },
+                {
+                    "type": "richtext",
+                    "id": "details_text",
+                    "label": "Details Text",
+                    "default": "<p>Treats with benefits and gut-supporting supplements. We did the research so you can enjoy the belly rubs.</p>"
+                },
+                {
+                    "type": "text",
+                    "id": "button_text",
+                    "label": "Button Text",
+                    "default": "Shop Now"
+                },
+                {
+                    "type": "url",
+                    "id": "button_link",
+                    "label": "Button Link",
+                    "default": "/"
+                },
+                {
+                    "type": "select",
+                    "id": "button_style",
+                    "label": "Button Style",
+                    "default": "primary-button",
+                    "options": [
+                        {
+                            "label": "Primary Button",
+                            "value": "primary-button"
+                        },
+                        {
+                            "label": "Secondary Button",
+                            "value": "secondary-button"
+                        }
+                    ]
+                },
+                {
+                    "type": "header",
+                    "content": "Block Settings"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "custom_image_1",
+                    "label": "Custom Image-1"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "custom_image_2",
+                    "label": "Custom Image-2"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Index Custom Slideshow",
+            "blocks": [
+                {
+                    "type": "split_banner_content"
+                },
+                {
+                    "type": "full_bleed_with_box"
+                },
+                {
+                    "type": "full_bleed_with_text"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

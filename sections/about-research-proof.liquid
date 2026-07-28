@@ -1,0 +1,256 @@
+{%- liquid
+  assign background_color = section.settings.background_color
+  assign desktop_padding_top = section.settings.desktop_top_padding
+  assign desktop_padding_bottom = section.settings.desktop_bottom_padding
+  assign mobile_padding_top = section.settings.mobile_top_padding
+  assign mobile_padding_bottom = section.settings.mobile_bottom_padding
+  assign heading = section.settings.heading
+  assign desktop_certification = section.settings.desktop_certification
+  assign mobile_certification = section.settings.mobile_certification
+  assign desktop_packet = section.settings.desktop_packet
+  assign mobile_packet = section.settings.mobile_packet
+  assign desktop_accent = section.settings.desktop_accent
+  assign mobile_accent = section.settings.mobile_accent
+
+  assign has_content = false
+  if heading != blank or desktop_certification != blank or mobile_certification != blank or desktop_packet != blank or mobile_packet != blank or desktop_accent != blank or mobile_accent != blank
+    assign has_content = true
+  endif
+
+  unless has_content
+    for block in section.blocks
+      if block.settings.text != blank
+        assign has_content = true
+        break
+      endif
+    endfor
+  endunless
+-%}
+
+{%- if has_content -%}
+  {{ 'about-research-proof.css' | asset_url | stylesheet_tag }}
+
+  {%- style -%}
+    #shopify-section-{{ section.id }} {
+      {%- if background_color != blank -%}
+        --about-research-background: {{ background_color }};
+      {%- endif -%}
+      --about-research-desktop-padding-top: {{ desktop_padding_top }}px;
+      --about-research-desktop-padding-bottom: {{ desktop_padding_bottom }}px;
+      --about-research-mobile-padding-top: {{ mobile_padding_top }}px;
+      --about-research-mobile-padding-bottom: {{ mobile_padding_bottom }}px;
+    }
+  {%- endstyle -%}
+
+  <section
+    class="about-research-proof"
+    {% if heading != blank %}
+      aria-labelledby="AboutResearchProofHeading-{{ section.id }}"
+    {% endif %}
+  >
+    <div class="about-research-proof__inner page-width">
+      {%- if heading != blank -%}
+        <h2 class="about-research-proof__heading heading-l" id="AboutResearchProofHeading-{{ section.id }}">
+          {{- heading | escape | newline_to_br -}}
+        </h2>
+      {%- endif -%}
+
+      <div class="about-research-proof__visual">
+        {%- render 'responsive-media-asset',
+          desktop_image: desktop_certification,
+          mobile_image: mobile_certification,
+          wrapper_class: 'about-research-proof__certification',
+          picture_class: 'about-research-proof__picture',
+          image_class: 'about-research-proof__image',
+          desktop_width: 360,
+          desktop_widths: '160, 240, 360',
+          desktop_sizes: '160px',
+          mobile_widths: '120, 180, 240',
+          mobile_sizes: '80px',
+          desktop_media: '(min-width: 750px)',
+          mobile_media: '(max-width: 749px)'
+        -%}
+
+        <div class="about-research-proof__packet-motion">
+          {%- render 'responsive-media-asset',
+            desktop_image: desktop_packet,
+            mobile_image: mobile_packet,
+            wrapper_class: 'about-research-proof__packet',
+            picture_class: 'about-research-proof__picture',
+            image_class: 'about-research-proof__image',
+            desktop_width: 1600,
+            desktop_widths: '640, 960, 1200, 1600',
+            desktop_sizes: '56vw',
+            mobile_widths: '360, 540, 720, 800',
+            mobile_sizes: 'calc(100vw - 64px)',
+            desktop_media: '(min-width: 750px)',
+            mobile_media: '(max-width: 749px)'
+          -%}
+        </div>
+
+        {%- render 'responsive-media-asset',
+          desktop_image: desktop_accent,
+          mobile_image: mobile_accent,
+          wrapper_class: 'about-research-proof__accent',
+          picture_class: 'about-research-proof__picture',
+          image_class: 'about-research-proof__image',
+          desktop_width: 240,
+          desktop_widths: '80, 120, 180, 240',
+          desktop_sizes: '72px',
+          mobile_widths: '60, 100, 160',
+          mobile_sizes: '32px',
+          desktop_media: '(min-width: 750px)',
+          mobile_media: '(max-width: 749px)',
+          decorative: true
+        -%}
+      </div>
+
+      {%- if section.blocks.size > 0 -%}
+        <ul class="about-research-proof__list" role="list">
+          {%- for block in section.blocks -%}
+            {%- if block.settings.text != blank -%}
+                <li class="about-research-proof__item" {{ block.shopify_attributes }}>
+                  <span class="about-research-proof__check" aria-hidden="true">
+                    {{- 'icon-checkmark.svg' | inline_asset_content -}}
+                  </span>
+                
+                  <div class="about-research-proof__text title-large">
+                    {{- block.settings.text -}}
+                  </div>
+                </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+    "name": "About Research Proof",
+    "class": "about-research-proof__section",
+    "max_blocks": 3,
+    "settings": [
+        {
+            "type": "header",
+            "content": "==== Color Settings ===="
+        },
+        {
+            "type": "color",
+            "id": "background_color",
+            "label": "Background Color",
+            "default": "#FFF9F0"
+        },
+        {
+            "type": "header",
+            "content": "==== Media Settings ===="
+        },
+        {
+            "type": "image_picker",
+            "id": "desktop_certification",
+            "label": "Desktop Certification Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "mobile_certification",
+            "label": "Mobile Certification Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "desktop_packet",
+            "label": "Desktop Packet Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "mobile_packet",
+            "label": "Mobile Packet Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "desktop_accent",
+            "label": "Desktop Decorative Accent"
+        },
+        {
+            "type": "image_picker",
+            "id": "mobile_accent",
+            "label": "Mobile Decorative Accent"
+        },
+        {
+            "type": "header",
+            "content": "==== Content Settings ===="
+        },
+        {
+            "type": "textarea",
+            "id": "heading",
+            "label": "Heading Text",
+            "default": "Research-backed.\nClinically reviewed."
+        },
+        {
+            "type": "header",
+            "content": "==== Layout Settings ===="
+        },
+        {
+            "type": "number",
+            "id": "desktop_top_padding",
+            "label": "Desktop Top Padding",
+            "default": 56
+        },
+        {
+            "type": "number",
+            "id": "desktop_bottom_padding",
+            "label": "Desktop Bottom Padding",
+            "default": 52
+        },
+        {
+            "type": "number",
+            "id": "mobile_top_padding",
+            "label": "Mobile Top Padding",
+            "default": 0
+        },
+        {
+            "type": "number",
+            "id": "mobile_bottom_padding",
+            "label": "Mobile Bottom Padding",
+            "default": 38
+        }
+    ],
+    "blocks": [
+        {
+            "type": "proof",
+            "name": "Proof Point",
+            "settings": [
+                {
+                    "type": "richtext",
+                    "id": "text",
+                    "label": "Text",
+                    "default": "<p>Lorem ipsum dolor sit amet.</p>"
+                }
+            ]
+        }
+    ],
+    "presets": [
+      {
+        "name": "About Research Proof",
+        "category": "Storytelling",
+        "blocks": [
+          {
+            "type": "proof"
+          },
+          {
+            "type": "proof",
+            "settings": {
+              "text": "<p>Second proof point</p>"
+            }
+          },
+          {
+            "type": "proof",
+            "settings": {
+              "text": "<p>Third proof point</p>"
+            }
+          }
+        ]
+      }
+    ]
+}
+{% endschema %}

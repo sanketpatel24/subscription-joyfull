@@ -1,0 +1,25 @@
+.slideshow{
+  padding: var(--desktop-top-padding) 0 var(--desktop-bottom-padding);    
+  @media (max-width: 989px) {
+    padding: var(--mobile-top-padding) 0 var(--mobile-bottom-padding);
+  }
+}
+
+.slideshow-split{
+  background: var(--background-color);
+  color: var(--information-color);
+}
+
+.slideshow-box{
+  background: var(--background-color);
+  color: var(--information-color);
+}
+
+.slideshow-box .slideshow-box__block-wrap{
+  background: var(--inner-background-color);
+}
+
+.slideshow-text{
+  background: var(--background-color);
+  color: var(--information-color);
+}

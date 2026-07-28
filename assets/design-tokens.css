@@ -1,0 +1,543 @@
+/* ==========================================================================
+   JOYFULL — Design Tokens
+   
+   Loaded first in snippets/stylesheets.liquid (or theme.liquid <style>)
+   so tokens resolve everywhere.
+   ========================================================================== */
+
+:root {
+  
+  /* ----------------------------------------------------------------------
+     FONT WEIGHTS
+     ---------------------------------------------------------------------- */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* ----------------------------------------------------------------------
+     FONT SIZE PRIMITIVES (rem)  — VERIFY against Figma, estimated from board
+     ---------------------------------------------------------------------- */
+  
+  --font-size-5: 0.3125rem;
+  --font-size-6: 0.375rem;
+  --font-size-7: 0.4375rem;
+  --font-size-8: 0.5rem;
+  --font-size-9: 0.5625rem;
+  --font-size-10: 0.625rem;
+  --font-size-11: 0.6875rem;
+  --font-size-12: 0.75rem;
+  --font-size-13: 0.8125rem;
+  --font-size-14: 0.875rem;
+  --font-size-15: 0.9375rem;
+  --font-size-16: 1rem;
+  --font-size-17: 1.0625rem;
+  --font-size-18: 1.125rem;
+  --font-size-19: 1.1875rem;
+  --font-size-20: 1.25rem;
+  --font-size-21: 1.3125rem;
+  --font-size-22: 1.375rem;
+  --font-size-23: 1.4375rem;
+  --font-size-24: 1.5rem;
+  --font-size-25: 1.5625rem;
+  --font-size-26: 1.625rem;
+  --font-size-27: 1.6875rem;
+  --font-size-28: 1.75rem;
+  --font-size-29: 1.8125rem;
+  --font-size-30: 1.875rem;
+  --font-size-31: 1.9375rem;
+  --font-size-32: 2rem;
+  --font-size-33: 2.0625rem;
+  --font-size-34: 2.125rem;
+  --font-size-35: 2.1875rem;
+  --font-size-36: 2.25rem;
+  --font-size-37: 2.3125rem;
+  --font-size-38: 2.375rem;
+  --font-size-39: 2.4375rem;
+  --font-size-40: 2.5rem;
+  --font-size-41: 2.5625rem;
+  --font-size-42: 2.625rem;
+  --font-size-43: 2.6875rem;
+  --font-size-44: 2.75rem;
+  --font-size-45: 2.8125rem;
+  --font-size-46: 2.875rem;
+  --font-size-47: 2.9375rem;
+  --font-size-48: 3rem;
+  --font-size-49: 3.0625rem;
+  --font-size-50: 3.125rem;
+  --font-size-51: 3.1875rem;
+  --font-size-52: 3.25rem;
+  --font-size-53: 3.3125rem;
+  --font-size-54: 3.375rem;
+  --font-size-55: 3.4375rem;
+  --font-size-56: 3.5rem;
+  --font-size-57: 3.5625rem;
+  --font-size-58: 3.625rem;
+  --font-size-59: 3.6875rem;
+  --font-size-60: 3.75rem;
+  --font-size-61: 3.8125rem;
+  --font-size-62: 3.875rem;
+  --font-size-63: 3.9375rem;
+  --font-size-64: 4rem;
+  --font-size-65: 4.0625rem;
+  --font-size-66: 4.125rem;
+  --font-size-67: 4.1875rem;
+  --font-size-68: 4.25rem;
+  --font-size-69: 4.3125rem;
+  --font-size-70: 4.375rem;
+  --font-size-71: 4.4375rem;
+  --font-size-72: 4.5rem;
+  --font-size-73: 4.5625rem;
+  --font-size-74: 4.625rem;
+  --font-size-75: 4.6875rem;
+  --font-size-76: 4.75rem;
+  --font-size-77: 4.8125rem;
+  --font-size-78: 4.875rem;
+  --font-size-79: 4.9375rem;
+  --font-size-80: 5rem;
+  --font-size-81: 5.0625rem;
+  --font-size-82: 5.125rem;
+  --font-size-83: 5.1875rem;
+  --font-size-84: 5.25rem;
+  --font-size-85: 5.3125rem;
+  --font-size-86: 5.375rem;
+  --font-size-87: 5.4375rem;
+  --font-size-88: 5.5rem;
+  --font-size-89: 5.5625rem;
+  --font-size-90: 5.625rem;
+  --font-size-91: 5.6875rem;
+  --font-size-92: 5.75rem;
+  --font-size-93: 5.8125rem;
+  --font-size-94: 5.875rem;
+  --font-size-95: 5.9375rem;
+  --font-size-96: 6rem;
+  --font-size-97: 6.0625rem;
+  --font-size-98: 6.125rem;
+  --font-size-99: 6.1875rem;
+  --font-size-100: 6.25rem;
+
+  /* ----------------------------------------------------------------------
+     LINE HEIGHT
+     ---------------------------------------------------------------------- */
+  --line-height-heading: 1.1; /* 110% */
+  --line-height-body: 1.5; /* 150% */
+  --line-height-tight: 1; /* 100% */
+
+  /* ----------------------------------------------------------------------
+     LETTER SPACING
+     ---------------------------------------------------------------------- */
+  --letter-spacing-tight: -0.01em; /* -1% */
+  --letter-spacing-normal: 0; /* 0% */
+  --letter-spacing-wide: 0.02em; /* 2% */
+
+  /* ----------------------------------------------------------------------
+     COLOR — PRIMARY
+     ---------------------------------------------------------------------- */
+  --color-joy: #FEC844;
+  --color-off-white: #FFF9F0;
+  --color-sand: #D2C6B7;
+  --color-moss: #6F715C;
+  --color-onyx: #2F261C;
+
+  /* ----------------------------------------------------------------------
+     COLOR — SECONDARY
+     ---------------------------------------------------------------------- */
+  --color-orange: #F47A00;
+  --color-creme: #FFEFC8;
+  --color-azure: #2F57A4;
+  --color-aqua: #8FC9C9;
+
+  /* ----------------------------------------------------------------------
+     COLOR — NEUTRALS / TEXT (derived, common UI needs not shown directly
+     in swatches but required for body copy, borders, surfaces)
+     ---------------------------------------------------------------------- */
+  --color-white: #FFFFFF;
+  --color-black: #000000;
+  --color-text-body: var(--color-onyx);
+  --color-text-muted: var(--color-moss);
+  --color-border: var(--color-sand);
+  --color-surface: var(--color-white);
+  --color-surface-alt: var(--color-off-white);
+
+
+  /* ----------------------------------------------------------------------
+     SPACING SCALE (rem) — common 4/8 step scale; VERIFY against Figma
+     ---------------------------------------------------------------------- */
+  --spacing-1: 0.0625rem;
+  --spacing-2: 0.125rem;
+  --spacing-3: 0.1875rem;
+  --spacing-4: 0.25rem;
+  --spacing-5: 0.3125rem;
+  --spacing-6: 0.375rem;
+  --spacing-7: 0.4375rem;
+  --spacing-8: 0.5rem;
+  --spacing-9: 0.5625rem;
+  --spacing-10: 0.625rem;
+  --spacing-11: 0.6875rem;
+  --spacing-12: 0.75rem;
+  --spacing-13: 0.8125rem;
+  --spacing-14: 0.875rem;
+  --spacing-15: 0.9375rem;
+  --spacing-16: 1rem;
+  --spacing-17: 1.0625rem;
+  --spacing-18: 1.125rem;
+  --spacing-19: 1.1875rem;
+  --spacing-20: 1.25rem;
+  --spacing-21: 1.3125rem;
+  --spacing-22: 1.375rem;
+  --spacing-23: 1.4375rem;
+  --spacing-24: 1.5rem;
+  --spacing-25: 1.5625rem;
+  --spacing-26: 1.625rem;
+  --spacing-27: 1.6875rem;
+  --spacing-28: 1.75rem;
+  --spacing-29: 1.8125rem;
+  --spacing-30: 1.875rem;
+  --spacing-31: 1.9375rem;
+  --spacing-32: 2rem;
+  --spacing-33: 2.0625rem;
+  --spacing-34: 2.125rem;
+  --spacing-35: 2.1875rem;
+  --spacing-36: 2.25rem;
+  --spacing-37: 2.3125rem;
+  --spacing-38: 2.375rem;
+  --spacing-39: 2.4375rem;
+  --spacing-40: 2.5rem;
+  --spacing-41: 2.5625rem;
+  --spacing-42: 2.625rem;
+  --spacing-43: 2.6875rem;
+  --spacing-44: 2.75rem;
+  --spacing-45: 2.8125rem;
+  --spacing-46: 2.875rem;
+  --spacing-47: 2.9375rem;
+  --spacing-48: 3rem;
+  --spacing-49: 3.0625rem;
+  --spacing-50: 3.125rem;
+  --spacing-51: 3.1875rem;
+  --spacing-52: 3.25rem;
+  --spacing-53: 3.3125rem;
+  --spacing-54: 3.375rem;
+  --spacing-55: 3.4375rem;
+  --spacing-56: 3.5rem;
+  --spacing-57: 3.5625rem;
+  --spacing-58: 3.625rem;
+  --spacing-59: 3.6875rem;
+  --spacing-60: 3.75rem;
+  --spacing-61: 3.8125rem;
+  --spacing-62: 3.875rem;
+  --spacing-63: 3.9375rem;
+  --spacing-64: 4rem;
+  --spacing-65: 4.0625rem;
+  --spacing-66: 4.125rem;
+  --spacing-67: 4.1875rem;
+  --spacing-68: 4.25rem;
+  --spacing-69: 4.3125rem;
+  --spacing-70: 4.375rem;
+  --spacing-71: 4.4375rem;
+  --spacing-72: 4.5rem;
+  --spacing-73: 4.5625rem;
+  --spacing-74: 4.625rem;
+  --spacing-75: 4.6875rem;
+  --spacing-76: 4.75rem;
+  --spacing-77: 4.8125rem;
+  --spacing-78: 4.875rem;
+  --spacing-79: 4.9375rem;
+  --spacing-80: 5rem;
+  --spacing-81: 5.0625rem;
+  --spacing-82: 5.125rem;
+  --spacing-83: 5.1875rem;
+  --spacing-84: 5.25rem;
+  --spacing-85: 5.3125rem;
+  --spacing-86: 5.375rem;
+  --spacing-87: 5.4375rem;
+  --spacing-88: 5.5rem;
+  --spacing-89: 5.5625rem;
+  --spacing-90: 5.625rem;
+  --spacing-91: 5.6875rem;
+  --spacing-92: 5.75rem;
+  --spacing-93: 5.8125rem;
+  --spacing-94: 5.875rem;
+  --spacing-95: 5.9375rem;
+  --spacing-96: 6rem;
+  --spacing-97: 6.0625rem;
+  --spacing-98: 6.125rem;
+  --spacing-99: 6.1875rem;
+  --spacing-100: 6.25rem;
+  --spacing-101: 6.3125rem;
+  --spacing-102: 6.375rem;
+  --spacing-103: 6.4375rem;
+  --spacing-104: 6.5rem;
+  --spacing-105: 6.5625rem;
+  --spacing-106: 6.625rem;
+  --spacing-107: 6.6875rem;
+  --spacing-108: 6.75rem;
+  --spacing-109: 6.8125rem;
+  --spacing-110: 6.875rem;
+  --spacing-111: 6.9375rem;
+  --spacing-112: 7rem;
+  --spacing-113: 7.0625rem;
+  --spacing-114: 7.125rem;
+  --spacing-115: 7.1875rem;
+  --spacing-116: 7.25rem;
+  --spacing-117: 7.3125rem;
+  --spacing-118: 7.375rem;
+  --spacing-119: 7.4375rem;
+  --spacing-120: 7.5rem;
+
+  /* ----------------------------------------------------------------------
+     TYPOGRAPHY SCALE — Subtitle & Text (Figtree)
+     Source: type-spec screenshot (Subtitle 1/2, Text 1-4 + CAPS variants)
+     ---------------------------------------------------------------------- */
+
+  --line-height-s1: 1.28; /* 128% */
+  --line-height-t1: 1.28; /* 128% */
+  --line-height-t2: 1.36; /* 136% */
+  --line-height-t3: 1.36; /* 136% */
+  --line-height-t4: 1.36; /* 136% */
+}
+/* ==========================================================================
+   JOYFULL — Typography Classes (Header & Description)
+   Built on top of joyfull-design-tokens.css — load tokens file first.
+
+   Usage:
+     <h1 class="heading-1">Headline 1</h1>
+     <h2 class="heading-2">Headline 2</h2>
+     <h3 class="heading-3">Headline 3</h3>
+   ========================================================================== */
+
+/* ----------------------------------------------------------------------
+   HEADINGS
+   ---------------------------------------------------------------------- */
+.heading-l,
+.heading-m,
+.heading-s {
+  font-family: var(--font-heading--family);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-heading);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.heading-l {
+  font-size: var(--font-size-56);
+}
+@media (max-width:749px){
+  .heading-l {
+    font-size: var(--font-size-40);
+  }
+}
+
+.heading-m {
+  font-size: var(--font-size-40);
+}
+@media (max-width:749px){
+  .heading-m {
+    font-size: var(--font-size-32);
+  }
+}
+
+.heading-s {
+  font-size: var(--font-size-32);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Optional accent variant — e.g. brand-colored heading, matches "Joy" mark */
+.heading-l--accent,
+.heading-m--accent,
+.heading-s--accent {
+  color: var(--color-joy);
+}
+
+/* ==========================================================================
+   TYPOGRAPHY SCALE — Subtitle & Text (Figtree)
+
+   Usage:
+     <p class="subtitle-1">Subtitle 1 — Medium</p>
+     <p class="subtitle-1 subtitle-1--caps">Subtitle 1 — Medium, Capitals</p>
+     <p class="text-2 text-2--medium">Text 2 — Medium</p>
+   ========================================================================== */
+
+/* ----------------------------------------------------------------------
+   SUBTITLE 1 — Semibold, 24px, LH 128%
+   ---------------------------------------------------------------------- */
+.subtitle-1 {
+  font-family: var(--font-heading--family);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-24);
+  line-height: var(--line-height-s1);
+  letter-spacing: var(--letter-spacing-normal);
+}
+
+.subtitle-1--caps {
+  text-transform: uppercase;
+}
+
+/* ----------------------------------------------------------------------
+   SUBTITLE 2 — Semibold, 18px, LH 120%
+   ---------------------------------------------------------------------- */
+.subtitle-2 {
+  font-family: var(--font-heading--family);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-18);
+  line-height: var(--line-height-heading);
+  letter-spacing: var(--letter-spacing-normal);
+}
+
+.subtitle-2--caps {
+  text-transform: uppercase;
+}
+
+/* ----------------------------------------------------------------------
+   TEXT 1 (Large) — Regular/Medium, 16px, LH 128%
+   ---------------------------------------------------------------------- */
+.text-common {
+  font-family: var(--font-body--family);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-16);
+  line-height: var(--line-height-t1);
+  letter-spacing: var(--letter-spacing-normal);
+}
+
+.text-common--medium {
+  font-weight: var(--font-weight-medium);
+}
+
+.text-common--caps {
+  text-transform: uppercase;
+}
+
+/* ----------------------------------------------------------------------
+   TEXT 2 (Medium) — Regular/Medium, 14px, LH 136%
+   ---------------------------------------------------------------------- */
+.text-2 {
+  font-family: var(--font-body--family);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-t2);
+  letter-spacing: var(--letter-spacing-normal);
+}
+
+.text-2--medium {
+  font-weight: var(--font-weight-medium);
+}
+
+.text-2--caps {
+  text-transform: uppercase;
+}
+
+/* ----------------------------------------------------------------------
+   TEXT 3 (Small) — Regular/Medium, 12px, LH 136%
+   ---------------------------------------------------------------------- */
+.text-3 {
+  font-family: var(--font-body--family);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-12);
+  line-height: var(--line-height-t3);
+  letter-spacing: var(--letter-spacing-normal);
+}
+
+.text-3--medium {
+  font-weight: var(--font-weight-medium);
+}
+
+.text-3--caps {
+  text-transform: uppercase;
+}
+
+/* ----------------------------------------------------------------------
+   TEXT 4 (Tiny) — Regular/Medium, 10px, LH 136%
+   ---------------------------------------------------------------------- */
+.text-4 {
+  font-family: var(--font-body--family);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-10);
+  line-height: var(--line-height-t4);
+  letter-spacing: var(--letter-spacing-normal);
+}
+
+.text-4--medium {
+  font-weight: var(--font-weight-medium);
+}
+
+.text-4--caps {
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   UI/UX — Button & Hyperlink Text Styles
+   Source: type-spec screenshot (Button-Large/Small, Hyperlink-Large/Small
+   + CAPS variants). Font color matches Text-Text-1 (#2F261C / --color-onyx).
+
+   Usage:
+     <span class="title-large">Button-Large</span>
+     <span class="title-small title-small--caps">BUTTON-SMALL, CAPITALS</span>
+     <a class="hyperlink-large">Hyperlink-Large</a>
+     <a class="hyperlink-small hyperlink-small--caps">HYPERLINK SMALL — CAPS</a>
+   ========================================================================== */
+
+/* ----------------------------------------------------------------------
+   BUTTON-LARGE — Bold, 16px, LH 100%
+   ---------------------------------------------------------------------- */
+.title-large {
+  font-family: var(--font-body--family);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-16);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-normal);
+}
+
+.title-large--caps {
+  text-transform: uppercase;
+}
+
+/* ----------------------------------------------------------------------
+   BUTTON-SMALL — Bold, 14px, LH 100%
+   ---------------------------------------------------------------------- */
+.title-small {
+  font-family: var(--font-body--family);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-normal);
+}
+
+@media (max-width:749px){
+  .title-small {
+    font-size: var(--font-size-12);
+  }
+}
+
+.title-small--caps {
+  text-transform: uppercase;
+}
+
+/* ----------------------------------------------------------------------
+   HYPERLINK-LARGE — Bold, Underline, 16px, LH 100%
+   ---------------------------------------------------------------------- */
+.hyperlink-large {
+  font-family: var(--font-body--family);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-16);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-normal);
+  text-decoration: underline;
+}
+
+.hyperlink-large--caps {
+  text-transform: uppercase;
+}
+
+/* ----------------------------------------------------------------------
+   HYPERLINK-SMALL — Bold, Underline, 14px, LH 100%
+   ---------------------------------------------------------------------- */
+.hyperlink-small {
+  font-family: var(--font-body--family);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-normal);
+  text-decoration: underline;
+}
+
+.hyperlink-small--caps {
+  text-transform: uppercase;
+}

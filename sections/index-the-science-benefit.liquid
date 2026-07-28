@@ -1,0 +1,418 @@
+{%- liquid
+    assign background_color = section.settings.background_color
+    assign information_color = section.settings.information_color
+    assign desktop_top_padding = section.settings.desktop_top_padding
+    assign desktop_bottom_padding = section.settings.desktop_bottom_padding
+    assign mobile_top_padding = section.settings.mobile_top_padding
+    assign mobile_bottom_padding = section.settings.mobile_bottom_padding
+
+    assign main_desktop_image = section.settings.main_desktop_image
+    assign main_mobile_image = section.settings.main_mobile_image
+
+    assign heading_size = section.settings.heading_size
+    assign heading_text = section.settings.heading_text
+    assign details_text = section.settings.details_text
+    assign button_text = section.settings.button_text
+    assign button_link = section.settings.button_link
+    assign button_style = section.settings.button_style
+-%}
+
+{%- if heading_text != blank or details_text != blank or button_link != blank or main_desktop_image != blank or main_mobile_image != blank or section.blocks.size > 0 -%}
+    {{ 'index-the-science-benefit.css' | asset_url | stylesheet_tag }}
+    <script src="{{ 'index-the-science-benefit.js' | asset_url }}" defer></script>
+
+    {%- style -%}
+        #shopify-section-{{ section.id }} .science {
+            {%- if background_color != blank -%}
+                --background-color: {{ background_color }};
+            {%- endif -%}
+            {%- if information_color != blank -%}
+                --information-color: {{ information_color }};
+            {%- endif -%}
+            {%- if desktop_top_padding != blank -%}
+                --desktop-top-padding: {{ desktop_top_padding }}px;
+            {%- endif -%}
+            {%- if desktop_bottom_padding != blank -%}
+                --desktop-bottom-padding: {{ desktop_bottom_padding }}px;
+            {%- endif -%}
+            {%- if mobile_top_padding != blank -%}
+                --mobile-top-padding: {{ mobile_top_padding }}px;
+            {%- endif -%}
+            {%- if mobile_bottom_padding != blank -%}
+                --mobile-bottom-padding: {{ mobile_bottom_padding }}px;
+            {%- endif -%}
+        }
+    {%- endstyle -%}
+
+    <section class="science">
+        <div class="page-width">
+            <div class="science__body">
+                {%- if heading_text != blank or details_text != blank or button_link != blank -%}
+                    <div class="science__detail">
+                        <div class="science__detail-wrap">
+                            {%- if heading_text != blank -%}
+                                <div class="heading-m science__title">
+                                    <{{ heading_size }}>
+                                        {{ heading_text | newline_to_br }}
+                                    </{{ heading_size }}>
+                                </div>                                    
+                            {%- endif -%}
+                            {%- if details_text != blank -%}
+                                <div class="text-common science__infos">
+                                    {{ details_text }}
+                                </div>                                    
+                            {%- endif -%}
+                            {%- if button_text != blank and button_link != blank -%}                                    
+                                <div class="science__links show--desktop">
+                                    {%- render 'button-common-style',                                                  
+                                        main_button_text: button_text, 
+                                        main_button_link: button_link,
+                                        main_button_style: button_style
+                                    -%}
+                                </div>                                    
+                            {%- endif -%}
+                        </div>
+                    </div>
+                {%- endif -%}
+                {%- if main_desktop_image != blank and main_mobile_image != blank -%}
+                    <div class="science__media">
+                        <div class="science__media-wrap">
+                            {% render 'responsive-image-lazyload',
+                                desktop_image: main_desktop_image,
+                                mobile_image: main_mobile_image,
+                                class: 'custom--image',
+                                sizes: '(max-width: 749px) 100vw, 100vw'
+                            %}
+                        </div>
+                    </div>
+                {%- endif -%}
+                {%- if section.blocks.size > 0 -%}
+                    <div class="science__loop show--desktop">
+                        <div class="science__loop-wrap">
+                            {%- assign half = section.blocks.size | divided_by: 2 -%}
+                            <div class="science__leftside">
+                                {%- for block in section.blocks -%}
+                                    {%- liquid
+                                        assign icon = block.settings.icon
+                                        assign title = block.settings.title
+                                        assign detail = block.settings.detail
+                                    -%}
+                                    {%- if forloop.index0 < half -%}
+                                        {%- if icon != blank or title != blank or detail != blank -%}
+                                            <div class="science__block">
+                                                {%- if icon != blank -%}
+                                                    <div class="science__block-image">
+                                                        {% render 'responsive-image-lazyload',
+                                                            desktop_image: icon,
+                                                            mobile_image: icon,
+                                                            class: 'custom--image',
+                                                            sizes: '(max-width: 749px) 100vw, 100vw'                                                            
+                                                        %}
+                                                    </div>
+                                                {%- endif -%}
+                                                {%- if title != blank -%}
+                                                    <div class="science__block-title">
+                                                        {{ title }}
+                                                    </div>
+                                                {%- endif -%}
+                                                {%- if detail != blank -%}
+                                                    <div class="text-common science__block-infos">
+                                                        {{ detail }}
+                                                    </div>
+                                                {%- endif -%}                                                
+                                            </div>
+                                        {%- endif -%}
+                                    {%- endif -%}
+                                {%- endfor -%}
+                            </div>
+                            <div class="science__rightside">
+                                {%- for block in section.blocks -%}
+                                    {%- liquid
+                                        assign icon = block.settings.icon
+                                        assign title = block.settings.title
+                                        assign detail = block.settings.detail
+                                    -%}
+                                    {%- if forloop.index0 >= half -%}
+                                        {%- if icon != blank or title != blank or detail != blank -%}
+                                            <div class="science__block">
+                                                {%- if icon != blank -%}
+                                                    <div class="science__block-image">
+                                                        {% render 'responsive-image-lazyload',
+                                                            desktop_image: icon,
+                                                            mobile_image: icon,
+                                                            class: 'custom--image',
+                                                            sizes: '(max-width: 749px) 100vw, 100vw'                                                            
+                                                        %}
+                                                    </div>
+                                                {%- endif -%}
+                                                {%- if title != blank -%}
+                                                    <div class="science__block-title">
+                                                        {{ title }}
+                                                    </div>
+                                                {%- endif -%}
+                                                {%- if detail != blank -%}
+                                                    <div class="text-common science__block-infos">
+                                                        {{ detail }}
+                                                    </div>
+                                                {%- endif -%}                                                
+                                            </div>
+                                        {%- endif -%}
+                                    {%- endif -%}
+                                {%- endfor -%}
+                            </div>                            
+                        </div>
+                    </div>
+                {%- endif -%}
+                {%- if section.blocks.size > 0 -%}
+                    <div class="science__item show--mobile">
+                        <div class="science__item-wrap">
+                            <div class="accordion">
+                                <ul class="list-unstyled">
+                                    {%- for block in section.blocks -%}
+                                        {%- liquid
+                                            assign icon = block.settings.icon
+                                            assign title = block.settings.title
+                                            assign detail = block.settings.detail
+                                        -%}
+                                        {%- if title != blank and detail != blank -%}
+                                            <li>
+                                                {%- if icon != blank or title != blank -%}
+                                                    <div class="question">
+                                                        <div class="science__both">
+                                                            {%- if icon != blank -%}
+                                                                <div class="science__both-image">
+                                                                    {% render 'responsive-image-lazyload',
+                                                                        desktop_image: icon,
+                                                                        mobile_image: icon,
+                                                                        class: 'custom--image',
+                                                                        sizes: '(max-width: 749px) 100vw, 100vw'
+                                                                    %}
+                                                                </div>
+                                                            {%- endif -%}
+                                                            {%- if title != blank -%}
+                                                                <div class="science__both-title">
+                                                                    {{ title }}
+                                                                </div>
+                                                            {%- endif -%}
+                                                        </div>
+                                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.28089 6.02653C1.25652 6.01912 1.27994 5.95083 1.26361 5.92967C1.19569 5.84053 1.19838 5.77964 1.14535 5.69056C1.06678 5.55843 0.693839 5.30603 1.01242 4.98744C1.01243 4.98743 1.01243 4.98742 1.01244 4.98742C1.01557 4.98429 1.01876 4.98116 1.02201 4.97803C1.0838 4.91843 1.17666 4.87876 1.24924 4.81407C1.32185 4.74934 1.7622 4.30308 1.82489 4.31593C1.9125 4.33786 1.93021 4.5829 1.96446 4.60707C1.9879 4.62357 2.05279 4.60786 2.08548 4.62623C2.19087 4.6855 2.20448 4.75805 2.38812 4.72276C2.36011 4.81012 2.33209 4.89747 2.30407 4.98483C2.36953 4.9968 2.35212 5.13155 2.37983 5.15088C2.40256 5.16672 2.45949 5.13242 2.48172 5.1504C2.50691 5.17032 2.49231 5.2542 2.54075 5.28781C2.61994 5.34313 2.75091 5.23609 2.80638 5.26134C2.86386 5.28754 2.86426 5.4173 2.95953 5.42882C2.97932 5.42242 2.99911 5.41603 3.0189 5.40964C3.0437 5.37523 3.06851 5.34083 3.09332 5.30642C3.134 5.31953 3.08489 5.39177 3.1085 5.41759C3.13625 5.44799 3.20861 5.4053 3.22791 5.42513C3.24367 5.44142 3.21928 5.50928 3.24295 5.52717C3.27723 5.5535 3.3372 5.48027 3.36596 5.48412C3.37731 5.48578 3.53434 5.5693 3.54165 5.57556C3.59589 5.62454 3.50922 5.72019 3.5424 5.76931C3.63479 5.90518 3.82561 5.94868 3.95902 6.02642C4.01862 6.0611 4.0625 6.11559 4.09493 6.17717C3.78759 6.33644 3.76987 6.68185 4.07366 6.25551C4.07402 6.35974 4.20965 6.29828 4.24257 6.36452C4.26376 6.40745 4.23534 6.48026 4.28245 6.52473C4.36637 6.6033 4.59913 6.54828 4.36243 6.83171C4.50365 6.88124 4.49191 7.05818 4.75587 6.86297C4.79449 6.87354 4.72077 7.07332 4.72977 7.11948C4.73836 7.16306 4.87678 7.42497 4.90608 7.46116C4.93538 7.49735 4.98895 7.55842 5.03667 7.56586C5.09624 7.57559 5.35854 7.3617 5.14185 7.70177C5.2361 7.75097 5.25368 7.78449 5.28805 7.88353C5.29428 7.90146 5.25431 7.94415 5.26133 7.95125C5.27587 7.96578 5.33114 7.95997 5.36081 7.98218C5.40957 8.01875 5.34695 8.13006 5.47502 7.99248C5.52542 7.99833 5.57582 8.00419 5.62621 8.01005C5.61045 8.04555 5.59468 8.08106 5.57891 8.11656C5.62188 8.10366 5.66486 8.09076 5.70784 8.07786C5.49796 8.25241 5.71723 8.24482 5.79316 8.10017C5.80792 8.19446 5.82268 8.28874 5.83744 8.38303C5.61138 8.59388 5.93195 8.52796 6.04001 8.39846C6.04607 8.40488 6.05214 8.41129 6.05821 8.4177C6.05476 8.53038 6.15241 8.53305 6.18002 8.6386C6.20762 8.74414 6.1801 8.75917 6.09986 8.87989C6.12128 8.8898 6.1427 8.89971 6.16412 8.90962C6.52179 8.71636 6.03033 9.17876 6.3824 9.10822C6.25424 9.32632 6.45604 9.34624 6.58204 9.36725C6.59669 9.36971 6.63045 9.33625 6.6522 9.33728C6.70497 9.34021 6.73284 9.45448 6.8388 9.34365C6.83204 9.39961 6.82528 9.45558 6.81852 9.51154C6.85833 9.51194 6.89815 9.51234 6.93797 9.51274C6.9717 9.4788 7.00544 9.44486 7.03917 9.41092C6.96434 9.56673 7.07228 9.58603 7.07609 9.64499C7.07675 9.65683 7.03142 9.70485 7.03811 9.737C7.04568 9.7748 7.10178 9.80327 7.11423 9.84489C7.17645 9.8037 7.23867 9.76251 7.30088 9.72131C7.37728 9.74162 7.2578 9.89509 7.27559 9.93409C7.27886 9.94104 7.38193 10.0245 7.38987 10.0266C7.4541 10.0447 7.55871 9.91674 7.65279 10.0606C7.66948 10.0863 7.64638 10.1437 7.66392 10.1645C7.69483 10.2012 7.88801 10.2119 7.98034 10.1356C7.91585 10.2822 8.06877 10.3488 8.07062 10.4116C8.07101 10.4308 8.006 10.5002 8.02169 10.5445C8.03434 10.5805 8.1508 10.5893 8.17263 10.6291C8.19557 10.6717 8.15079 10.7398 8.16147 10.7585C8.17162 10.7761 8.22998 10.7433 8.2486 10.7624C8.30597 10.823 8.28599 10.9497 8.33124 10.9977C8.33193 10.9984 8.33264 10.9991 8.33336 10.9998L7.66632 10.9998C7.73209 10.9326 7.65822 10.741 7.65473 10.6259C7.67747 10.6206 7.72019 10.6359 7.73513 10.6215C7.92089 10.4442 8.15051 10.2643 8.36147 10.1111C8.45926 10.0399 8.85262 10.0129 8.49088 9.76333C8.46672 9.68043 8.80352 9.59009 8.84599 9.55133C8.88844 9.51255 8.86583 9.42556 8.89694 9.39283C8.99089 9.29411 9.09822 9.26576 9.16775 9.10079C9.18556 9.05802 9.15308 8.96065 9.17177 8.94347C9.19443 8.92293 9.28047 8.96247 9.31245 8.93848C9.38817 8.88078 9.49183 8.73581 9.5667 8.68267C9.5805 8.67311 9.63975 8.72414 9.67369 8.72466C9.80611 8.72692 9.87322 8.64813 9.68427 8.485C9.86763 8.50153 9.85363 8.3332 9.92535 8.25031C10.0774 8.07546 10.4162 7.8188 10.4847 7.60244C10.5278 7.46599 10.4465 7.38934 10.6468 7.32528C10.6913 7.31104 10.7409 7.30221 10.7945 7.28465C10.9204 7.24364 11.1427 7.31297 11.0306 7.07362C11.1688 7.02655 11.2103 6.92043 11.4293 7.002C11.4014 6.95785 11.3734 6.91369 11.3455 6.86953C11.356 6.85728 11.3664 6.84503 11.3769 6.83278C11.4148 6.86362 11.4527 6.89446 11.4907 6.9253C11.5813 6.85318 11.5432 6.60862 11.6131 6.54077C11.7302 6.42687 12.0826 6.18431 12.2385 6.1212C12.3213 6.0877 12.2508 6.01093 12.4354 6.12902C12.4379 6.10548 12.4404 6.08195 12.4428 6.05841C12.4178 6.01713 12.3928 5.97585 12.3678 5.93456C12.4411 5.85864 12.581 5.82166 12.6516 5.75007C12.78 5.61953 12.8832 5.33387 13.0731 5.26375C13.1209 5.24626 13.23 5.27386 13.2611 5.24116C13.3065 5.19363 13.2044 5.0689 13.2612 5.00782C13.3594 4.90274 13.6805 4.84524 13.7665 4.73911C13.7921 4.70766 13.7632 4.65214 13.7784 4.62793C13.8416 4.52597 13.9129 4.46158 13.9269 4.31715C14.1206 4.34079 14.2536 4.48845 14.4215 4.60367C14.5484 4.69054 14.8572 4.87692 14.9595 4.96181C15.0314 5.02145 15.0931 5.12883 15.1741 5.19265C15.13 5.35235 15.0235 5.33153 14.839 5.31247C14.6902 5.46933 14.5415 5.6262 14.3927 5.78307C14.3393 5.75746 14.2859 5.73186 14.2325 5.70626C14.2324 5.70617 14.2323 5.70609 14.2323 5.706C14.128 5.71909 14.2048 5.8457 14.1963 5.90044C14.1144 6.42455 13.345 6.84785 12.9865 7.15649C12.9093 7.22307 12.7287 7.51012 12.6153 7.49528C12.5858 7.49134 12.5213 7.43398 12.5051 7.44492C12.4199 7.60252 12.3348 7.76011 12.2496 7.91771C11.9054 8.07266 11.7255 8.40886 11.4886 8.67494C10.8477 9.39488 10.222 10.1165 9.53816 10.7713C9.4059 10.8977 9.28739 11.1075 9.13133 11.2047C9.06628 11.2453 8.94644 11.1695 8.94992 11.3118C8.92283 11.2862 8.89575 11.2606 8.86866 11.235C8.83989 11.3274 8.86114 11.4261 8.79931 11.5001C8.74714 11.5623 8.59971 11.7176 8.53909 11.7581C8.50784 11.7792 8.46836 11.7202 8.44417 11.7449C8.4394 11.7499 8.4349 11.7564 8.43057 11.7641L8.09019 12.1852L7.5691 11.7641C7.51039 11.7312 7.38142 11.7086 7.33038 11.6576C7.27807 11.6052 7.24661 11.4603 7.19818 11.4283C7.02417 11.3127 6.78232 11.239 6.65051 11.0621C6.61425 11.0131 6.62326 10.8944 6.60813 10.8828C6.57833 10.8604 6.50854 10.9147 6.48304 10.9052C6.35375 10.8565 6.28874 10.644 6.20444 10.5539C5.92974 10.2601 5.60155 9.98605 5.32993 9.69163C5.15828 9.50567 4.85023 9.21945 4.73181 9.00771C4.70628 8.96204 4.78373 8.90357 4.75384 8.87368C4.72068 8.84055 4.65682 8.86851 4.63763 8.85673C4.50443 8.7755 4.22136 8.58524 4.16706 8.4371C4.15679 8.40881 4.19605 8.34157 4.18431 8.33022C4.17847 8.32438 4.12893 8.34752 4.10688 8.33289C3.91205 8.20381 3.81515 8.06453 3.66891 7.89337C3.38857 7.56584 2.9688 7.28127 2.6861 6.9254C2.62448 6.84788 2.6821 6.69485 2.67125 6.68613C2.64766 6.66679 2.56308 6.72389 2.50211 6.69791C2.30004 6.61087 2.18094 6.34059 2.00794 6.23861C1.92251 6.18818 1.73925 6.18476 1.6525 6.13781C1.5832 6.10032 1.49239 5.93896 1.42924 5.95477C1.39099 5.96423 1.30772 6.03418 1.28089 6.02653ZM4.2721 6.63263C4.1401 6.74561 4.34186 6.74377 4.37011 6.64052C4.37647 6.61727 4.30636 6.60329 4.2721 6.63263ZM8.19254 10.593C8.15664 10.559 8.12074 10.5249 8.08484 10.4908C8.08627 10.5185 8.08771 10.5462 8.08914 10.5739C8.11755 10.5875 8.14596 10.6012 8.17437 10.6148C8.18043 10.6076 8.18648 10.6003 8.19254 10.593Z" fill="currentColor"/></svg>                                                    
+                                                    </div>
+                                                {%- endif -%}
+                                                {%- if detail != blank -%}
+                                                    <div class="answer">
+                                                        <div class="text-common accordion__answer-common">
+                                                            {{ detail }}
+                                                        </div>
+                                                    </div>
+                                                {%- endif -%}
+                                            </li>
+                                        {%- endif -%}
+                                    {%- endfor -%}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                {%- endif -%}
+                {%- if button_text != blank and button_link != blank -%}                                    
+                    <div class="science__links show--mobile">
+                        {%- render 'button-common-style',                                                  
+                            main_button_text: button_text, 
+                            main_button_link: button_link,
+                            main_button_style: button_style
+                        -%}
+                    </div>                                    
+                {%- endif -%}
+            </div>
+        </div>
+    </section>
+{%- endif -%}
+
+{% schema %}
+{
+    "name": "Index The Science Benefit",
+    "class": "index-the-science-benefit__section",
+    "settings": [
+        {
+            "type": "header",
+            "content": "==== Color Settings ===="
+        },
+        {
+            "type": "color",
+            "id": "background_color",
+            "label": "Background Color"
+        },
+        {
+            "type": "color",
+            "id": "information_color",
+            "label": "Information Color"
+        },
+        {
+            "type": "header",
+            "content": "==== Layout Settings ===="
+        },
+        {
+            "type": "number",
+            "id": "desktop_top_padding",
+            "label": "Desktop Top Padding",
+            "default": 80
+        },
+        {
+            "type": "number",
+            "id": "desktop_bottom_padding",
+            "label": "Desktop Bottom Padding",
+            "default": 116
+        },
+        {
+            "type": "number",
+            "id": "mobile_top_padding",
+            "label": "Mobile Top Padding",
+            "default": 32
+        },
+        {
+            "type": "number",
+            "id": "mobile_bottom_padding",
+            "label": "Mobile Bottom Padding",
+            "default": 32
+        },
+        {
+            "type": "header",
+            "content": "==== Media Settings ===="
+        },
+        {
+            "type": "image_picker",
+            "id": "main_desktop_image",
+            "label": "Add Main Desktop Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "main_mobile_image",
+            "label": "Add Main Mobile Image"
+        },
+        {
+            "type": "header",
+            "content": "==== Content Settings ===="
+        },
+        {
+            "type": "select",
+            "id": "heading_size",
+            "label": "Heading Size",
+            "default": "h2",
+            "options": [
+                {
+                    "label": "H1",
+                    "value": "h1"
+                },
+                {
+                    "label": "H2",
+                    "value": "h2"
+                },
+                {
+                    "label": "H3",
+                    "value": "h3"
+                },
+                {
+                    "label": "H4",
+                    "value": "h4"
+                },
+                {
+                    "label": "H5",
+                    "value": "h5"
+                },
+                {
+                    "label": "H6",
+                    "value": "h6"
+                },
+                {
+                    "label": "Span",
+                    "value": "span"
+                }
+            ]
+        },
+        {
+            "type": "textarea",
+            "id": "heading_text",
+            "label": "Heading Text",
+            "default": "Built from the gut up"
+        },
+        {
+            "type": "richtext",
+            "id": "details_text",
+            "label": "Details Text",
+            "default": "<p>We did the research, read the labels, and couldn't ignore what we saw. Some brands aren't just missing the mark on gut health, they're formulated in ways that actively disrupt it. So we built Joyfull from the gut up, with ingredients chosen to support it.</p>"
+        },
+        {
+            "type": "text",
+            "id": "button_text",
+            "label": "Button Text",
+            "default": "The Science"
+        },
+        {
+            "type": "url",
+            "id": "button_link",
+            "label": "Button Link",
+            "default": "/"
+        },
+        {
+            "type": "select",
+            "id": "button_style",
+            "label": "Button Style",
+            "default": "secondary-button",
+            "options": [
+                {
+                    "label": "Primary Button",
+                    "value": "primary-button"
+                },
+                {
+                    "label": "Secondary Button",
+                    "value": "secondary-button"
+                }
+            ]
+        }
+    ],
+    "blocks": [
+        {
+            "type": "information",
+            "name": "Information",
+            "limit": 4,
+            "settings": [
+                {
+                    "type": "image_picker",
+                    "id": "icon",
+                    "label": "Image"
+                },
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Heading",
+                    "default": "Lorem Ipsum is simply dummy text"
+                },
+                {
+                    "type": "richtext",
+                    "id": "detail",
+                    "label": "Detail",
+                    "default": "<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Index The Science Benefit",
+            "blocks": [
+                {
+                    "type": "information"
+                },
+                {
+                    "type": "information"
+                },
+                {
+                    "type": "information"
+                },
+                {
+                    "type": "information"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

@@ -1,0 +1,209 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "blocks": {
+        "heading": {
+          "type": "text",
+          "name": "Title",
+          "settings": {
+            "text": "<h1>{{ closest.page.title }}</h1>",
+            "width": "100%",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "h2",
+            "font": "var(--font-primary--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "text_color": "",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "page-content": {
+          "type": "page-content",
+          "settings": {
+            "text_color": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "heading",
+        "page-content"
+      ],
+      "disabled": true,
+      "settings": {
+        "content_direction": "column",
+        "gap": 32,
+        "background_color": "{{ settings.color_palette.background }}",
+        "padding-block-start": 40,
+        "padding-block-end": 80
+      }
+    },
+    "about_founder_story_EzrCiH": {
+      "type": "about-founder-story",
+      "name": "About founder story",
+      "settings": {
+        "background_color": "#ffefc8",
+        "shape_background_color": "#ffefc8",
+        "desktop_image": "shopify://shop_images/Rectangle_1.jpg",
+        "icon": "shopify://shop_images/Flat__Mark_2_copy_1.svg",
+        "mobile_icon": "shopify://shop_images/M-frame_1000005860.svg",
+        "heading": "Founded by a helicopter dog parent and an animal-lover-turned-veterinarian, we set out to do things differently.",
+        "desktop_top_padding": 0,
+        "desktop_bottom_padding": 0,
+        "mobile_top_padding": 0,
+        "mobile_bottom_padding": 5
+      }
+    },
+    "about_quality_principles_JwTEMV": {
+      "type": "about-quality-principles",
+      "blocks": {
+        "principle_zCnxUM": {
+          "type": "principle",
+          "settings": {
+            "heading": "We start with clean ingredients",
+            "text": "<p>No byproducts, no fillers, no artificial anything. Just high-quality ingredients checked against the Environmental Working Group database – because what's in the bag matters.</p>"
+          }
+        },
+        "principle_7RFC9U": {
+          "type": "principle",
+          "settings": {
+            "heading": "We add in extra health benefits",
+            "text": "<p>Sure, we could have just made a clean treat and stopped there. But of course a veterinarian and crazy pet mom would take it farther. Every product delivers a concrete science-backed health benefit on top of being a treat your pet loves.</p>"
+          }
+        },
+        "principle_WJda69": {
+          "type": "principle",
+          "settings": {
+            "heading": "We undergo third-party testing",
+            "text": "<p>We voluntarily test for efficacy, safety, and purity beyond what's required. We hold ourselves to a higher standard because our pets are worth it.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "principle_zCnxUM",
+        "principle_7RFC9U",
+        "principle_WJda69"
+      ],
+      "name": "About quality principles",
+      "settings": {
+        "background_color": "#fff9f0",
+        "desktop_image": "shopify://shop_images/Frame_1000005861.jpg",
+        "heading": "We don't cut corners. Ever.",
+        "desktop_top_padding": 128,
+        "desktop_bottom_padding": 68,
+        "mobile_top_padding": 52,
+        "mobile_bottom_padding": 28
+      }
+    },
+    "about_research_proof_z9hkJa": {
+      "type": "about-research-proof",
+      "blocks": {
+        "proof_fQ4BVi": {
+          "type": "proof",
+          "settings": {
+            "text": "<p>Every product serves a function, which we back up with a list of peer-reviewed research we make public</p>"
+          }
+        },
+        "proof_QtAdLJ": {
+          "type": "proof",
+          "settings": {
+            "text": "<p>We undergo voluntary third-party testing beyond what's required for the industry to get</p>"
+          }
+        },
+        "proof_QJQq7R": {
+          "type": "proof",
+          "settings": {
+            "text": "<p>Only high-quality proteins, never meat byproducts</p>"
+          }
+        }
+      },
+      "block_order": [
+        "proof_fQ4BVi",
+        "proof_QtAdLJ",
+        "proof_QJQq7R"
+      ],
+      "name": "About research proof",
+      "settings": {
+        "background_color": "#fff9f0",
+        "desktop_certification": "shopify://shop_images/Lable_CLPC.jpg",
+        "desktop_packet": "shopify://shop_images/joyfull_TWB.png",
+        "mobile_packet": "shopify://shop_images/Frame_1000005862.png",
+        "desktop_accent": "shopify://shop_images/Flat__Marks_copy_1.svg",
+        "mobile_accent": "shopify://shop_images/M-frame_1000005863.svg",
+        "heading": "We did the research so you can go back to the belly rubs",
+        "desktop_top_padding": 56,
+        "desktop_bottom_padding": 56,
+        "mobile_top_padding": 0,
+        "mobile_bottom_padding": 38
+      }
+    },
+    "about_team_6pnGny": {
+      "type": "about-team",
+      "blocks": {
+        "member_fB9mCm": {
+          "type": "member",
+          "settings": {
+            "desktop_image": "shopify://shop_images/Frame_100000558.jpg",
+            "name": "Kate",
+            "role": "Founder & CEO",
+            "biography": "<p>Kate spent years in high-growth tech convincing herself her pets were eating the best products available. It wasn't until she slowed down that she actually read the labels... and couldn't stop. So she did what any person with ADHD and an unhealthy obsession with her pets would do: she built something better, with the same Type-A energy she brought to everything else. In her free time, you'll find her on a hiking trail with her dog or snuggling her cat on the couch, worrying they're not sufficiently enriched.</p>",
+            "fun_fact": ""
+          }
+        },
+        "member_GJhRGD": {
+          "type": "member",
+          "settings": {
+            "desktop_image": "shopify://shop_images/Group_741.jpg",
+            "name": "Dr. Natascha",
+            "role": "JoyFull’s Veterinary Advisor",
+            "biography": "<p>A lifelong animal lover turned licensed veterinarian, Dr. Natascha reviews every ingredient and formulation for efficacy and safety so you can feel confident in what you're giving your pet. She pursued advanced certification in small animal medicine not because she had to, but because she wanted to know more. In her free time, you'll find her petting every street cat she passes and helping her clients' dogs give birth to puppies.</p>",
+            "fun_fact": "<p>She stopped to pet Tom Holland's dogs and was holding their leashes before even realizing it was him. That's how dog-obsessed she is.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "member_fB9mCm",
+        "member_GJhRGD"
+      ],
+      "name": "About Team",
+      "settings": {
+        "background_color": "#2f57a4",
+        "left_decorative_icons": "shopify://shop_images/Left.svg",
+        "right_decorative_icons": "shopify://shop_images/Icon-Right.svg",
+        "heading": "The humans behind JoyFull",
+        "desktop_top_padding": 80,
+        "desktop_bottom_padding": 80,
+        "mobile_top_padding": 32,
+        "mobile_bottom_padding": 32
+      }
+    }
+  },
+  "order": [
+    "main",
+    "about_founder_story_EzrCiH",
+    "about_quality_principles_JwTEMV",
+    "about_research_proof_z9hkJa",
+    "about_team_6pnGny"
+  ]
+}

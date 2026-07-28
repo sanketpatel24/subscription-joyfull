@@ -1,0 +1,134 @@
+{%- liquid
+    assign background_color = section.settings.background_color
+    assign information_color = section.settings.information_color
+    assign desktop_top_padding = section.settings.desktop_top_padding
+    assign desktop_bottom_padding = section.settings.desktop_bottom_padding
+    assign mobile_top_padding = section.settings.mobile_top_padding
+    assign mobile_bottom_padding = section.settings.mobile_bottom_padding
+-%}
+
+{%- if section.blocks.size > 0 -%}
+    {{ "header-announcement-bar.css" | asset_url | stylesheet_tag }}
+    <script src="{{ 'header-announcement-bar.js' | asset_url }}" defer></script>
+
+    {%- style -%}
+        #shopify-section-{{ section.id }} .announcement {
+            {%- if background_color != blank -%}
+                --background-color: {{ background_color }};
+            {%- endif -%}
+            {%- if information_color != blank -%}
+                --information-color: {{ information_color }};
+            {%- endif -%}
+            {%- if desktop_top_padding != blank -%}
+                --desktop-top-padding: {{ desktop_top_padding }}px;
+            {%- endif -%}
+            {%- if desktop_bottom_padding != blank -%}
+                --desktop-bottom-padding: {{ desktop_bottom_padding }}px;
+            {%- endif -%}
+            {%- if mobile_top_padding != blank -%}
+                --mobile-top-padding: {{ mobile_top_padding }}px;
+            {%- endif -%}
+            {%- if mobile_bottom_padding != blank -%}
+                --mobile-bottom-padding: {{ mobile_bottom_padding }}px;
+            {%- endif -%}
+        }
+    {%- endstyle -%}
+
+    <section class="announcement">
+        <div class="page-width">
+            <div class="announcement__body">
+                <div class="swiper{% if section.blocks.size > 1 %} header-announcement-bar-slider{% endif %}">
+                    <div class="swiper-wrapper">
+                        {%- for block in section.blocks -%}
+                            {%- assign title = block.settings.title -%}
+                            {%- if title != blank -%}
+                                <div class="swiper-slide announcement__block">
+                                    <div class="announcement__block-text">
+                                        {{ title }}
+                                    </div>
+                                </div>  
+                            {%- endif -%}
+                        {%- endfor -%}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{%- endif -%}  
+
+{% schema %}
+{
+    "name": "Header Announcement Bar",
+    "class": "header-announcement-bar__section",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Color Settings"
+        },
+        {
+            "type": "color",
+            "id": "background_color",
+            "label": "Background Color",
+            "default": "#FEC844"
+        },
+        {
+            "type": "color",
+            "id": "information_color",
+            "label": "Information Color",
+            "default": "#2F261C"
+        },
+        {
+            "type": "header",
+            "content": "Layout Settings"
+        },
+        {
+            "type": "number",
+            "id": "desktop_top_padding",
+            "label": "Desktop Top Padding",
+            "default": 7
+        },
+        {
+            "type": "number",
+            "id": "desktop_bottom_padding",
+            "label": "Desktop Bottom Padding",
+            "default": 7
+        },
+        {
+            "type": "number",
+            "id": "mobile_top_padding",
+            "label": "Mobile Top Padding",
+            "default": 7
+        },
+        {
+            "type": "number",
+            "id": "mobile_bottom_padding",
+            "label": "Mobile Bottom Padding",
+            "default": 7
+        }
+    ],
+    "blocks": [
+        {
+            "type": "information",
+            "name": "Information",
+            "settings": [
+                {
+                    "type": "richtext",
+                    "id": "title",
+                    "label": "Add Detail Text",
+                    "default": "<p>FREE SHIPPING ON ORDERS $20+ 🚚 🐾</p>"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Header Announcement Bar",
+            "blocks": [
+                {
+                    "type": "information"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}
