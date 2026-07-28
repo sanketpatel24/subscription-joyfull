@@ -1,0 +1,58 @@
+<script
+  src="{{ 'marquee.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
+{{ 'product-info-marquee.css' | asset_url | stylesheet_tag }}
+
+<marquee-component
+  class="product-info-marquee"
+  data-speed-factor="25"
+  {{ block.shopify_attributes }}
+>
+  <div class="product-info-marquee__wrapper" ref="wrapper">
+    <div class="product-info-marquee__content" ref="content">
+      <div class="product-info-marquee__items" ref="marqueeItems[]">
+        {% content_for 'blocks' %}
+      </div>
+    </div>
+  </div>
+</marquee-component>
+
+{% schema %}
+{
+  "name": "Product info marquee",
+  "tag": null,
+  "blocks": [
+    {
+      "type": "_product-info-marquee-item"
+    }
+  ],
+  "settings": [],
+  "presets": [
+    {
+      "name": "Product info marquee",
+      "blocks": [
+        {
+          "type": "_product-info-marquee-item",
+          "settings": {
+            "text": "Fast shipping from Denver, CO"
+          }
+        },
+        {
+          "type": "_product-info-marquee-item",
+          "settings": {
+            "text": "30-Day Happiness Guarantee"
+          }
+        },
+        {
+          "type": "_product-info-marquee-item",
+          "settings": {
+            "text": "5% of every purchase donated"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

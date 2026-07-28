@@ -1,0 +1,39 @@
+{%- if block.settings.icon != blank or block.settings.text != blank -%}
+  <div class="product-info-marquee__item" {{ block.shopify_attributes }}>
+    {%- if block.settings.icon != blank -%}
+      {{
+        block.settings.icon
+        | image_url: width: 120
+        | image_tag:
+          class: 'product-info-marquee__icon',
+          widths: '40, 60, 80, 120',
+          sizes: '32px',
+          loading: 'lazy'
+      }}
+    {%- endif -%}
+
+    {%- if block.settings.text != blank -%}
+      <span>{{ block.settings.text | escape }}</span>
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Marquee item",
+  "tag": null,
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "icon",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text",
+      "default": "Marquee text"
+    }
+  ]
+}
+{% endschema %}

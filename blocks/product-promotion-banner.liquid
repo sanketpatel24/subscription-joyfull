@@ -1,0 +1,112 @@
+{{ 'product-promotion-banner.css' | asset_url | stylesheet_tag }}
+
+
+<div
+  class="product-promotion-banner-wrapper"
+  style="
+    --promotion-background: {{ block.settings.background_color }};
+    --promotion-text: {{ block.settings.text_color }};
+  "
+  {{ block.shopify_attributes }}
+>
+  <div class="product-promotion-banner product-promotion-banner--desktop">
+    {%- if block.settings.icon != blank -%}
+      {{
+        block.settings.icon
+        | image_url: width: 240
+        | image_tag:
+          class: 'product-promotion-banner__icon',
+          widths: '32, 48, 64, 96, 120, 160, 240',
+          sizes: 'var(--promotion-icon-width)',
+          loading: 'lazy'
+      }}
+    {%- endif -%}
+
+    {%- if block.settings.text != blank -%}
+      <div class="product-promotion-banner__text">
+        {{ block.settings.text }}
+      </div>
+    {%- endif -%}
+  </div>
+
+  <div class="product-promotion-banner-mobile">
+    <div class="product-promotion-banner product-promotion-banner--mobile">
+      {%- if block.settings.icon != blank -%}
+        {{
+          block.settings.icon
+          | image_url: width: 240
+          | image_tag:
+            class: 'product-promotion-banner__icon',
+            widths: '32, 48, 64, 96, 120, 160, 240',
+            sizes: 'var(--promotion-icon-width)',
+            loading: 'lazy'
+        }}
+      {%- endif -%}
+
+      {%- if block.settings.mobile_primary_text != blank -%}
+        <div class="product-promotion-banner__text">
+          {{ block.settings.mobile_primary_text }}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- if block.settings.mobile_secondary_text != blank -%}
+      <div class="product-promotion-banner-mobile__secondary">
+        {{ block.settings.mobile_secondary_text }}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Product promotion banner",
+  "tag": null,
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "icon",
+      "label": "Icon image"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Desktop text",
+      "default": "<p>Buy 2 for 10% off · Buy 3 for 15% off · Mix and match flavors</p>"
+    },
+    {
+      "type": "header",
+      "content": "Mobile content"
+    },
+    {
+      "type": "richtext",
+      "id": "mobile_primary_text",
+      "label": "Text inside banner",
+      "default": "<p>Buy 2 for 10% off · Buy 3 for 15% off</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "mobile_secondary_text",
+      "label": "Text below banner",
+      "default": "<p>Mix and match flavors 🍗🐟</p>"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#94CCCF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#2F261C"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product promotion banner"
+    }
+  ]
+}
+{% endschema %}

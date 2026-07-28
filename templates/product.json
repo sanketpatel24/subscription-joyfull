@@ -197,6 +197,7 @@
               },
               "block_order": []
             },
+              "name": "Product info marquee",
             "product_vet_formulated_FiWJfV": {
               "type": "product-vet-formulated",
               "name": "Vet-formulated",

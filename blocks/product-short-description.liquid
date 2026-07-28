@@ -1,0 +1,33 @@
+{%- assign short_description = closest.product.metafields.custom.short_description -%}
+
+{%- if short_description != blank -%}
+  <div
+    class="product-short-description"
+    style="
+      --short-description-background: {{ block.settings.background_color }};
+      --short-description-text: {{ block.settings.text_color }};
+      --short-description-font-size: {{ block.settings.font_size }}px;
+    "
+    {{ block.shopify_attributes }}
+  >
+    {%- if short_description.type == 'rich_text_field' -%}
+      {{ short_description | metafield_tag }}
+    {%- else -%}
+      <p>{{ short_description.value | escape | newline_to_br }}</p>
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Product short description",
+  "tag": null,
+  "settings": [
+  ],
+  "presets": [
+    {
+      "name": "Product short description"
+    }
+  ]
+}
+{% endschema %}
