@@ -37,6 +37,7 @@
   assign frequency_option_name = block.settings.frequency_option_name | default: 'Order Frequency and Unit'
   assign default_frequency_text = block.settings.default_frequency_text
   assign badge_text = block.settings.badge_text 
+  assign onetime_badge_text = block.settings.onetime_badge_text
   assign subscribe_label = block.settings.subscribe_label
   assign onetime_label = block.settings.onetime_label
   assign delivery_label = block.settings.delivery_label
@@ -143,6 +144,16 @@
     </div>
 
     <div class="subscription-selector__option subscription-selector__option--onetime">
+      <div class="subscription-selector__badge">
+        <span>{{ onetime_badge_text | escape }}</span>
+        {% if block.settings.show_per_packet and packet_count > 0 %}
+          <span class="subscription-selector__badge-price">
+            {{ variant.price | divided_by: packet_count | money }}
+            {{ per_packet_label | escape }}
+          </span>
+        {% endif %}
+      </div>
+
       <label class="subscription-selector__summary">
         <input
           type="radio"
@@ -173,6 +184,12 @@
       "id": "badge_text",
       "label": "t:settings.subscription_badge",
       "default": "Best Value"
+    },
+    {
+      "type": "text",
+      "id": "onetime_badge_text",
+      "label": "t:settings.one_time_badge",
+      "default": "Getting Started"
     },
     {
       "type": "text",

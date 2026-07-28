@@ -773,6 +773,7 @@
     "subscription_badge": "Badge",
     "subscription_label": "Subscription label",
     "one_time_label": "One-time label",
+    "one_time_badge": "One-time purchase badge",
     "delivery_label": "Delivery label",
     "frequency_option_name": "Frequency option property",
     "default_frequency_text": "Default frequency text",

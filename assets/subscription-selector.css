@@ -9,20 +9,20 @@
   border: var(--spacing-2) solid
     color-mix(in srgb, var(--subscription-text, var(--color-text-body)) 35%, transparent);
   border-radius: var(--subscription-radius, var(--spacing-12));
-  background: var(--subscription-background, transparent);
+  background: transparent;
 }
 
 .subscription-selector__option + .subscription-selector__option {
   margin-block-start: var(--spacing-16);
 }
 
-.subscription-selector__option--subscribe {
+.subscription-selector__option[data-selected] {
   border-color: var(--subscription-text, var(--color-text-body));
   background: var(--subscription-background, var(--color-creme));
 }
 
-.subscription-selector__option--onetime {
-  background: transparent;
+.subscription-selector__option:not([data-selected]) .subscription-selector__badge {
+  display: none;
 }
 
 .subscription-selector__badge {

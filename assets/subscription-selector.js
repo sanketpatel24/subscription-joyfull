@@ -51,6 +51,10 @@ class SubscriptionSelector extends HTMLElement {
     const isSubscription = Boolean(subscriptionInput?.checked);
 
     this.toggleAttribute('data-subscription-selected', isSubscription);
+    this.purchaseInputs?.forEach((input) => {
+      input.closest('.subscription-selector__option')?.toggleAttribute('data-selected', input.checked);
+    });
+
     if (this.details) {
       this.details.hidden = !isSubscription;
       this.details.setAttribute('aria-hidden', String(!isSubscription));
