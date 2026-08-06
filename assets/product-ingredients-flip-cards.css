@@ -1,0 +1,322 @@
+.product-ingredients-flip-cards {
+  --product-ingredients-flip-cards-card-radius: var(--spacing-16);
+  --product-ingredients-flip-cards-card-inset: var(--spacing-24);
+  --product-ingredients-flip-cards-toggle-size: var(--spacing-48);
+  --product-ingredients-flip-cards-name-size: var(--font-size-18);
+  --product-ingredients-flip-cards-flip-duration: 450ms;
+  position: relative;
+  z-index: var(--layer-flat);
+  margin-block: var(--product-ingredients-flip-cards-margin-start, 0)
+    var(--product-ingredients-flip-cards-margin-end, 0);
+  padding-block: var(--product-ingredients-flip-cards-padding-start, var(--spacing-40))
+    var(--product-ingredients-flip-cards-padding-end, var(--spacing-40));
+  overflow: hidden;
+  background: var(--product-ingredients-flip-cards-background, var(--color-sand));
+  color: var(--color-text-body);
+}
+
+
+
+.product-ingredients-flip-cards-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    'intro'
+    'cards'
+    'badge';
+  gap: var(--spacing-24);
+}
+
+.product-ingredients-flip-cards-intro {
+  grid-area: intro;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-24);
+  text-align: center;
+}
+
+.product-ingredients-flip-cards-heading {
+  margin: 0;
+  letter-spacing:0;
+}
+
+.product-ingredients-flip-cards-description {
+  margin: 0;
+  line-height: var(--line-height-s1);
+  max-width: 23rem;
+}
+
+.product-ingredients-flip-cards-carousel {
+  grid-area: cards;
+  width: 100%;
+  margin-inline: 0;
+  padding-inline: var(--spacing-20);
+  overflow: hidden;
+}
+
+.product-ingredients-flip-cards-slide {
+  height: auto;
+}
+
+.product-ingredients-flip-cards-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  aspect-ratio: 1 / 1;
+  padding: var(--product-ingredients-flip-cards-card-inset);
+  overflow: hidden;
+  border-radius: var(--product-ingredients-flip-cards-card-radius);
+  background: var(--product-ingredients-flip-cards-card-background, var(--color-off-white));
+  color: var(--product-ingredients-flip-cards-card-color, var(--color-text-body));
+}
+
+.product-ingredients-flip-cards-panel {
+  position: absolute;
+  inset: 0;
+  z-index: var(--layer-flat);
+  perspective: 1200px;
+}
+
+.product-ingredients-flip-cards-flipper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform var(--product-ingredients-flip-cards-flip-duration) ease-in-out;
+  will-change: transform;
+}
+
+.product-ingredients-flip-cards-face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.product-ingredients-flip-cards-face--back {
+  padding: calc(
+      var(--product-ingredients-flip-cards-card-inset) + var(--product-ingredients-flip-cards-name-size) +
+        var(--spacing-12)
+    )
+    var(--product-ingredients-flip-cards-card-inset) var(--product-ingredients-flip-cards-card-inset);
+  background: var(--product-ingredients-flip-cards-card-background, var(--color-off-white));
+  transform: rotateY(180deg);
+}
+
+.product-ingredients-flip-cards-name {
+  position: relative;
+  z-index: var(--layer-raised);
+  flex: 0 0 auto;
+  margin: 0;
+  font-size: var(--product-ingredients-flip-cards-name-size);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-t1);
+}
+
+.product-ingredients-flip-cards-text {
+  margin: 0;
+  font-family: var(--font-body--family);
+  font-size: var(--font-size-16);
+  line-height: var(--line-height-t2);
+}
+
+.product-ingredients-flip-cards-media {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.product-ingredients-flip-cards-media-item,
+.product-ingredients-flip-cards-picture,
+.product-ingredients-flip-cards-image,
+.product-ingredients-flip-cards-video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-ingredients-flip-cards-media-item--desktop {
+  display: none;
+}
+
+.product-ingredients-flip-cards-toggle {
+  position: absolute;
+  inset-block-end: var(--product-ingredients-flip-cards-card-inset);
+  inset-inline-end: var(--product-ingredients-flip-cards-card-inset);
+  z-index: var(--layer-raised);
+  display: grid;
+  place-items: center;
+  width: var(--product-ingredients-flip-cards-toggle-size);
+  height: var(--product-ingredients-flip-cards-toggle-size);
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-sand);
+  cursor: pointer;
+}
+
+.product-ingredients-flip-cards-toggle-icon {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.product-ingredients-flip-cards-toggle-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.product-ingredients-flip-cards-toggle:focus-visible {
+  outline: var(--border-width-md) solid var(--color-onyx);
+  outline-offset: var(--spacing-2);
+}
+
+.product-ingredients-flip-cards-card[data-flipped='true'] .product-ingredients-flip-cards-flipper {
+  transform: rotateY(180deg);
+}
+
+.product-ingredients-flip-cards-certification {
+  grid-area: badge;
+  margin-top:var(--spacing-15);
+}
+
+.product-ingredients-flip-cards-certification-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-8);
+  overflow:hidden;
+  padding: 0 var(--spacing-8) 0 0;
+  border-radius: var(--spacing-8);
+  background: var(--color-white);
+  color: var(--color-text-body);
+  text-decoration: none;
+  width: 100%;
+  max-width: 13.375rem;
+}
+
+.product-ingredients-flip-cards-badge-media {
+  flex: 0 0 auto;
+  width: var(--spacing-56);
+}
+
+.product-ingredients-flip-cards-badge-image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.product-ingredients-flip-cards-badge-text {
+  font-family: var(--font-body--family);
+  font-size: var(--font-size-14);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-heading);
+  padding-right:var(--spacing-2);
+}
+@media (max-width: 991px) {
+  .product-ingredients-flip-cards-description {
+    margin:0 auto;
+  }
+  .product-ingredients-flip-cards{
+    overflow:hidden;
+  }
+  .product-ingredients-flip-cards-intro{
+    gap:var(--spacing-17);
+  }
+  .product-ingredients-flip-cards-layout{
+    gap:var(--spacing-15);
+  }
+  .product-ingredients-flip-cards-carousel{
+    padding:0;
+    overflow:visible;
+  }
+  .product-ingredients-flip-cards-card{
+    padding:var(--spacing-22) var(--spacing-24);
+  }
+  .product-ingredients-flip-cards-certification{
+    margin-top:var(--spacing-8);
+  }
+  .product-ingredients-flip-cards-certification-inner{
+    width:100%;
+    max-width:100%;
+    padding-right: var(--spacing-64);
+  }
+  .product-ingredients-flip-cards-badge-media {
+      flex: 0 0 auto;
+      width: var(--spacing-80);
+  }
+  .product-ingredients-flip-cards-badge-text{
+    font-size:var(--font-size-18);
+    line-height: 1.26;
+  }
+}
+@media (min-width: 990px) {
+  .product-ingredients-flip-cards {
+    --product-ingredients-flip-cards-card-inset: var(--spacing-24);
+    --product-ingredients-flip-cards-toggle-size: var(--spacing-48);
+    --product-ingredients-flip-cards-name-size: var(--font-size-18);
+  }
+  .product-ingredients-flip-cards .page-width{
+    padding-right:0;
+  }
+  .product-ingredients-flip-cards-layout {
+    grid-template-columns: minmax(0, 27rem) minmax(0, 1fr);
+    grid-template-areas:
+      'intro cards'
+      'badge cards';
+    align-items: start;
+    gap: 0 var(--spacing-16);
+  }
+
+  .product-ingredients-flip-cards-intro {
+    text-align: start;
+  }
+
+.product-ingredients-flip-cards-certification-inner {
+    justify-self: start;
+    width: 100%;
+    max-width: 13.375rem;
+}
+
+  .product-ingredients-flip-cards-carousel {
+    align-self: center;
+    padding-inline: 0 var(--spacing-56);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .product-ingredients-flip-cards-carousel::-webkit-scrollbar {
+    display: none;
+  }
+
+  .product-ingredients-flip-cards-media-item--desktop {
+    display: block;
+  }
+
+  .product-ingredients-flip-cards-media-item--mobile {
+    display: none;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .product-ingredients-flip-cards-card:hover .product-ingredients-flip-cards-flipper,
+  .product-ingredients-flip-cards-card:focus-within .product-ingredients-flip-cards-flipper {
+    transform: rotateY(180deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-ingredients-flip-cards-flipper {
+    transition: none;
+  }
+}

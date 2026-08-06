@@ -1,0 +1,354 @@
+{{ 'product-ingredients-flip-cards.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'product-ingredients-flip-cards.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign section_content = product.metafields.custom.ingredients_section.value
+
+  assign heading = section_content.title.value | strip
+  assign description = section_content.sub_heading.value | strip
+  assign badge_image = section_content.badge_image.value
+  assign badge_text = section_content.badge_text.value | strip
+  assign badge_link = section_content.badge_link.value
+  assign ingredient_cards = section_content.ingredient_cards.value
+-%}
+
+{%- if ingredient_cards != blank -%}
+  {%- style -%}
+    #shopify-section-{{ section.id }} {
+      {%- if section.settings.background_color != blank %}
+        --product-ingredients-flip-cards-background: {{ section.settings.background_color }};
+      {%- endif %}
+      --product-ingredients-flip-cards-padding-start: {{ section.settings.mobile_top_padding }}px;
+      --product-ingredients-flip-cards-padding-end: {{ section.settings.mobile_bottom_padding }}px;
+      --product-ingredients-flip-cards-margin-start: {{ section.settings.mobile_top_margin }}px;
+      --product-ingredients-flip-cards-margin-end: {{ section.settings.mobile_bottom_margin }}px;
+    }
+
+    @media (min-width: 990px) {
+      #shopify-section-{{ section.id }} {
+        --product-ingredients-flip-cards-padding-start: {{ section.settings.desktop_top_padding }}px;
+        --product-ingredients-flip-cards-padding-end: {{ section.settings.desktop_bottom_padding }}px;
+        --product-ingredients-flip-cards-margin-start: {{ section.settings.desktop_top_margin }}px;
+        --product-ingredients-flip-cards-margin-end: {{ section.settings.desktop_bottom_margin }}px;
+      }
+    }
+  {%- endstyle -%}
+
+  <section
+    class="product-ingredients-flip-cards"
+    {% if heading != blank %}aria-labelledby="ProductIngredientsHeading-{{ section.id }}"{% endif %}
+    data-product-ingredients-flip-cards
+  >
+    <div class="page-width">
+    <div class="product-ingredients-flip-cards-layout">
+      <div class="product-ingredients-flip-cards-intro">
+        {%- if heading != blank -%}
+          <h2 class="product-ingredients-flip-cards-heading heading-m" id="ProductIngredientsHeading-{{ section.id }}">
+            {{- heading | escape | newline_to_br -}}
+          </h2>
+        {%- endif -%}
+        {%- if description != blank -%}
+          <p class="product-ingredients-flip-cards-description text-common">{{ description | escape }}</p>
+        {%- endif -%}
+      </div>
+
+      <div class="product-ingredients-flip-cards-carousel swiper" data-product-ingredients-flip-cards-carousel>
+        <div class="swiper-wrapper">
+          {%- for ingredient in ingredient_cards -%}
+            {%- liquid
+              assign ingredient_name = ingredient.ingredient_name.value | strip
+              assign ingredient_description = ingredient.description.value | strip
+              assign flip_icon = ingredient.flip_icon.value
+              assign card_background = ingredient.card_background_color.value
+              assign card_color = ingredient.text_color.value
+
+              assign desktop_media = ingredient.desktop_image.value
+              assign mobile_media = ingredient.mobile_image.value
+
+              assign has_mobile_media = false
+              if mobile_media != blank
+                assign has_mobile_media = true
+              else
+                assign mobile_media = desktop_media
+              endif
+
+              assign desktop_is_video = false
+              if desktop_media.sources.size > 0
+                assign desktop_is_video = true
+              endif
+
+              assign mobile_is_video = false
+              if mobile_media.sources.size > 0
+                assign mobile_is_video = true
+              endif
+
+              assign card_id = 'ProductIngredientCard-' | append: section.id | append: '-' | append: forloop.index
+            -%}
+            {%- capture card_style -%}
+              {%- if card_background != blank -%}--product-ingredients-flip-cards-card-background:{{ card_background }};{%- endif -%}
+              {%- if card_color != blank -%}--product-ingredients-flip-cards-card-color:{{ card_color }};{%- endif -%}
+            {%- endcapture -%}
+
+            <div class="swiper-slide product-ingredients-flip-cards-slide">
+              <article
+                class="product-ingredients-flip-cards-card"
+                data-product-ingredients-flip-cards-card
+                {% if card_style != blank %}style="{{ card_style | strip }}"{% endif %}
+              >
+                {%- if ingredient_name != blank -%}
+                  <h3 class="product-ingredients-flip-cards-name">{{ ingredient_name | escape }}</h3>
+                {%- endif -%}
+
+                <div class="product-ingredients-flip-cards-panel">
+                  <div class="product-ingredients-flip-cards-flipper" data-product-ingredients-flip-cards-flipper>
+                    <div class="product-ingredients-flip-cards-face product-ingredients-flip-cards-face--front">
+                      <div class="product-ingredients-flip-cards-media">
+                      {%- if desktop_is_video == false and mobile_is_video == false -%}
+                        {%- if desktop_media != blank -%}
+                          {%- render 'responsive-image-lazyload',
+                            desktop_image: desktop_media,
+                            mobile_image: mobile_media,
+                            class: 'product-ingredients-flip-cards-picture',
+                            image_class: 'product-ingredients-flip-cards-image',
+                            alt: ingredient_name,
+                            desktop_width: 660,
+                            desktop_widths: '330, 460, 560, 660',
+                            desktop_sizes: '330px',
+                            mobile_widths: '250, 375, 500',
+                            mobile_sizes: '250px',
+                            desktop_media: '(min-width: 990px)',
+                            mobile_media: '(max-width: 989px)'
+                          -%}
+                        {%- endif -%}
+                      {%- else -%}
+                        {%- assign media_breakpoints = 'desktop,mobile' | split: ',' -%}
+                        {%- for media_breakpoint in media_breakpoints -%}
+                          {%- liquid
+                            if media_breakpoint == 'desktop'
+                              assign current_media = desktop_media
+                              assign current_is_video = desktop_is_video
+                              assign current_sizes = '330px'
+                            else
+                              assign current_media = mobile_media
+                              assign current_is_video = mobile_is_video
+                              assign current_sizes = '250px'
+                            endif
+
+                            assign render_media = true
+                            if has_mobile_media == false and media_breakpoint == 'mobile'
+                              assign render_media = false
+                            endif
+                            if current_media == blank
+                              assign render_media = false
+                            endif
+                          -%}
+                          {%- if render_media -%}
+                            <div
+                              class="product-ingredients-flip-cards-media-item
+                                {%- if has_mobile_media %} product-ingredients-flip-cards-media-item--{{ media_breakpoint }}{% endif -%}
+                              "
+                            >
+                              {%- if current_is_video -%}
+                                {{
+                                  current_media
+                                  | video_tag:
+                                    image_size: '660x',
+                                    autoplay: true,
+                                    loop: true,
+                                    muted: true,
+                                    controls: false,
+                                    class: 'product-ingredients-flip-cards-video'
+                                }}
+                              {%- else -%}
+                                {{
+                                  current_media
+                                  | image_url: width: 660
+                                  | image_tag:
+                                    widths: '250, 330, 460, 560, 660',
+                                    sizes: current_sizes,
+                                    loading: 'lazy',
+                                    decoding: 'async',
+                                    class: 'product-ingredients-flip-cards-image',
+                                    alt: ingredient_name
+                                }}
+                              {%- endif -%}
+                            </div>
+                          {%- endif -%}
+                        {%- endfor -%}
+                      {%- endif -%}
+                      </div>
+                    </div>
+
+                    <div class="product-ingredients-flip-cards-face product-ingredients-flip-cards-face--back">
+                      {%- if ingredient_description != blank -%}
+                        <p class="product-ingredients-flip-cards-text" id="{{ card_id }}">
+                          {{- ingredient_description | escape | newline_to_br -}}
+                        </p>
+                      {%- endif -%}
+                    </div>
+                  </div>
+                </div>
+
+                {%- if ingredient_description != blank -%}
+                  <button
+                    type="button"
+                    class="product-ingredients-flip-cards-toggle"
+                    data-product-ingredients-flip-cards-toggle
+                    aria-expanded="false"
+                    aria-controls="{{ card_id }}"
+                  >
+                    {%- if flip_icon != blank -%}
+                      {{
+                        flip_icon
+                        | image_url: width: 96
+                        | image_tag:
+                          widths: '24, 48, 72, 96',
+                          sizes: '28px',
+                          loading: 'lazy',
+                          decoding: 'async',
+                          class: 'product-ingredients-flip-cards-toggle-icon',
+                          alt: ''
+                      }}
+                    {%- endif -%}
+                    <span class="product-ingredients-flip-cards-toggle-label">
+                      {{- section.settings.flip_label | default: 'Show details' | escape }}
+                      {{ ingredient_name | escape -}}
+                    </span>
+                  </button>
+                {%- endif -%}
+              </article>
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+
+      {%- if badge_image != blank or badge_text != blank -%}
+        {%- capture badge_content -%}
+          {%- if badge_image != blank -%}
+            <span class="product-ingredients-flip-cards-badge-media">
+              {{-
+                badge_image
+                | image_url: width: 208
+                | image_tag:
+                  widths: '52, 104, 156, 208',
+                  sizes: '52px',
+                  loading: 'lazy',
+                  decoding: 'async',
+                  class: 'product-ingredients-flip-cards-badge-image',
+                  alt: badge_text
+              -}}
+            </span>
+          {%- endif -%}
+          {%- if badge_text != blank -%}
+            <span class="product-ingredients-flip-cards-badge-text">{{ badge_text | escape | newline_to_br }}</span>
+          {%- endif -%}
+        {%- endcapture -%}
+
+        <div class="product-ingredients-flip-cards-certification">
+          {%- if badge_link != blank -%}
+            <a class="product-ingredients-flip-cards-certification-inner" href="{{ badge_link }}">
+              {{- badge_content -}}
+            </a>
+          {%- else -%}
+            <div class="product-ingredients-flip-cards-certification-inner">
+              {{- badge_content -}}
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Product Ingredient Cards",
+  "class": "product-ingredients-flip-cards-section",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content Settings"
+    },
+    {
+      "type": "text",
+      "id": "flip_label",
+      "label": "Flip Button Label",
+      "default": "Show details",
+      "info": "Read by screen readers before the ingredient name, e.g. \"Show details Water\"."
+    },
+    {
+      "type": "header",
+      "content": "Color Settings"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#D2C6B7"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "number",
+      "id": "desktop_top_padding",
+      "label": "Desktop Top Padding",
+      "default": 56
+    },
+    {
+      "type": "number",
+      "id": "desktop_bottom_padding",
+      "label": "Desktop Bottom Padding",
+      "default": 56
+    },
+    {
+      "type": "number",
+      "id": "mobile_top_padding",
+      "label": "Mobile Top Padding",
+      "default": 40
+    },
+    {
+      "type": "number",
+      "id": "mobile_bottom_padding",
+      "label": "Mobile Bottom Padding",
+      "default": 40
+    },
+     {
+      "type": "header",
+      "content": "Margin"
+    },
+    {
+      "type": "number",
+      "id": "desktop_top_margin",
+      "label": "Desktop Top Margin",
+      "default": 0
+    },
+    {
+      "type": "number",
+      "id": "desktop_bottom_margin",
+      "label": "Desktop Bottom Margin",
+      "default": 0
+    },
+    {
+      "type": "number",
+      "id": "mobile_top_margin",
+      "label": "Mobile Top Margin",
+      "default": 0
+    },
+    {
+      "type": "number",
+      "id": "mobile_bottom_margin",
+      "label": "Mobile Bottom Margin",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Ingredient Flip Cards"
+    }
+  ]
+}
+{% endschema %}

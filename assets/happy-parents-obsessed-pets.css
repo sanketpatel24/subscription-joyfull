@@ -1,0 +1,146 @@
+.happy-parents-pets {
+  position: relative;
+  padding-block: var(--happy-parents-pets-mobile-padding-top, var(--spacing-48))
+    var(--happy-parents-pets-mobile-padding-bottom, var(--spacing-48));
+  background: var(--happy-parents-pets-background, var(--color-off-white));
+}
+
+.happy-parents-pets__inner {
+  position: relative;
+  z-index: var(--layer-flat);
+  max-width: var(--normal-page-width);
+  margin-inline: auto;
+}
+
+.happy-parents-pets__heading {
+  margin-block: 0 var(--spacing-32);
+  color: var(--color-text-body);
+  text-align: var(--happy-parents-pets-heading-align, center);
+  text-wrap: balance;
+  letter-spacing:0;
+}
+
+.happy-parents-pets__slider {
+  margin-inline: calc(var(--spacing-20) * -1);
+  padding-inline: var(--spacing-20);
+}
+
+.happy-parents-pets__grid {
+  align-items: stretch;
+}
+
+.happy-parents-pets__card {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  margin: 0;
+  border-radius: var(--happy-parents-pets-radius, var(--spacing-16));
+  background: var(--color-sand);
+}
+
+.happy-parents-pets__card.swiper-slide {
+  width: calc(100% - var(--spacing-22));
+  height: auto;
+}
+
+.happy-parents-pets__card.swiper-slide:only-child {
+  width: 100%;
+}
+
+.happy-parents-pets__media {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1/1;
+}
+
+.happy-parents-pets__picture,
+.happy-parents-pets__image,
+.happy-parents-pets__video {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.happy-parents-pets__image,
+.happy-parents-pets__video {
+  object-fit: cover;
+  object-position: center;
+}
+
+.happy-parents-pets__slot--desktop {
+  display: none;
+}
+
+.happy-parents-pets__badge {
+    position: absolute;
+    inset-block-start: var(--spacing-16);
+    inset-inline-start: var(--spacing-16);
+    z-index: var(--layer-raised);
+    max-width: calc(100% - var(--spacing-32));
+    border-radius: var(--spacing-30);
+    font-family: var(--font-burned-pancakes--family);
+    font-weight: var(--font-weight-regular);
+    font-size: var(--font-size-16);
+    line-height: 1.2;
+    letter-spacing: 0.3px;
+    color: var(--happy-parents-pets-badge-text, var(--color-onyx));
+    text-align: start;
+    background: var(--happy-parents-pets-badge-background, var(--color-joy));
+    padding: 0px var(--spacing-8);
+}
+
+@media (min-width: 750px) {
+  .happy-parents-pets {
+    padding-block: var(--happy-parents-pets-desktop-padding-top, var(--spacing-80))
+      var(--happy-parents-pets-desktop-padding-bottom, var(--spacing-80));
+  }
+
+  .happy-parents-pets__heading {
+    margin-block-end: var(--spacing-56);
+  }
+
+  .happy-parents-pets__slider.swiper {
+    overflow: visible;
+    margin-inline: 0;
+    padding-inline: 0;
+  }
+
+  .happy-parents-pets__grid.swiper-wrapper {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: var(--happy-parents-pets-grid-rows, repeat(6, 1fr));
+    gap: var(--happy-parents-pets-gap, var(--spacing-16));
+    aspect-ratio: var(--happy-parents-pets-grid-ratio, 1432 / 988);
+    transform: none;
+  }
+
+  .happy-parents-pets__card.swiper-slide {
+    grid-column: var(--happy-parents-pets-card-column, auto);
+    grid-row: var(--happy-parents-pets-card-row, auto) / span var(--happy-parents-pets-card-span, 1);
+    width: auto;
+    height: auto;
+    min-height: 0;
+  }
+
+  .happy-parents-pets__media {
+    height: 100%;
+    aspect-ratio: auto;
+  }
+
+  .happy-parents-pets__slot--mobile {
+    display: none;
+  }
+
+  .happy-parents-pets__slot--desktop {
+    display: block;
+  }
+
+  .happy-parents-pets__badge {
+    inset-block-start: var(--spacing-24);
+    inset-inline-start: var(--spacing-24);
+    max-width: calc(100% - var(--spacing-48));
+  }
+}

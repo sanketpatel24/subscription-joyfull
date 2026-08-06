@@ -29,6 +29,14 @@
     assign current_variant = product.selected_or_first_available_variant
     # Get the initial quantity based on quantity rules
     assign initial_quantity = current_variant.quantity_rule.min | default: 1
+    assign custom_title = product.metafields.custom.product_display_title.value
+    assign selected_variant = product.selected_or_first_available_variant
+    assign display_title = custom_title | default: product.title
+    assign supporting_text = product.metafields.custom.product_supporting_text.value
+    assign packet_count = product.metafields.custom.packet_count.value | plus: 0
+    if selected_variant != blank and packet_count > 0
+    assign price_per_packet = selected_variant.price | divided_by: packet_count
+  endif
   %}
 
   <sticky-add-to-cart
@@ -46,6 +54,7 @@
       role="region"
       aria-label="{{ 'products.product.sticky_add_to_cart' | t }}"
     >
+      
       {% liquid
         assign image_to_show = current_variant.featured_image | default: product.featured_image
       %}
@@ -91,8 +100,22 @@
           class="sticky-add-to-cart__title"
           data-testid="sticky-product-title"
         >
-          {{ product.title | escape }}
+          {{ display_title | escape }}
         </p>
+        {%- if supporting_text != blank or price_per_packet != blank -%}
+          <div class="product-custom-heading__meta">
+            {%- if supporting_text != blank -%}
+              <span class="product-custom-heading__supporting">{{ supporting_text | escape }}</span>
+            {%- endif -%}
+
+            {%- if price_per_packet != blank -%}
+              <span class="product-custom-heading__packet-price">
+                <span data-sticky-per-packet>{{- price_per_packet | money -}}</span>
+                <span>per packet</span>
+              </span>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
         <div
           class="sticky-add-to-cart__variant"
           data-testid="sticky-variant-title"
@@ -109,13 +132,6 @@
         </div>
       </div>
 
-      <div
-        class="sticky-add-to-cart__price"
-        data-testid="sticky-price-display"
-      >
-        {% render 'price', product_resource: product, show_sale_price_first: true %}
-      </div>
-
       <button
         type="button"
         class="sticky-add-to-cart__button add-to-cart-button button"
@@ -128,11 +144,6 @@
         <span
           class="add-to-cart-text"
         >
-          {% if current_variant.available %}
-            <span class="svg-wrapper">
-              {{- 'icon-add-to-cart.svg' | inline_asset_content -}}
-            </span>
-          {% endif %}
           <span class="add-to-cart-text__content">
             <span>
               {%- if current_variant.available -%}
@@ -154,6 +165,37 @@
               {{- ' (' -}}
               <span ref="quantityNumber">{{- initial_quantity -}}</span>
               {{- ')' -}}
+            </span>
+            <span
+              class="sticky-add-to-cart__price"
+              data-testid="sticky-price-display"
+            >
+              {{- ' - ' -}}
+              {%- liquid
+                assign sticky_variant      = product.selected_or_first_available_variant
+                assign sticky_compare      = sticky_variant.compare_at_price
+                assign sticky_price        = sticky_variant.price
+                assign show_sticky_compare = false
+                if sticky_compare > sticky_price
+                  assign show_sticky_compare = true
+                endif
+              -%}
+              <span data-sticky-price>{{- sticky_price | money -}}</span>
+              {%- if show_sticky_compare -%}
+                <span aria-hidden="true"> </span>
+                <s
+                  class="sticky-add-to-cart__compare-price"
+                  data-sticky-compare-price
+                >
+                  {{- sticky_compare | money -}}
+                </s>
+              {%- else -%}
+                <s
+                  class="sticky-add-to-cart__compare-price"
+                  data-sticky-compare-price
+                  hidden
+                ></s>
+              {%- endif -%}
             </span>
           </span>
         </span>
@@ -284,6 +326,26 @@
     position: relative;
   }
 
+  .sticky-add-to-cart__button .sticky-add-to-cart__price {
+    font-weight: var(--font-weight-semibold);
+    white-space: nowrap;
+  }
+
+  .sticky-add-to-cart__button .compare-at-price {
+    display: none;
+  }
+
+  .sticky-add-to-cart__compare-price {
+    font-weight: var(--font-weight-regular);
+    opacity: var(--opacity-subdued-text);
+    text-decoration: line-through;
+    margin-inline-end: 0.25em;
+  }
+
+  .sticky-add-to-cart__compare-price[hidden] {
+    display: none;
+  }
+
   /* Mobile adjustments */
   @media screen and (max-width: 749px) {
     .sticky-add-to-cart__bar {
@@ -327,6 +389,10 @@
 
     sticky-add-to-cart:not([data-variant-available='true']) .sticky-add-to-cart__button {
       width: auto;
+    }
+
+    .sticky-add-to-cart__button .sticky-add-to-cart__price {
+      display: none;
     }
   }
 

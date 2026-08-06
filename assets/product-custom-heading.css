@@ -2,11 +2,11 @@
   display: block;
   width: 100%;
   color: var(--color-text-body);
-  margin-bottom:var(--spacing-16);
+  margin-bottom:var(--spacing-18);
 }
 
 .product-custom-heading__title {
-  margin: 0 0 var(--spacing-8);
+  margin: 0 0 var(--spacing-6);
   font-family: var(--font-heading--family);
   font-size: var(--font-size-32);
   font-weight: var(--font-weight-bold);
@@ -36,4 +36,12 @@
   font-size: var(--font-size-12);
   line-height: 136%;
   color:var(--color-onyx);
+}
+
+@media screen and (max-width: 749px) {
+  .product-custom-heading__title{
+      font-size: var(--font-size-24);
+      line-height: 112%;
+         
+  } 
 }

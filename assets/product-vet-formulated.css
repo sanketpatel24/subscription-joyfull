@@ -62,7 +62,7 @@
   font-family: var(--font-body--family);
   font-size: var(--font-size-14);
   line-height: var(--line-height-body);
-  margin-bottom:var(--spacing-16);
+  margin-bottom:var(--spacing-13);
   max-width: 21rem;
   color:var(--color-black);
 }
@@ -87,7 +87,7 @@
   display: none;
 }
 
-@media screen and (max-width: 749px) {
+@media screen and (max-width: 991px) {
   .product-information__media .product-vet-card--desktop {
     display: none !important;
   }
@@ -161,7 +161,7 @@
   }
 }
 
-@media screen and (min-width: 750px) {
+@media screen and (min-width: 992px) {
   .product-details .product-vet-card--mobile {
     display: none !important;
   }
@@ -169,7 +169,7 @@
   .product-information__media .product-vet-card--desktop {
     display: grid;
     grid-template-columns: 14.9375rem minmax(0, 1fr);
-    margin-top: var(--spacing-16);
+    margin-top: var(--spacing-17);
     padding:0 0 0 var(--spacing-9);
   }
 

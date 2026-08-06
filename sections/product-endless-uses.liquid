@@ -1,0 +1,325 @@
+{{ 'product-endless-uses.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'product-endless-uses.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign cards = product.metafields.custom.product_endless_use_cards.value
+
+  assign heading = section.settings.heading
+  assign description = section.settings.description
+-%}
+
+{%- if cards != blank -%}
+  {%- style -%}
+    #shopify-section-{{ section.id }} {
+      {%- if section.settings.background_color != blank %}
+        --product-endless-uses-panel-background: {{ section.settings.background_color }};
+      {%- endif %}
+      --product-endless-uses-padding-start: {{ section.settings.mobile_top_padding }}px;
+      --product-endless-uses-padding-end: {{ section.settings.mobile_bottom_padding }}px;
+      --product-endless-uses-margin-start: {{ section.settings.mobile_top_margin }}px;
+      --product-endless-uses-margin-end: {{ section.settings.mobile_bottom_margin }}px;
+    }
+
+    @media (min-width: 990px) {
+      #shopify-section-{{ section.id }} {
+        --product-endless-uses-padding-start: {{ section.settings.desktop_top_padding }}px;
+        --product-endless-uses-padding-end: {{ section.settings.desktop_bottom_padding }}px;
+        --product-endless-uses-margin-start: {{ section.settings.desktop_top_margin }}px;
+        --product-endless-uses-margin-end: {{ section.settings.desktop_bottom_margin }}px;
+      }
+    }
+  {%- endstyle -%}
+
+  <section
+    class="product-endless-uses"
+    {% if heading != blank %}aria-labelledby="ProductEndlessUsesHeading-{{ section.id }}"{% endif %}
+    data-product-endless-uses
+  >
+    <div class="product-endless-uses-container page-width">
+      <div class="product-endless-uses-panel">
+        {%- if heading != blank or description != blank -%}
+          <div class="product-endless-uses-header">
+            {%- if heading != blank -%}
+              <h2 class="product-endless-uses-heading heading-m" id="ProductEndlessUsesHeading-{{ section.id }}">
+                {{- heading | escape -}}
+              </h2>
+            {%- endif -%}
+            {%- if description != blank -%}
+              <p class="product-endless-uses-description text-common">{{ description | escape }}</p>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+
+        <div
+          class="product-endless-uses-tabs"
+          aria-label="{{ section.settings.tablist_label | default: 'Ways to use' | escape }}"
+          data-product-endless-uses-tablist
+        >
+          {%- for card in cards -%}
+            {%- liquid
+              assign tab_label = card.tab_label.value | strip
+              assign badge_background = card.badge_background_color.value
+              assign badge_color = card.badge_text_color.value
+            -%}
+            {%- capture tab_style -%}
+              {%- if badge_background != blank -%}--product-endless-uses-badge-background:{{ badge_background }};{%- endif -%}
+              {%- if badge_color != blank -%}--product-endless-uses-badge-color:{{ badge_color }};{%- endif -%}
+            {%- endcapture -%}
+            <button
+              type="button"
+              class="product-endless-uses-tab"
+              id="ProductEndlessUsesTab-{{ section.id }}-{{ forloop.index }}"
+              data-product-endless-uses-tab
+              data-index="{{ forloop.index0 }}"
+              {% if tab_style != blank %}style="{{ tab_style | strip }}"{% endif %}
+            >
+              {{- tab_label | default: forloop.index | escape -}}
+            </button>
+          {%- endfor -%}
+        </div>
+
+        <div class="product-endless-uses-carousel swiper" data-product-endless-uses-carousel>
+          <div class="swiper-wrapper">
+            {%- for card in cards -%}
+              {%- liquid
+                assign desktop_media = card.desktop_image.value
+                assign mobile_media = card.mobile_image.value
+                assign tab_label = card.tab_label.value | strip
+                assign card_title = card.card_title.value | strip
+                assign card_description = card.card_description.value | strip
+                assign badge_background = card.badge_background_color.value
+                assign badge_color = card.badge_text_color.value
+                assign media_alt = card_title | default: tab_label
+
+                assign has_mobile_media = false
+                if mobile_media != blank
+                  assign has_mobile_media = true
+                else
+                  assign mobile_media = desktop_media
+                endif
+
+                assign desktop_is_video = false
+                if desktop_media.sources.size > 0
+                  assign desktop_is_video = true
+                endif
+
+                assign mobile_is_video = false
+                if mobile_media.sources.size > 0
+                  assign mobile_is_video = true
+                endif
+              -%}
+              {%- capture badge_style -%}
+                {%- if badge_background != blank -%}--product-endless-uses-badge-background:{{ badge_background }};{%- endif -%}
+                {%- if badge_color != blank -%}--product-endless-uses-badge-color:{{ badge_color }};{%- endif -%}
+              {%- endcapture -%}
+              <div
+                class="swiper-slide product-endless-uses-slide"
+                id="ProductEndlessUsesPanel-{{ section.id }}-{{ forloop.index }}"
+                data-product-endless-uses-slide
+                data-index="{{ forloop.index0 }}"
+              >
+                <article class="product-endless-uses-card">
+                  <div class="product-endless-uses-media">
+                    {%- if desktop_is_video == false and mobile_is_video == false -%}
+                      {%- if desktop_media != blank -%}
+                        {%- render 'responsive-image-lazyload',
+                          desktop_image: desktop_media,
+                          mobile_image: mobile_media,
+                          class: 'product-endless-uses-picture',
+                          image_class: 'product-endless-uses-image',
+                          alt: media_alt,
+                          desktop_width: 800,
+                          desktop_widths: '320, 480, 640, 800',
+                          desktop_sizes: '(min-width: 1440px) 320px, 22vw',
+                          mobile_widths: '360, 540, 720, 900',
+                          mobile_sizes: 'calc(100vw - 40px)',
+                          desktop_media: '(min-width: 990px)',
+                          mobile_media: '(max-width: 989px)'
+                        -%}
+                      {%- endif -%}
+                    {%- else -%}
+                      {%- assign media_breakpoints = 'desktop,mobile' | split: ',' -%}
+                      {%- for media_breakpoint in media_breakpoints -%}
+                        {%- liquid
+                          if media_breakpoint == 'desktop'
+                            assign current_media = desktop_media
+                            assign current_is_video = desktop_is_video
+                            assign current_sizes = '(min-width: 1440px) 320px, 22vw'
+                          else
+                            assign current_media = mobile_media
+                            assign current_is_video = mobile_is_video
+                            assign current_sizes = 'calc(100vw - 40px)'
+                          endif
+
+                          assign render_media = true
+                          if has_mobile_media == false and media_breakpoint == 'mobile'
+                            assign render_media = false
+                          endif
+                          if current_media == blank
+                            assign render_media = false
+                          endif
+                        -%}
+                        {%- if render_media -%}
+                          <div
+                            class="product-endless-uses-media-item
+                              {%- if has_mobile_media %} product-endless-uses-media-item--{{ media_breakpoint }}{% endif -%}
+                            "
+                          >
+                            {%- if current_is_video -%}
+                              {{
+                                current_media
+                                | video_tag:
+                                  image_size: '1200x',
+                                  autoplay: true,
+                                  loop: true,
+                                  muted: true,
+                                  controls: false,
+                                  class: 'product-endless-uses-video'
+                              }}
+                            {%- else -%}
+                              {{
+                                current_media
+                                | image_url: width: 900
+                                | image_tag:
+                                  widths: '320, 480, 640, 800, 900',
+                                  sizes: current_sizes,
+                                  loading: 'lazy',
+                                  decoding: 'async',
+                                  class: 'product-endless-uses-image',
+                                  alt: media_alt
+                              }}
+                            {%- endif -%}
+                          </div>
+                        {%- endif -%}
+                      {%- endfor -%}
+                    {%- endif -%}
+
+                    {%- if tab_label != blank -%}
+                      <span
+                        class="product-endless-uses-badge"
+                        {% if badge_style != blank %}style="{{ badge_style | strip }}"{% endif %}
+                      >
+                        {{- tab_label | escape -}}
+                      </span>
+                    {%- endif -%}
+                  </div>
+
+                  {%- if card_title != blank -%}
+                    <h3 class="product-endless-uses-title text-common">{{ card_title | escape }}</h3>
+                  {%- endif -%}
+                  {%- if card_description != blank -%}
+                    <p class="product-endless-uses-text text-common">{{ card_description | escape }}</p>
+                  {%- endif -%}
+                </article>
+              </div>
+            {%- endfor -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Product Endless Uses",
+  "class": "product-endless-uses-section",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content Settings"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "One packet, endless uses"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "One packet does it all. Made for your real (sometimes chaotic) life together."
+    },
+    {
+      "type": "text",
+      "id": "tablist_label",
+      "label": "Accessible Tab List Label",
+      "default": "Ways to use",
+      "info": "Announced by screen readers as the name of the mobile tab navigation."
+    },
+    {
+      "type": "header",
+      "content": "Color Settings"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#FFEFC8"
+    },
+    {
+      "type": "header",
+      "content": "Layout Settings"
+    },
+    {
+      "type": "number",
+      "id": "desktop_top_padding",
+      "label": "Desktop Top Padding",
+      "default": 56
+    },
+    {
+      "type": "number",
+      "id": "desktop_bottom_padding",
+      "label": "Desktop Bottom Padding",
+      "default": 56
+    },
+    {
+      "type": "number",
+      "id": "mobile_top_padding",
+      "label": "Mobile Top Padding",
+      "default": 40
+    },
+    {
+      "type": "number",
+      "id": "mobile_bottom_padding",
+      "label": "Mobile Bottom Padding",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Margin"
+    },
+    {
+      "type": "number",
+      "id": "desktop_top_margin",
+      "label": "Desktop Top Margin",
+      "default": 0
+    },
+    {
+      "type": "number",
+      "id": "desktop_bottom_margin",
+      "label": "Desktop Bottom Margin",
+      "default": 0
+    },
+    {
+      "type": "number",
+      "id": "mobile_top_margin",
+      "label": "Mobile Top Margin",
+      "default": 0
+    },
+    {
+      "type": "number",
+      "id": "mobile_bottom_margin",
+      "label": "Mobile Bottom Margin",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Endless Uses"
+    }
+  ]
+}
+{% endschema %}

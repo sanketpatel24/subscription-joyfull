@@ -1,0 +1,57 @@
+.product-benefits-grid {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(4,minmax(0,1fr));
+    gap: var(--spacing-34);
+    padding: 0 var(--spacing-41);
+    margin-bottom: var(--spacing-21);
+}
+  .product-benefits-grid__item {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    flex-direction: column;
+    gap: var(--spacing-8);
+    text-align: center;
+  }
+
+  .product-benefits-grid__icon {
+    width: var(--spacing-56);
+    height: var(--spacing-56);
+    object-fit: contain;
+  }
+
+  .product-benefits-grid__text {
+    margin: 0;
+    color: var(--color-black);
+    font-family: var(--font-body--family);
+    font-size: var(--font-size-16);
+    font-style: var(--font-body--style);
+    font-weight: var(--font-weight-semibold);
+    line-height: 120%;
+  }
+
+  @media screen and (max-width: 749px) {
+    .product-benefits-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-bottom:0;
+      gap:var(--spacing-23) var(--spacing-36);
+      padding:0 var(--spacing-45);
+    }
+
+    .product-benefits-grid__item {
+      gap: var(--spacing-8);
+    }
+    .product-benefits-grid__item:nth-child(1){
+      order:1;
+    }
+    .product-benefits-grid__item:nth-child(2){
+      order:3;
+    }
+    .product-benefits-grid__item:nth-child(3){
+      order:2;
+    }
+    .product-benefits-grid__item:nth-child(4){
+      order:4;
+    }
+  }

@@ -54,13 +54,19 @@
     assign onboarding = true
   endif
 
+  if settings.show_second_image_on_hover
+    if product.metafields.custom.grid_hover_image_or_video.value != blank
+      assign hoverClass = 'show_second_image_on_hover'
+    endif
+  endif
+
   if block_settings.background_color != blank
     render 'contrast-override', background_color: block_settings.background_color, text_color: block_settings.text_color, section_id: block.id
   endif
 %}
 
 <product-card
-  class="product-card size-style"
+  class="product-card size-style product-grid__main {{ hoverClass }}{% if product.available == false %} product-grid__soldout{% endif %}"
   style="{% render 'size-style', settings: block_settings %}"
   data-product-id="{{ product.id }}"
   id="product-card-{{ block.id }}"
@@ -99,8 +105,7 @@
       spacing-style
       border-style
       gap-style
-      {% if block_settings.background_color != blank %} color-custom-{{ block.id }}{% endif %}
-    "
+      {% if block_settings.background_color != blank %} color-custom-{{ block.id }}{% endif %} product-grid__main-wrap"
     style="
       {% render 'border-override', settings: block_settings %}
       {% render 'layout-panel-style', settings: block_settings %}
@@ -115,7 +120,11 @@
       {% if block_settings.padding-block-end > 0 %}--zoom-out-padding-block-end: min(var(--padding-xs), {{ block_settings.padding-block-end | times: 0.7}}px);{% endif %}
     "
   >
-    {{ children }}
+    {%- comment -%}
+      {{ children }}
+    {%- endcomment -%}
+    {% render 'product-card-grid-gallery-custom', closest.product: product %}
+    {% render 'product-card-grid-content-custom', closest.product: product %}
   </div>
 </product-card>
 

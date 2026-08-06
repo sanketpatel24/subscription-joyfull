@@ -1,0 +1,370 @@
+{{ 'product-comparison.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'product-comparison.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign comparison = product.metafields.custom.comparison_section.value
+
+  assign heading = comparison.heading.value | strip
+  assign description = comparison.description.value | strip
+  assign cta_label = comparison.cta_label.value | strip
+  assign cta_link = comparison.cta_link.value
+  assign cta_icon = comparison.cta_icon.value
+  assign illustration = comparison.main_illustration.value
+  assign brands = comparison.comparison_cards.value
+  assign background_color = comparison.background_color.value
+  assign mobile_background_color = comparison.mobile_background_color.value | default: background_color
+
+  assign show_cta = false
+  if section.settings.enable_cta and cta_label != blank and cta_link != blank
+    assign show_cta = true
+  endif
+
+  assign active_index = 0
+  for brand in brands
+    if brand.default_active.value == true
+      assign active_index = forloop.index0
+      break
+    endif
+  endfor
+-%}
+
+{%- if brands != blank -%}
+  {%- style -%}
+    #shopify-section-{{ section.id }} {
+      {%- if mobile_background_color != blank %}
+        --product-comparison-background: {{ mobile_background_color }};
+      {%- endif %}
+      --product-comparison-padding-start: {{ section.settings.mobile_top_padding }}px;
+      --product-comparison-padding-end: {{ section.settings.mobile_bottom_padding }}px;
+      --product-comparison-margin-start: {{ section.settings.mobile_top_margin }}px;
+      --product-comparison-margin-end: {{ section.settings.mobile_bottom_margin }}px;
+      --product-comparison-illustration-width: {{ section.settings.illustration_width }}%;
+    }
+
+    @media (min-width: 990px) {
+      #shopify-section-{{ section.id }} {
+        {%- if background_color != blank %}
+          --product-comparison-background: {{ background_color }};
+        {%- endif %}
+        --product-comparison-padding-start: {{ section.settings.desktop_top_padding }}px;
+        --product-comparison-padding-end: {{ section.settings.desktop_bottom_padding }}px;
+        --product-comparison-margin-start: {{ section.settings.desktop_top_margin }}px;
+        --product-comparison-margin-end: {{ section.settings.desktop_bottom_margin }}px;
+      }
+    }
+  {%- endstyle -%}
+
+  <section
+    class="product-comparison"
+    {% if heading != blank %}aria-labelledby="ProductComparisonHeading-{{ section.id }}"{% endif %}
+    data-product-comparison
+    data-active-index="{{ active_index }}"
+  >
+    <div class="product-comparison-container page-width">
+      <div class="product-comparison-layout">
+        {%- if heading != blank or description != blank -%}
+          <div class="product-comparison-intro">
+            {%- if heading != blank -%}
+              <h2 class="product-comparison-heading heading-m" id="ProductComparisonHeading-{{ section.id }}">
+                {{- heading | escape -}}
+              </h2>
+            {%- endif -%}
+            {%- if description != blank -%}
+              <p class="product-comparison-description text-common">{{ description | escape }}</p>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+
+        <div
+          class="product-comparison-tabs"
+          aria-label="{{ section.settings.tablist_label | default: 'Compare brands' | escape }}"
+          data-product-comparison-tablist
+        >
+          {%- for brand in brands -%}
+            {%- liquid
+              assign brand_title = brand.brand_title.value | strip
+              assign brand_logo = brand.brand_logo.value
+              assign brand_logo_active = brand.brand_logo_active.value | default: brand_logo
+            -%}
+            {%- capture brand_vars -%}
+              {%- if brand.background_color.value != blank -%}--product-comparison-brand-background:{{ brand.background_color.value }};{%- endif -%}
+              {%- if brand.text_color.value != blank -%}--product-comparison-brand-color:{{ brand.text_color.value }};{%- endif -%}
+              {%- if brand.border_color.value != blank -%}--product-comparison-brand-border:{{ brand.border_color.value }};{%- endif -%}
+              {%- if brand.active_background_color.value != blank -%}--product-comparison-brand-active-background:{{ brand.active_background_color.value }};{%- endif -%}
+              {%- if brand.active_text_color.value != blank -%}--product-comparison-brand-active-color:{{ brand.active_text_color.value }};{%- endif -%}
+            {%- endcapture -%}
+            <button
+              type="button"
+              class="product-comparison-tab"
+              id="ProductComparisonTab-{{ section.id }}-{{ forloop.index }}"
+              data-product-comparison-tab
+              data-index="{{ forloop.index0 }}"
+              {% if brand_vars != blank %}style="{{ brand_vars | strip }}"{% endif %}
+            >
+              {%- if brand_logo != blank -%}
+                <span class="product-comparison-tab-logo product-comparison-tab-logo--idle">
+                  {{-
+                    brand_logo
+                    | image_url: width: 400
+                    | image_tag:
+                      widths: '120, 200, 300, 400',
+                      sizes: '120px',
+                      loading: 'lazy',
+                      decoding: 'async',
+                      class: 'product-comparison-logo-image',
+                      alt: brand_title
+                  -}}
+                </span>
+                <span class="product-comparison-tab-logo product-comparison-tab-logo--active" aria-hidden="true">
+                  {{-
+                    brand_logo_active
+                    | image_url: width: 400
+                    | image_tag:
+                      widths: '120, 200, 300, 400',
+                      sizes: '120px',
+                      loading: 'lazy',
+                      decoding: 'async',
+                      class: 'product-comparison-logo-image',
+                      alt: ''
+                  -}}
+                </span>
+              {%- else -%}
+                <span class="product-comparison-tab-title">{{ brand_title | escape }}</span>
+              {%- endif -%}
+            </button>
+          {%- endfor -%}
+        </div>
+
+        <div class="product-comparison-cards">
+          {%- for brand in brands -%}
+            {%- liquid
+              assign brand_title = brand.brand_title.value | strip
+              assign brand_logo = brand.brand_logo_active.value | default: brand.brand_logo.value
+              assign points = brand.comparison_points.value
+            -%}
+            {%- capture brand_vars -%}
+              {%- if brand.background_color.value != blank -%}--product-comparison-brand-background:{{ brand.background_color.value }};{%- endif -%}
+              {%- if brand.text_color.value != blank -%}--product-comparison-brand-color:{{ brand.text_color.value }};{%- endif -%}
+              {%- if brand.mobile_background_color.value != blank -%}--product-comparison-brand-mobile-background:{{ brand.mobile_background_color.value }};{%- endif -%}
+              {%- if brand.mobile_text_color.value != blank -%}--product-comparison-brand-mobile-color:{{ brand.mobile_text_color.value }};{%- endif -%}
+              {%- if brand.border_color.value != blank -%}--product-comparison-brand-border:{{ brand.border_color.value }};{%- endif -%}
+            {%- endcapture -%}
+            <article
+              class="product-comparison-card"
+              id="ProductComparisonPanel-{{ section.id }}-{{ forloop.index }}"
+              data-product-comparison-card
+              data-index="{{ forloop.index0 }}"
+              {% if brand_vars != blank %}style="{{ brand_vars | strip }}"{% endif %}
+            >
+              {%- if brand_logo != blank -%}
+                <div class="product-comparison-card-head">
+                  {{
+                    brand_logo
+                    | image_url: width: 600
+                    | image_tag:
+                      widths: '180, 300, 450, 600',
+                      sizes: '180px',
+                      loading: 'lazy',
+                      decoding: 'async',
+                      class: 'product-comparison-card-logo',
+                      alt: brand_title
+                  }}
+                </div>
+              {%- elsif brand_title != blank -%}
+                <div class="product-comparison-card-head">
+                  <span class="product-comparison-card-title">{{ brand_title | escape }}</span>
+                </div>
+              {%- endif -%}
+
+              {%- if points != blank -%}
+                <ul class="product-comparison-points">
+                  {%- for point in points -%}
+                    {%- liquid
+                      assign point_text = point.text.value | strip
+                      assign point_icon = point.icon.value
+                    -%}
+                    {%- if point_text != blank or point_icon != blank -%}
+                      <li class="product-comparison-point">
+                        <div class="product-comparison-point-body">
+                          {%- if point_icon != blank -%}
+                            <span class="product-comparison-point-icon">
+                              {%- if point_icon.width != blank -%}
+                                {{-
+                                  point_icon
+                                  | image_url: width: 96
+                                  | image_tag:
+                                    widths: '24, 48, 72, 96',
+                                    sizes: '24px',
+                                    loading: 'lazy',
+                                    decoding: 'async',
+                                    class: 'product-comparison-point-icon-image',
+                                    alt: ''
+                                -}}
+                              {%- else -%}
+                                <img
+                                  class="product-comparison-point-icon-image"
+                                  src="{{ point_icon | file_url }}"
+                                  width="24"
+                                  height="24"
+                                  loading="lazy"
+                                  decoding="async"
+                                  alt=""
+                                >
+                              {%- endif -%}
+                            </span>
+                          {%- endif -%}
+                          {%- if point_text != blank -%}
+                            <span class="product-comparison-point-text">{{ point_text}}</span>
+                          {%- endif -%}
+                        </div>
+                        {%- if point.enable_divider.value == true -%}
+                          <span class="product-comparison-divider" aria-hidden="true"></span>
+                        {%- endif -%}
+                      </li>
+                    {%- endif -%}
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+            </article>
+          {%- endfor -%}
+        </div>
+
+        {%- if show_cta -%}
+          <div class="product-comparison-cta">
+            <a class="product-comparison-button" href="{{ cta_link }}">{{ cta_label | escape }}</a>
+            {%- if cta_icon != blank -%}
+              <a class="product-comparison-cta-icon" href="{{ cta_link }}" tabindex="-1" aria-hidden="true">
+                {{-
+                  cta_icon
+                  | image_url: width: 128
+                  | image_tag:
+                    widths: '32, 64, 96, 128',
+                    sizes: '32px',
+                    loading: 'lazy',
+                    decoding: 'async',
+                    class: 'product-comparison-cta-icon-image',
+                    alt: ''
+                -}}
+              </a>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+
+        {%- if illustration != blank -%}
+          <div class="product-comparison-media">
+            {{
+              illustration
+              | image_url: width: 1200
+              | image_tag:
+                widths: '400, 600, 800, 1000, 1200',
+                sizes: '(min-width: 990px) 420px, calc(100vw - 40px)',
+                loading: 'lazy',
+                decoding: 'async',
+                class: 'product-comparison-media-image',
+                alt: heading
+            }}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Product Comparison",
+  "class": "product-comparison-section",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_cta",
+      "label": "Enable CTA",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "tablist_label",
+      "label": "Accessible Tab List Label",
+      "default": "Compare brands",
+      "info": "Announced by screen readers as the name of the mobile tab navigation."
+    },
+    {
+      "type": "range",
+      "id": "illustration_width",
+      "label": "Illustration Width",
+      "min": 60,
+      "max": 200,
+      "step": 5,
+      "unit": "%",
+      "default": 100,
+      "info": "Width of the illustration relative to the left column. Above 100% it grows toward the cards and sits behind them."
+    },
+    {
+      "type": "header",
+      "content": "Layout Settings"
+    },
+    {
+      "type": "number",
+      "id": "desktop_top_padding",
+      "label": "Desktop Top Padding",
+      "default": 56
+    },
+    {
+      "type": "number",
+      "id": "desktop_bottom_padding",
+      "label": "Desktop Bottom Padding",
+      "default": 56
+    },
+    {
+      "type": "number",
+      "id": "mobile_top_padding",
+      "label": "Mobile Top Padding",
+      "default": 40
+    },
+    {
+      "type": "number",
+      "id": "mobile_bottom_padding",
+      "label": "Mobile Bottom Padding",
+      "default": 40
+    },
+        {
+      "type": "header",
+      "content": "Margin"
+    },
+    {
+      "type": "number",
+      "id": "desktop_top_margin",
+      "label": "Desktop Top Margin",
+      "default": 0
+    },
+    {
+      "type": "number",
+      "id": "desktop_bottom_margin",
+      "label": "Desktop Bottom Margin",
+      "default": 0
+    },
+    {
+      "type": "number",
+      "id": "mobile_top_margin",
+      "label": "Mobile Top Margin",
+      "default": 0
+    },
+    {
+      "type": "number",
+      "id": "mobile_bottom_margin",
+      "label": "Mobile Bottom Margin",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Comparison"
+    }
+  ]
+}
+{% endschema %}

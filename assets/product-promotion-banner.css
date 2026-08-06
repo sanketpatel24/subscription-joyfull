@@ -1,6 +1,6 @@
 .product-promotion-banner-wrapper {
     width: 100%;
-    margin-bottom:var(--spacing-24);
+    margin-bottom:var(--spacing-23);
   }
 
   .product-promotion-banner {
@@ -45,9 +45,9 @@
     .product-promotion-banner-mobile {
       display: flex;
       flex-direction: column;
-      gap: var(--spacing-6);
+      gap: var(--spacing-5);
       width: 100%;
-      padding:var(--spacing-6) var(--spacing-4);
+      padding:0;
     }
 
     .product-promotion-banner {
@@ -57,6 +57,7 @@
     .product-promotion-banner--mobile {
       justify-content: center;
       text-align: center;
+      padding:var(--spacing-6);
     }
 
     .product-promotion-banner-mobile__secondary {

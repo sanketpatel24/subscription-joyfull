@@ -3,7 +3,7 @@
   width: 100%;
   color: var(--jdgm-product-text-color);
   font-family: var(--font-body--family);
-  margin-bottom:var(--spacing-8);
+  margin-bottom:var(--spacing-7);
 }
 
 .product-judgeme-stars .jdgm-preview-badge {
@@ -41,7 +41,7 @@
 }
 
 .product-judgeme-stars .jdgm-prev-badge::after {
-  content: "(" attr(data-number-of-reviews) " reviews)";
+  content: "(" attr(data-number-of-reviews) " Reviews)";
   color: var(--jdgm-product-text-color);
   font-size: var(--jdgm-product-text-size);
   font-weight: var(--font-weight-semibold);

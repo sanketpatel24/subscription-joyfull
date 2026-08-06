@@ -24,7 +24,7 @@
             "slideshow_controls_style": "thumbnails",
             "slideshow_mobile_controls_style": "hint",
             "thumbnail_position": "left",
-            "thumbnail_width": 72,
+            "thumbnail_width": 80,
             "thumbnail_radius": 8,
             "aspect_ratio": "1",
             "constrain_to_viewport": false,
@@ -85,6 +85,54 @@
               "settings": {},
               "blocks": {}
             },
+            "product_short_description_RYWx7V": {
+              "type": "product-short-description",
+              "name": "Product short description",
+              "settings": {},
+              "blocks": {}
+            },
+            "product_stitches_KhwzCM": {
+              "type": "product-stitches",
+              "name": "Stitches",
+              "settings": {
+                "heading": "FLAVOR:"
+              },
+              "blocks": {}
+            },
+            "product_promotion_banner_7QMBbU": {
+              "type": "product-promotion-banner",
+              "name": "Product promotion banner",
+              "settings": {
+                "icon": "shopify://shop_images/Vector.svg",
+                "text": "<p><strong>Buy 2 for 10% off · Buy 3 for 15% off · Mix and match flavors 🍗🐟</strong></p>",
+                "mobile_primary_text": "<p><strong>Buy 2 for 10% off · Buy 3 for 15% off</strong></p>",
+                "mobile_secondary_text": "<p><strong> Mix and match flavors 🍗🐟</strong></p>",
+                "background_color": "#8fc9c9",
+                "text_color": "#2f261c"
+              },
+              "blocks": {}
+            },
+            "subscription_selector_XixTFG": {
+              "type": "subscription-selector",
+              "name": "t:names.subscription_selector",
+              "settings": {
+                "badge_text": "Best Value",
+                "onetime_badge_text": "Getting Started",
+                "subscribe_label": "Subscribe & Save",
+                "onetime_label": "One-Time Purchase",
+                "delivery_label": "Deliver every:",
+                "show_per_packet": true,
+                "per_packet_label": "per packet",
+                "benefit_1": "Save an additional 10% on every order",
+                "benefit_2": "Free shipping, always",
+                "benefit_3": "Cancel or pause anytime",
+                "background_color": "#ffefc8",
+                "text_color": "#2f261c",
+                "badge_background": "#2f261c",
+                "badge_text_color": "#fff9f0"
+              },
+              "blocks": {}
+            },
             "variant_picker_R3rGDr": {
               "type": "variant-picker",
               "settings": {
@@ -104,35 +152,6 @@
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "product_stitches_8CfUnm": {
-              "type": "product-stitches",
-              "name": "Stitches",
-              "settings": {
-                "heading": "Flavor:"
-              },
-              "blocks": {}
-            },
-            "subscription_selector_VyTNVP": {
-              "type": "subscription-selector",
-              "name": "t:names.subscription_selector",
-              "settings": {
-                "badge_text": "Best Value",
-                "subscribe_label": "Subscribe & Save",
-                "onetime_label": "One-Time Purchase",
-                "delivery_label": "Deliver every:",
-                "show_per_packet": true,
-                "per_packet_label": "per packet",
-                "benefit_1": "Save an additional 10% on every order",
-                "benefit_2": "Free shipping, always",
-                "benefit_3": "Cancel or pause anytime",
-                "background_color": "#fff3ce",
-                "text_color": "#2f261c",
-                "badge_background": "#2f261c",
-                "badge_text_color": "#ffffff",
-                "border_radius": 12
               },
               "blocks": {}
             },
@@ -158,7 +177,7 @@
                 "border_width": 1,
                 "border_radius": 0,
                 "padding-block-start": 0,
-                "padding-block-end": 0,
+                "padding-block-end": 16,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
               },
@@ -197,6 +216,42 @@
               },
               "block_order": []
             },
+            "product_info_marquee_JzWMra": {
+              "type": "product-info-marquee",
+              "name": "Product info marquee",
+              "settings": {},
+              "blocks": {
+                "product_info_marquee_item_wpNc43": {
+                  "type": "_product-info-marquee-item",
+                  "settings": {
+                    "icon": "shopify://shop_images/truck.svg",
+                    "text": "Fast shipping from Denver, CO"
+                  },
+                  "blocks": {}
+                },
+                "product_info_marquee_item_efUAKa": {
+                  "type": "_product-info-marquee-item",
+                  "settings": {
+                    "icon": "shopify://shop_images/Frame_1000005688.svg",
+                    "text": "30-Day Happiness Guarantee"
+                  },
+                  "blocks": {}
+                },
+                "product_info_marquee_item_EqyXEn": {
+                  "type": "_product-info-marquee-item",
+                  "settings": {
+                    "icon": "shopify://shop_images/Frame_1000005690.svg",
+                    "text": "5% of every purchase goes to the ASPCA"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "product_info_marquee_item_wpNc43",
+                "product_info_marquee_item_efUAKa",
+                "product_info_marquee_item_EqyXEn"
+              ]
+            },
             "product_vet_formulated_FiWJfV": {
               "type": "product-vet-formulated",
               "name": "Vet-formulated",
@@ -208,17 +263,43 @@
               "name": "Customer image quote",
               "settings": {},
               "blocks": {}
+            },
+            "product_benefits_grid_p43qd4": {
+              "type": "product-benefits-grid",
+              "name": "Product benefits grid",
+              "settings": {},
+              "blocks": {}
+            },
+            "product_details_accordion_h7tqnA": {
+              "type": "product-details-accordion",
+              "name": "Product details accordion",
+              "settings": {},
+              "blocks": {}
+            },
+            "product_bundle_upsell_ighGCh": {
+              "type": "product-bundle-upsell",
+              "name": "Product bundle upsell",
+              "settings": {
+                "title": "Bundle & save $15"
+              },
+              "blocks": {}
             }
           },
           "block_order": [
             "judgeme_review_stars_H7LenN",
             "product_custom_heading_MR9Prx",
+            "product_short_description_RYWx7V",
+            "product_stitches_KhwzCM",
+            "product_promotion_banner_7QMBbU",
+            "subscription_selector_XixTFG",
             "variant_picker_R3rGDr",
-            "product_stitches_8CfUnm",
-            "subscription_selector_VyTNVP",
             "buy_buttons_eYQEYi",
+            "product_info_marquee_JzWMra",
             "product_vet_formulated_FiWJfV",
-            "product_customer_quote_aUXqiR"
+            "product_customer_quote_aUXqiR",
+            "product_benefits_grid_p43qd4",
+            "product_details_accordion_h7tqnA",
+            "product_bundle_upsell_ighGCh"
           ]
         }
       },
@@ -234,151 +315,197 @@
         "padding-block-end": 0
       }
     },
-    "product_recommendations_qggXJq": {
-      "type": "product-recommendations",
+    "product_ingredients_flip_cards_R9khn4": {
+      "type": "product-ingredients-flip-cards",
+      "name": "Product Ingredient Flip Cards",
+      "settings": {
+        "flip_label": "Show details",
+        "background_color": "#d2c6b7",
+        "desktop_top_padding": 56,
+        "desktop_bottom_padding": 56,
+        "mobile_top_padding": 33,
+        "mobile_bottom_padding": 33,
+        "desktop_top_margin": 23,
+        "desktop_bottom_margin": 56,
+        "mobile_top_margin": 0,
+        "mobile_bottom_margin": 0
+      }
+    },
+    "product_endless_uses_qHkbW6": {
+      "type": "product-endless-uses",
+      "name": "Product Endless Uses",
+      "settings": {
+        "heading": "One packet, endless uses",
+        "description": "One packet does it all. Made for your real (sometimes chaotic) life together.",
+        "tablist_label": "Ways to use",
+        "background_color": "#ffefc8",
+        "desktop_top_padding": 56,
+        "desktop_bottom_padding": 56,
+        "mobile_top_padding": 32,
+        "mobile_bottom_padding": 32,
+        "desktop_top_margin": 0,
+        "desktop_bottom_margin": 56,
+        "mobile_top_margin": 0,
+        "mobile_bottom_margin": 0
+      }
+    },
+    "product_comparison_4ibEaE": {
+      "type": "product-comparison",
+      "name": "Product Comparison",
+      "settings": {
+        "enable_cta": true,
+        "tablist_label": "Compare brands",
+        "illustration_width": 100,
+        "desktop_top_padding": 54,
+        "desktop_bottom_padding": 16,
+        "mobile_top_padding": 31,
+        "mobile_bottom_padding": 40,
+        "desktop_top_margin": 0,
+        "desktop_bottom_margin": 0,
+        "mobile_top_margin": 0,
+        "mobile_bottom_margin": 0
+      }
+    },
+    "product_benefits_marquee_hf78nA": {
+      "type": "product-benefits-marquee",
+      "name": "Product Benefits Marquee",
+      "settings": {
+        "accessible_label": "Product benefits",
+        "section_background_color": "#fff9f0",
+        "marquee_background_color": "#8fc9c9",
+        "scroll_speed": 40,
+        "enable_infinite_loop": true,
+        "pause_on_hover": true,
+        "show_dot_separator": true,
+        "desktop_text_size": 24,
+        "desktop_item_gap": 20,
+        "desktop_icon_size": 12,
+        "desktop_dot_size": 5,
+        "mobile_text_size": 18,
+        "mobile_item_gap": 18,
+        "mobile_icon_size": 20,
+        "mobile_dot_size": 5,
+        "desktop_wave_band_height": 56,
+        "desktop_wave_amplitude": 33,
+        "desktop_wave_length": 1660,
+        "desktop_wave_phase": 55,
+        "mobile_wave_band_height": 44,
+        "mobile_wave_amplitude": 9,
+        "mobile_wave_length": 420,
+        "mobile_wave_phase": 75,
+        "desktop_top_padding": 20,
+        "desktop_bottom_padding": 56,
+        "mobile_top_padding": 12,
+        "mobile_bottom_padding": 32
+      }
+    },
+    "178539793936d82a2f": {
+      "type": "_blocks",
       "blocks": {
-        "text_cbcgyb": {
-          "type": "text",
-          "name": "t:names.header",
+        "judge_me_reviews_review_widget_iR3Rwp": {
+          "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
           "settings": {
-            "text": "<h3>You may also like </h3>",
-            "width": "fit-content",
-            "max_width": "normal",
-            "alignment": "left",
-            "type_preset": "h4",
-            "font": "var(--font-primary--family)",
-            "font_size": "1rem",
-            "line_height": "normal",
-            "letter_spacing": "normal",
-            "case": "none",
-            "wrap": "pretty",
-            "text_color": "",
-            "background": false,
-            "background_color": "#00000026",
-            "corner_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
-        },
-        "static-product-card": {
-          "type": "_product-card",
-          "name": "t:names.product_card",
-          "static": true,
-          "settings": {
-            "product_card_gap": 8,
-            "background_color": "",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_color": "",
-            "border_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 8,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {
-            "product_card_gallery_DNizbJ": {
-              "type": "_product-card-gallery",
-              "name": "t:names.product_card_media",
-              "settings": {
-                "image_ratio": "adapt",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_color": "",
-                "border_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "product_title_M7MJkb": {
-              "type": "product-title",
-              "name": "t:names.product_title",
-              "settings": {
-                "width": "100%",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "rte",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "text_color": "",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 4,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "price_gLWgA6": {
-              "type": "price",
-              "settings": {
-                "show_sale_price_first": true,
-                "show_installments": false,
-                "show_tax_info": false,
-                "type_preset": "h6",
-                "width": "100%",
-                "alignment": "left",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "text_color": "",
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "product_card_gallery_DNizbJ",
-            "product_title_M7MJkb",
-            "price_gLWgA6"
-          ]
+            "review_data": "sample_data",
+            "max_width": 1200,
+            "show_shop_reviews": false,
+            "empty_state": "empty_widget"
+          }
         }
       },
       "block_order": [
-        "text_cbcgyb"
+        "judge_me_reviews_review_widget_iR3Rwp"
       ],
-      "name": "t:names.product_recommendations",
+      "name": "Customer Reviews",
       "settings": {
-        "product": "{{ closest.product }}",
+        "custom_class": "pdp_review_section page-width",
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 12,
+        "section_width": "full-width",
+        "section_height": "",
+        "section_height_custom": 50,
+        "background_media": "none",
+        "background_color": "",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_color": "",
+        "border_radius": 0,
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "happy_parents_obsessed_pets_mgArc6": {
+      "type": "happy-parents-obsessed-pets",
+      "name": "Happy Parents Pets",
+      "settings": {
+        "background_color": "#fff9f0",
+        "heading": "Happy parents, obsessed pets",
+        "heading_alignment": "center",
+        "desktop_top_padding": 112,
+        "desktop_bottom_padding": 56,
+        "mobile_top_padding": 48,
+        "mobile_bottom_padding": 48
+      }
+    },
+    "while_youre_here_wcxHmA": {
+      "type": "while-youre-here",
+      "name": "While you're here",
+      "settings": {
+        "heading": "While you’re here",
+        "product": "prebiotic-squeeze-treats-for-dogs",
         "recommendation_type": "related",
-        "layout_type": "grid",
-        "carousel_on_mobile": false,
-        "max_products": 4,
-        "columns": 4,
-        "mobile_columns": "2",
-        "columns_gap": 12,
-        "rows_gap": 24,
-        "icons_style": "arrow",
-        "icons_shape": "none",
-        "section_width": "page-width",
-        "gap": 28,
-        "background_color": "{{ settings.color_palette.background }}",
-        "padding-block-start": 48,
-        "padding-block-end": 48
+        "collection": "",
+        "products_to_show": 8,
+        "columns_desktop": 4,
+        "card_width_mobile": 224,
+        "gap_desktop": 16,
+        "gap_mobile": 16,
+        "show_shop_all": true,
+        "button_label": "SHOP ALL",
+        "background_color": "#fff9f0",
+        "padding_top_desktop": 56,
+        "padding_bottom_desktop": 56,
+        "padding_top_mobile": 40,
+        "padding_bottom_mobile": 32
+      }
+    },
+    "index_meta_faqs_accordion_aPhDzX": {
+      "type": "index-meta-faqs-accordion",
+      "name": "Index Meta FAQs Accordion",
+      "settings": {
+        "background_color": "",
+        "information_color": "",
+        "inner_background_color": "",
+        "desktop_top_padding": 32,
+        "desktop_bottom_padding": 32,
+        "mobile_top_padding": 32,
+        "mobile_bottom_padding": 32,
+        "main_heading_size": "h2",
+        "faqs_accordions": ""
       }
     }
   },
   "order": [
     "main",
-    "product_recommendations_qggXJq"
+    "product_ingredients_flip_cards_R9khn4",
+    "product_endless_uses_qHkbW6",
+    "product_comparison_4ibEaE",
+    "product_benefits_marquee_hf78nA",
+    "178539793936d82a2f",
+    "happy_parents_obsessed_pets_mgArc6",
+    "while_youre_here_wcxHmA",
+    "index_meta_faqs_accordion_aPhDzX"
   ]
 }

@@ -14,7 +14,8 @@
   section: section,
   children: children,
   section_id: section.id,
-  background_color: section.settings.background_color
+  background_color: section.settings.background_color,
+  custom_class: section.settings.custom_class
 %}
 
 {% schema %}
@@ -33,6 +34,12 @@
     }
   ],
   "settings": [
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Custom CSS class",
+      "info": "Add one or more class names separated by spaces. Do not include a dot."
+    },
     {
       "type": "header",
       "content": "t:content.layout"

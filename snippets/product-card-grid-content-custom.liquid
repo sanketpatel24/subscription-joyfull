@@ -1,0 +1,52 @@
+{%- if product -%}
+  {%- assign product = product -%}
+{%- else -%}
+  {%- assign product = closest.product -%}
+{%- endif -%}
+
+{%- liquid
+    assign product_title = product.title
+    assign product_url = product.url
+    assign product_price = product.price
+    assign grid_descriptor_text_list = product.metafields.custom.grid_descriptor_text_list.value
+-%}
+
+<div class="product-card-content__body">
+    <div class="product-card-content__body-wrap">
+        {%- if product.metafields.judgeme.badge -%}
+            <div class="jdgm-widget jdgm-preview-badge text-3 product-card-content__review" data-id="{{ product.id }}" data-product-title="{{ product.title | escape }}" data-auto-install='false'>
+                {{ product.metafields.judgeme.badge }}
+            </div>
+        {%- endif -%}
+        {%- if product_title != blank -%}
+            <div class="text-common bold product-card-content__title">
+                <a href="{{ product_url }}">
+                    {{ product_title }}
+                </a>
+            </div>
+        {%- endif -%}
+        {%- if grid_descriptor_text_list != blank -%}
+            <div class="text-2 product-card-content__lists">
+                <ul>
+                    {%- for grid_descriptor_text_list in grid_descriptor_text_list -%}
+                        <li>
+                            {{ grid_descriptor_text_list }}
+                        </li>
+                    {%- endfor -%}
+                </ul>
+            </div>
+        {%- endif -%}
+        {%- if product_price != blank -%}
+            <div class="product-card-content__price show--mobile">
+                <div class="product-card-content__price-wrap" ref="productPrice">
+                    {% render 'price',
+                        show_unit_price: true,
+                        show_sale_price_first: true,
+                        product_resource: product,
+                        class: 'text-2 bold'
+                    %}
+                </div>
+            </div>
+        {%- endif -%}
+    </div>
+</div>

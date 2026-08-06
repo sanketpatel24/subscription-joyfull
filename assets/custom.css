@@ -665,3 +665,11 @@
 .instagram__loop-media{width:200px;}
 }
 /*--SECTION_8_END--*/
+
+/* --ATC button compare price-- */
+.add-to-cart-compare-price {
+  font-weight: var(--font-weight-regular, 400);
+  opacity: 0.6;
+  text-decoration: line-through;
+  margin-inline-end: 0.2em;
+}

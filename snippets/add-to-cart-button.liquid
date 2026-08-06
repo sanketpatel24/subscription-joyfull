@@ -56,8 +56,21 @@
             <span data-add-to-cart-label>
               {{- add_to_cart_text | default: default_add_to_cart_text -}}
             </span>
-            <span aria-hidden="true"> - </span>
-            <span data-add-to-cart-price>{{ product.selected_or_first_available_variant.price | money }}</span>
+            <span aria-hidden="true"> &ndash; </span> 
+            {%- liquid
+              assign atc_variant = product.selected_or_first_available_variant
+              assign atc_compare = atc_variant.compare_at_price
+              assign atc_price   = atc_variant.price
+            -%}
+            <span data-add-to-cart-price>{{ atc_price | money }}</span>
+            {%- if atc_compare > atc_price -%}
+              <span aria-hidden="true"> </span>
+              <s class="add-to-cart-compare-price" data-add-to-cart-compare-price>
+                {{- atc_compare | money -}}
+              </s>
+            {%- else -%}
+              <s class="add-to-cart-compare-price" data-add-to-cart-compare-price hidden></s>
+            {%- endif -%}
           </span>
         </span>
       </span>

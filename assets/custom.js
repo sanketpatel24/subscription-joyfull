@@ -307,3 +307,70 @@ document.querySelectorAll('.Index_object_testimonial_slider').forEach(el => {
   }
 });
 */
+
+
+
+
+(function () {
+  const WIDGET_SELECTOR = '#judgeme_product_reviews';
+  const RATING_SELECTOR = '.jm-average-rating-display .jm-star-rating, .jm-histogram-row .jm-star-rating';
+  const ENHANCED_ATTRIBUTE = 'data-joy-stars-enhanced';
+
+  function getRating(ratingElement) {
+    const label = ratingElement.getAttribute('aria-label') || '';
+    const match = label.match(/([0-5](?:\.\d+)?)/);
+
+    return match ? Math.max(0, Math.min(5, Math.round(Number.parseFloat(match[1])))) : 0;
+  }
+
+  function enhanceRating(ratingElement) {
+    if (ratingElement.hasAttribute(ENHANCED_ATTRIBUTE)) return;
+
+    const icon = ratingElement.querySelector('.jm-star-rating__font-icon');
+    const iconContainer = icon?.parentElement;
+    if (!icon || !iconContainer) return;
+
+    const rating = getRating(ratingElement);
+    iconContainer.replaceChildren();
+
+    for (let index = 0; index < 5; index += 1) {
+      const star = icon.cloneNode(true);
+      star.classList.toggle('joy-review-star--empty', index >= rating);
+      iconContainer.appendChild(star);
+    }
+
+    ratingElement.setAttribute(ENHANCED_ATTRIBUTE, 'true');
+  }
+
+  function enhanceWidget(widget) {
+    widget.querySelectorAll(RATING_SELECTOR).forEach(enhanceRating);
+  }
+
+  function initialize() {
+    const widget = document.querySelector(WIDGET_SELECTOR);
+    if (!widget) return false;
+
+    enhanceWidget(widget);
+
+    const observer = new MutationObserver(() => enhanceWidget(widget));
+    observer.observe(widget, { childList: true, subtree: true });
+    return true;
+  }
+
+  function waitForWidget() {
+    if (initialize()) return;
+
+    const pageObserver = new MutationObserver(() => {
+      if (!initialize()) return;
+      pageObserver.disconnect();
+    });
+
+    pageObserver.observe(document.documentElement, { childList: true, subtree: true });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForWidget, { once: true });
+  } else {
+    waitForWidget();
+  }
+})();

@@ -30,7 +30,7 @@
 
       {%- if price_per_packet != blank -%}
         <span class="product-custom-heading__packet-price">
-          {{ price_per_packet | money }}
+          <span data-sticky-per-packet data-per-packet-display>{{ price_per_packet | money }}</span>
           <span>per packet</span>
         </span>
       {%- endif -%}

@@ -19,6 +19,7 @@
   assign text_color = entry.text_color.value | default: '#ffffff'
   assign badge_color = entry.badge_color.value | default: '#ffffff'
   assign badge_background_color = entry.badge_background_color.value | default: '#2f261c'
+  assign card_background_image = entry.background_svg.value
   assign image_alt = card_image.alt | default: card_text
   assign show_custom_badge = false
   assign is_active = false
@@ -58,17 +59,29 @@
       "
     >
   {%- endif -%}
-
-    {{
-      card_image
-      | image_url: width: 1000
-      | image_tag:
-        class: 'product-stitches-card__image',
-        widths: '240, 360, 480, 640, 800, 1000',
-        sizes: '(max-width: 749px) 44vw, 240px',
-        loading: 'lazy',
-        alt: image_alt
-    }}
+    <div class="product-stitches-card__image-wrapper" aria-hidden="true">
+      {{
+        card_image
+        | image_url: width: 1000
+        | image_tag:
+          class: 'product-stitches-card__image',
+          widths: '240, 360, 480, 640, 800, 1000',
+          sizes: '(max-width: 749px) 44vw, 240px',
+          loading: 'lazy',
+          alt: image_alt
+      }}
+      {%- if card_background_image != blank -%}
+        {{ card_background_image 
+          | image_url: width: 1000
+          | image_tag:
+            class: 'product-stitches-card__background--image',
+            widths: '240, 360, 480, 640, 800, 1000',
+            sizes: '(max-width: 749px) 44vw, 240px',
+            loading: 'lazy',
+            alt: image_alt 
+        }}
+      {%- endif -%}
+    </div>
 
     <span class="product-stitches-card__overlay" aria-hidden="true"></span>
 

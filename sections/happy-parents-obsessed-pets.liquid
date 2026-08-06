@@ -1,0 +1,334 @@
+{{ 'happy-parents-obsessed-pets.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'happy-parents-obsessed-pets.js' | asset_url }}" defer="defer"></script>
+
+{%- liquid
+  assign cards = product.metafields.custom.happy_parent_cards.value
+  assign heading = section.settings.heading
+  assign heading_alignment = section.settings.heading_alignment | default: 'center'
+  assign background_color = section.settings.background_color
+  assign desktop_top_padding = section.settings.desktop_top_padding
+  assign desktop_bottom_padding = section.settings.desktop_bottom_padding
+  assign mobile_top_padding = section.settings.mobile_top_padding
+  assign mobile_bottom_padding = section.settings.mobile_bottom_padding
+  assign renderable_count = 0
+
+  for card in cards
+    if card.desktop_image.value != blank or card.mobile_image.value != blank
+      assign renderable_count = renderable_count | plus: 1
+    endif
+  endfor
+
+  assign column_base = renderable_count | divided_by: 3
+  assign column_remainder = renderable_count | modulo: 3
+  assign column_one_size = column_base
+  assign column_two_size = column_base
+
+  if column_remainder == 1
+    assign column_two_size = column_two_size | plus: 1
+  elsif column_remainder == 2
+    assign column_one_size = column_one_size | plus: 1
+    assign column_two_size = column_two_size | plus: 1
+  endif
+
+  assign column_one_break = column_one_size
+  assign column_two_break = column_one_size | plus: column_two_size
+  assign column_three_size = renderable_count | minus: column_two_break
+
+  assign grid_rows = column_base
+  if column_remainder > 0
+    assign grid_rows = column_base | plus: 1 | times: column_base
+  endif
+  if grid_rows < 1
+    assign grid_rows = 1
+  endif
+
+  assign card_index = 0
+-%}
+
+{%- if renderable_count > 0 -%}
+  {%- style -%}
+    #shopify-section-{{ section.id }} {
+      --happy-parents-pets-heading-align: {{ heading_alignment }};
+      --happy-parents-pets-grid-rows: repeat({{ grid_rows }}, 1fr);
+      {%- if background_color != blank %}
+        --happy-parents-pets-background: {{ background_color }};
+      {%- endif %}
+      {%- if desktop_top_padding != blank %}
+        --happy-parents-pets-desktop-padding-top: {{ desktop_top_padding }}px;
+      {%- endif %}
+      {%- if desktop_bottom_padding != blank %}
+        --happy-parents-pets-desktop-padding-bottom: {{ desktop_bottom_padding }}px;
+      {%- endif %}
+      {%- if mobile_top_padding != blank %}
+        --happy-parents-pets-mobile-padding-top: {{ mobile_top_padding }}px;
+      {%- endif %}
+      {%- if mobile_bottom_padding != blank %}
+        --happy-parents-pets-mobile-padding-bottom: {{ mobile_bottom_padding }}px;
+      {%- endif %}
+    }
+  {%- endstyle -%}
+
+  <section
+    class="happy-parents-pets"
+    {% if heading != blank %}
+      aria-labelledby="HappyParentsPetsHeading-{{ section.id }}"
+    {% endif %}
+  >
+    <div class="happy-parents-pets__inner page-width">
+      {%- if heading != blank -%}
+        <h2 class="happy-parents-pets__heading heading-m" id="HappyParentsPetsHeading-{{ section.id }}">
+          {{- heading | escape | newline_to_br -}}
+        </h2>
+      {%- endif -%}
+
+      <div
+        class="happy-parents-pets__slider swiper"
+        data-happy-parents-pets-slider
+      >
+        <div class="happy-parents-pets__grid swiper-wrapper">
+          {%- for card in cards -%}
+            {%- liquid
+              assign desktop_asset = card.desktop_image.value | default: card.mobile_image.value
+              assign mobile_asset = card.mobile_image.value | default: card.desktop_image.value
+              assign badge_text = card.badge_text.value
+              assign badge_background_color = card.badge_background_color.value
+              assign badge_text_color = card.badge_text_color.value
+
+              assign desktop_is_video = false
+              if desktop_asset.sources.size > 0 or desktop_asset.media_type == 'video'
+                assign desktop_is_video = true
+              endif
+
+              assign mobile_is_video = false
+              if mobile_asset.sources.size > 0 or mobile_asset.media_type == 'video'
+                assign mobile_is_video = true
+              endif
+
+              assign split_media = false
+              if desktop_asset.id != mobile_asset.id
+                if desktop_is_video or mobile_is_video
+                  assign split_media = true
+                endif
+              endif
+
+              assign image_alt = desktop_asset.alt | default: mobile_asset.alt
+              assign image_decorative = false
+              if badge_text != blank and image_alt == blank
+                assign image_decorative = true
+                assign image_alt = ''
+              endif
+
+              assign card_column = 3
+              assign card_column_size = column_three_size
+              assign card_offset = card_index | minus: column_two_break
+
+              if card_index < column_one_break
+                assign card_column = 1
+                assign card_column_size = column_one_size
+                assign card_offset = card_index
+              elsif card_index < column_two_break
+                assign card_column = 2
+                assign card_column_size = column_two_size
+                assign card_offset = card_index | minus: column_one_break
+              endif
+
+              if card_column_size < 1
+                assign card_column_size = 1
+              endif
+
+              assign card_span = grid_rows | divided_by: card_column_size
+              assign card_row = card_offset | times: card_span | plus: 1
+            -%}
+
+            {%- if desktop_asset != blank or mobile_asset != blank -%}
+              {%- assign card_index = card_index | plus: 1 -%}
+              <figure
+                class="happy-parents-pets__card swiper-slide"
+                style="--happy-parents-pets-card-column: {{ card_column }}; --happy-parents-pets-card-row: {{ card_row }}; --happy-parents-pets-card-span: {{ card_span }};{% if badge_background_color != blank %} --happy-parents-pets-badge-background: {{ badge_background_color }};{% endif %}{% if badge_text_color != blank %} --happy-parents-pets-badge-text: {{ badge_text_color }};{% endif %}"
+              >
+                <div class="happy-parents-pets__media">
+                  {%- if split_media -%}
+                    {%- if mobile_is_video -%}
+                      {{
+                        mobile_asset
+                        | video_tag:
+                          image_size: '720x',
+                          autoplay: true,
+                          loop: true,
+                          muted: true,
+                          controls: false,
+                          playsinline: true,
+                          preload: 'none',
+                          class: 'happy-parents-pets__video happy-parents-pets__slot--mobile',
+                          data-happy-parents-pets-video: 'true'
+                      }}
+                    {%- else -%}
+                      {{
+                        mobile_asset
+                        | image_url: width: 720
+                        | image_tag:
+                          widths: '320, 480, 640, 720',
+                          sizes: '84vw',
+                          loading: 'lazy',
+                          decoding: 'async',
+                          class: 'happy-parents-pets__image happy-parents-pets__slot--mobile',
+                          alt: image_alt
+                      }}
+                    {%- endif -%}
+
+                    {%- if desktop_is_video -%}
+                      {{
+                        desktop_asset
+                        | video_tag:
+                          image_size: '900x',
+                          autoplay: true,
+                          loop: true,
+                          muted: true,
+                          controls: false,
+                          playsinline: true,
+                          preload: 'none',
+                          class: 'happy-parents-pets__video happy-parents-pets__slot--desktop',
+                          data-happy-parents-pets-video: 'true'
+                      }}
+                    {%- else -%}
+                      {{
+                        desktop_asset
+                        | image_url: width: 900
+                        | image_tag:
+                          widths: '360, 460, 640, 900',
+                          sizes: '(min-width: 1440px) 460px, (min-width: 990px) 31vw, 46vw',
+                          loading: 'lazy',
+                          decoding: 'async',
+                          class: 'happy-parents-pets__image happy-parents-pets__slot--desktop',
+                          alt: image_alt
+                      }}
+                    {%- endif -%}
+                  {%- elsif desktop_is_video -%}
+                    {{
+                      desktop_asset
+                      | video_tag:
+                        image_size: '900x',
+                        autoplay: true,
+                        loop: true,
+                        muted: true,
+                        controls: false,
+                        playsinline: true,
+                        preload: 'none',
+                        class: 'happy-parents-pets__video',
+                        data-happy-parents-pets-video: 'true'
+                    }}
+                  {%- else -%}
+                    {%- render 'responsive-image-lazyload',
+                      desktop_image: desktop_asset,
+                      mobile_image: mobile_asset,
+                      class: 'happy-parents-pets__picture',
+                      image_class: 'happy-parents-pets__image',
+                      desktop_width: 900,
+                      desktop_widths: '360, 460, 640, 900',
+                      desktop_sizes: '(min-width: 1440px) 460px, (min-width: 990px) 31vw, 46vw',
+                      mobile_widths: '320, 480, 640, 720',
+                      mobile_sizes: '84vw',
+                      desktop_media: '(min-width: 750px)',
+                      mobile_media: '(max-width: 749px)',
+                      loading: 'lazy',
+                      alt: image_alt,
+                      decorative: image_decorative
+                    -%}
+                  {%- endif -%}
+                </div>
+
+                {%- if badge_text != blank -%}
+                  <figcaption class="happy-parents-pets__badge">
+                    {{- badge_text | escape -}}
+                  </figcaption>
+                {%- endif -%}
+              </figure>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+    "name": "Happy Parents Pets",
+    "class": "happy-parents-obsessed-pets__section",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Color Settings"
+        },
+        {
+            "type": "color",
+            "id": "background_color",
+            "label": "Background Color",
+            "default": "#FFF9F0"
+        },
+        {
+            "type": "header",
+            "content": "Content Settings"
+        },
+        {
+            "type": "text",
+            "id": "heading",
+            "label": "Heading",
+            "default": "Happy parents, obsessed pets"
+        },
+        {
+            "type": "select",
+            "id": "heading_alignment",
+            "label": "Heading Alignment",
+            "default": "center",
+            "options": [
+                {
+                    "label": "Left",
+                    "value": "left"
+                },
+                {
+                    "label": "Center",
+                    "value": "center"
+                },
+                {
+                    "label": "Right",
+                    "value": "right"
+                }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Layout Settings"
+        },
+        {
+            "type": "number",
+            "id": "desktop_top_padding",
+            "label": "Desktop Top Padding",
+            "default": 80
+        },
+        {
+            "type": "number",
+            "id": "desktop_bottom_padding",
+            "label": "Desktop Bottom Padding",
+            "default": 80
+        },
+        {
+            "type": "number",
+            "id": "mobile_top_padding",
+            "label": "Mobile Top Padding",
+            "default": 48
+        },
+        {
+            "type": "number",
+            "id": "mobile_bottom_padding",
+            "label": "Mobile Bottom Padding",
+            "default": 48
+        }
+    ],
+    "presets": [
+        {
+            "name": "Happy Parents Pets"
+        }
+    ]
+}
+{% endschema %}

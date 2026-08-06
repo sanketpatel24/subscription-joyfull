@@ -1,0 +1,43 @@
+{{ 'product-benefits-grid.css' | asset_url | stylesheet_tag }}
+
+{%- assign product_benefits = closest.product.metafields.custom.product_benefits.value -%}
+
+{%- if product_benefits != blank -%}
+  <div class="product-benefits-grid" {{ block.shopify_attributes }}>
+    {%- for benefit in product_benefits -%}
+      {%- if benefit.icon.value != blank or benefit.text.value != blank -%}
+        <div class="product-benefits-grid__item">
+          {%- if benefit.icon.value != blank -%}
+            {{
+              benefit.icon.value
+              | image_url: width: 240
+              | image_tag:
+                class: 'product-benefits-grid__icon',
+                widths: '80, 120, 160, 200, 240',
+                sizes: '(max-width: 749px) 80px, 96px',
+                loading: 'lazy'
+            }}
+          {%- endif -%}
+
+          {%- if benefit.text.value != blank -%}
+            <p class="product-benefits-grid__text">{{ benefit.text.value | escape }}</p>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+{%- endif -%}
+
+
+{% schema %}
+{
+  "name": "Product benefits grid",
+  "tag": null,
+  "settings": [],
+  "presets": [
+    {
+      "name": "Product benefits grid"
+    }
+  ]
+}
+{% endschema %}

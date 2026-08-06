@@ -152,7 +152,6 @@
      in swatches but required for body copy, borders, surfaces)
      ---------------------------------------------------------------------- */
   --color-white: #FFFFFF;
-  --color-black: #000000;
   --color-text-body: var(--color-onyx);
   --color-text-muted: var(--color-moss);
   --color-border: var(--color-sand);
@@ -360,7 +359,7 @@
    SUBTITLE 1 — Semibold, 24px, LH 128%
    ---------------------------------------------------------------------- */
 .subtitle-1 {
-  font-family: var(--font-heading--family);
+  font-family: var(--font-body--family);
   font-weight: var(--font-weight-semibold);
   font-size: var(--font-size-24);
   line-height: var(--line-height-s1);
@@ -375,7 +374,7 @@
    SUBTITLE 2 — Semibold, 18px, LH 120%
    ---------------------------------------------------------------------- */
 .subtitle-2 {
-  font-family: var(--font-heading--family);
+  font-family: var(--font-body--family);
   font-weight: var(--font-weight-semibold);
   font-size: var(--font-size-18);
   line-height: var(--line-height-heading);
@@ -540,4 +539,46 @@
 
 .hyperlink-small--caps {
   text-transform: uppercase;
+}
+
+/* ----------------------------------------------------------------------*/
+
+.badge-small {
+  font-family: var(--font-burned-pancakes--family);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-16);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.badge-small--caps {
+  text-transform: uppercase;
+}
+
+.badge-medium {
+  font-family: var(--font-burned-pancakes--family);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-18);
+  line-height: 1.12;
+}
+
+.badge-medium--caps {
+  text-transform: uppercase;
+}
+
+.badge-large {
+  font-family: var(--font-burned-pancakes--family);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-24);
+  line-height: var(--line-height-t1);
+}
+
+.badge-large--caps {
+  text-transform: uppercase;
+}
+
+/* ----------------------------------------------------------------------*/
+
+.bold{
+  font-weight: var(--font-weight-bold);
 }

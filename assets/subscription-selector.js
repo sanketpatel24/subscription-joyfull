@@ -3,7 +3,8 @@ class SubscriptionSelector extends HTMLElement {
     this.section = this.closest('.shopify-section');
     this.section?.addEventListener('shopify:product:select', this.handleVariantChange);
     this.bindControls();
-    this.sync();
+    // Defer initial sync so all other blocks (product heading etc.) are in the DOM
+    requestAnimationFrame(() => this.sync());
   }
 
   disconnectedCallback() {
@@ -86,13 +87,53 @@ class SubscriptionSelector extends HTMLElement {
   updateAddToCartPrice() {
     const subscriptionInput = this.querySelector('[data-purchase-option="subscription"]');
     const oneTimeInput = this.querySelector('[data-purchase-option="onetime"]');
+    const isSubscription = Boolean(subscriptionInput?.checked);
     const selectedPlan = this.planSelect?.selectedOptions[0];
-    const price = subscriptionInput?.checked ? selectedPlan?.dataset.price : oneTimeInput?.dataset.onetimePrice;
+
+    const price = isSubscription ? selectedPlan?.dataset.price : oneTimeInput?.dataset.onetimePrice;
     if (!price) return;
 
+    // --- ATC button: sale price ---
     const form = this.sellingPlanInput?.form;
     const priceOutput = form?.querySelector('[data-add-to-cart-price]');
     if (priceOutput) priceOutput.textContent = price;
+
+    // --- ATC button: compare price ---
+    const comparePrice = isSubscription ? selectedPlan?.dataset.comparePrice : null;
+    const compareOutput = form?.querySelector('[data-add-to-cart-compare-price]');
+    if (compareOutput) {
+      if (comparePrice) {
+        compareOutput.textContent = comparePrice;
+        compareOutput.hidden = false;
+      } else {
+        compareOutput.hidden = true;
+      }
+    }
+
+    // --- Sticky bar button price ---
+    const stickyBar = document.querySelector('sticky-add-to-cart');
+    if (stickyBar) {
+      const stickyPriceEl = stickyBar.querySelector('[data-sticky-price]');
+      if (stickyPriceEl) stickyPriceEl.textContent = price;
+
+      const stickyCompareEl = stickyBar.querySelector('[data-sticky-compare-price]');
+      if (stickyCompareEl) {
+        if (comparePrice) {
+          stickyCompareEl.textContent = comparePrice;
+          stickyCompareEl.hidden = false;
+        } else {
+          stickyCompareEl.hidden = true;
+        }
+      }
+    }
+
+    // --- Per-packet price in sticky bar info area and product heading ---
+    const perPacket = isSubscription ? selectedPlan?.dataset.perPacket : oneTimeInput?.dataset.onetimePerPacket;
+    if (perPacket) {
+      document.querySelectorAll('[data-sticky-per-packet], [data-per-packet-display]').forEach((el) => {
+        el.textContent = perPacket;
+      });
+    }
   }
 
   handleVariantChange = async (event) => {
@@ -119,7 +160,8 @@ class SubscriptionSelector extends HTMLElement {
 
     // The product form morphs its button from the same variant response.
     // Update once more after that morph has completed.
-    requestAnimationFrame(() => this.updateAddToCartPrice());
+    // Double rAF ensures sticky-add-to-cart morph has also finished.
+    requestAnimationFrame(() => requestAnimationFrame(() => this.updateAddToCartPrice()));
   };
 }
 
