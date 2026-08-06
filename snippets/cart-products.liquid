@@ -40,6 +40,11 @@
   type="module"
   fetchpriority="low"
 ></script>
+<script
+  src="{{ 'cart-line-subscription-selector.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
 
 {% render 'text-component-shimmer-styles' %}
 
@@ -231,6 +236,7 @@
                     {%- if item.product.has_only_default_variant == false
                       or item.properties.size != 0
                       or item.selling_plan_allocation != null
+                      or item.variant.selling_plan_allocations.size > 0
                     -%}
                       {%- if item.product.has_only_default_variant == false and item.item_components.size == 0 -%}
                         <dl class="cart-items__variants">
@@ -276,9 +282,7 @@
                         </dl>
                       {%- endif -%}
 
-                      {%- if item.selling_plan_allocation -%}
-                        <p>{{ item.selling_plan_allocation.selling_plan.name }}</p>
-                      {%- endif -%}
+                      {% render 'cart-line-subscription-selector', item: item, line_index: item.index %}
 
                       {%- if item.line_level_discount_allocations.size > 0 -%}
                         <ul
@@ -328,7 +332,6 @@
                   role="cell"
                   headers="quantity"
                 >
-                  {% # Here I want to pass some arguments to the quantity block so it knows which value should the input be set to. Though quantity block could be a snippet instead %}
                   {% assign can_update_quantity = item.instructions.can_update_quantity
                     | default: true, allow_false: true
                   %}

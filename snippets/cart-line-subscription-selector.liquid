@@ -1,0 +1,237 @@
+{% doc %}
+  Cart Line Subscription Selector
+
+  Renders a dropdown for a cart line item that lets a shopper switch between
+  a one-time purchase and any subscription delivery frequency available for
+  the line's variant.
+
+  Renders nothing when the variant has no selling plan allocations.
+
+  @param {object} item - The cart line item.
+  @param {number} line_index - The forloop index of the line (0-based, matches `item.index`).
+
+  @example
+  {% render 'cart-line-subscription-selector', item: item, line_index: item.index %}
+{% enddoc %}
+
+{%- liquid
+  assign allocations = item.variant.selling_plan_allocations
+  assign selected_allocation = item.selling_plan_allocation
+  assign line = line_index | plus: 1
+  assign unique_id = 'CartLineSubscription-' | append: item.key
+-%}
+
+{%- if allocations.size > 0 -%}
+  {%- if selected_allocation -%}
+    {%- assign current_summary = 'products.product.subscription.deliver_every' | t | append: ' ' | append: selected_allocation.selling_plan.name -%}
+  {%- else -%}
+    {%- assign current_summary = 'products.product.subscription.one_time_purchase' | t -%}
+  {%- endif -%}
+
+  <cart-line-subscription-selector
+    class="cart-line-subscription-selector"
+    data-line="{{ line }}"
+    on:change="/handleChange"
+  >
+    {% capture accordion_children %}
+      <details
+        ref="details"
+        id="{{ unique_id }}"
+        class="cart-line-subscription-selector__details"
+        data-auto-close-details="desktop,mobile"
+      >
+        <summary
+          class="cart-line-subscription-selector__summary"
+          role="button"
+          aria-expanded="false"
+          aria-controls="{{ unique_id }}-options"
+        >
+          <span
+            class="cart-line-subscription-selector__summary-label"
+            ref="summaryLabel"
+          >
+            {{- current_summary -}}
+          </span>
+          <span class="svg-wrapper icon-caret icon-animated" aria-hidden="true">
+            {{- 'icon-caret.svg' | inline_asset_content -}}
+          </span>
+        </summary>
+
+        <floating-panel-component
+          id="{{ unique_id }}-options"
+          class="cart-line-subscription-selector__options color-custom-popover"
+          role="listbox"
+          aria-label="{{ 'accessibility.subscription_frequency' | t: title: item.product.title | escape }}"
+        >
+          <div class="cart-line-subscription-selector__options-inner">
+            {%- for allocation in allocations -%}
+              <label
+                class="cart-line-subscription-selector__option"
+                data-option-row
+                {% if selected_allocation.selling_plan.id == allocation.selling_plan.id %}
+                  data-selected
+                {% endif %}
+              >
+                <input
+                  type="radio"
+                  name="{{ unique_id }}-purchase-option"
+                  value="{{ allocation.selling_plan.id }}"
+                  data-summary="{{ 'products.product.subscription.deliver_every' | t }} {{ allocation.selling_plan.name }}"
+                  {% if selected_allocation.selling_plan.id == allocation.selling_plan.id %}
+                    checked
+                  {% endif %}
+                >
+                <span class="svg-wrapper icon-checkmark cart-line-subscription-selector__checkmark" aria-hidden="true">
+                  {{- 'icon-checkmark.svg' | inline_asset_content -}}
+                </span>
+                <span class="cart-line-subscription-selector__option-label">
+                  {{- 'products.product.subscription.deliver_every' | t }} {{ allocation.selling_plan.name -}}
+                </span>
+              </label>
+            {%- endfor -%}
+
+            <label
+              class="cart-line-subscription-selector__option"
+              data-option-row
+              {% unless selected_allocation %}
+                data-selected
+              {% endunless %}
+            >
+              <input
+                type="radio"
+                name="{{ unique_id }}-purchase-option"
+                value=""
+                data-summary="{{ 'products.product.subscription.one_time_purchase' | t }}"
+                {% unless selected_allocation %}
+                  checked
+                {% endunless %}
+              >
+              <span class="svg-wrapper icon-checkmark cart-line-subscription-selector__checkmark" aria-hidden="true">
+                {{- 'icon-checkmark.svg' | inline_asset_content -}}
+              </span>
+              <span class="cart-line-subscription-selector__option-label">
+                {{- 'products.product.subscription.one_time_purchase' | t -}}
+              </span>
+            </label>
+          </div>
+        </floating-panel-component>
+      </details>
+    {% endcapture %}
+    {% render 'accordion-custom-component', children: accordion_children %}
+  </cart-line-subscription-selector>
+{%- endif -%}
+
+{% stylesheet %}
+  .cart-line-subscription-selector {
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+  }
+
+  .cart-line-subscription-selector__details {
+    position: relative;
+  }
+
+  .cart-line-subscription-selector__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--gap-sm);
+    padding: var(--padding-xs) var(--padding-md);
+    border: var(--style-border-width) solid rgb(var(--color-foreground-rgb) / var(--opacity-20));
+    border-radius: var(--style-border-radius-buttons-secondary, 999px);
+    cursor: pointer;
+    font-size: var(--font-size--sm);
+    font-weight: var(--font-weight-bold);
+    list-style: none;
+    min-height: var(--minimum-touch-target);
+  }
+
+  .cart-line-subscription-selector__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .cart-line-subscription-selector__summary:hover {
+    background-color: rgb(var(--color-foreground-rgb) / var(--opacity-4));
+  }
+
+  .cart-line-subscription-selector__summary:focus-visible {
+    outline: var(--focus-outline-width) solid currentcolor;
+    outline-offset: var(--focus-outline-offset);
+  }
+
+  .cart-line-subscription-selector__summary .icon-caret {
+    flex-shrink: 0;
+    width: var(--icon-size-2xs);
+    height: var(--icon-size-2xs);
+  }
+
+  .cart-line-subscription-selector__options {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: var(--facets-upper-z-index, 4);
+    box-shadow: var(--shadow-popover);
+    border: var(--style-border-popover);
+    background-color: var(--color-background);
+    border-radius: var(--style-border-radius-popover);
+    width: max-content;
+    min-width: 100%;
+    min-height: 0;
+    transition: grid-template-rows var(--animation-speed-slow) var(--animation-easing),
+      opacity var(--animation-speed-slow) var(--animation-easing);
+  }
+
+  .cart-line-subscription-selector__details[open] .cart-line-subscription-selector__options {
+    opacity: 1;
+    grid-template-rows: 1fr;
+  }
+
+  .cart-line-subscription-selector__options-inner {
+    display: flex;
+    flex-direction: column;
+    grid-row: 1 / span 2;
+    gap: var(--gap-3xs);
+    padding: var(--padding-xs);
+    overflow: clip;
+  }
+
+  .cart-line-subscription-selector__option {
+    cursor: pointer;
+    display: grid;
+    grid-template-columns: var(--icon-size-sm) 1fr;
+    align-items: center;
+    gap: var(--gap-2xs);
+    padding: var(--padding-2xs) var(--padding-sm);
+    border-radius: calc(var(--style-border-radius-popover) / 2);
+    font-size: var(--font-size--sm);
+    white-space: nowrap;
+  }
+
+  .cart-line-subscription-selector__option:hover {
+    background-color: rgb(var(--color-foreground-rgb) / var(--opacity-8));
+  }
+
+  .cart-line-subscription-selector__option input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .cart-line-subscription-selector__checkmark {
+    visibility: hidden;
+    width: var(--icon-size-sm);
+    height: var(--icon-size-sm);
+  }
+
+  .cart-line-subscription-selector__option[data-selected] .cart-line-subscription-selector__checkmark {
+    visibility: visible;
+  }
+
+  .cart-line-subscription-selector__option[data-selected] .cart-line-subscription-selector__option-label {
+    font-weight: var(--font-weight-bold);
+  }
+{% endstylesheet %}

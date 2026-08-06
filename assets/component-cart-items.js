@@ -198,19 +198,32 @@ export class CartItemsComponent extends createViewEventElement(Component) {
     });
   }
 
+  onLineItemSellingPlanChange(line, sellingPlan) {
+    const lineItemRow = this.refs.cartItemRows[line - 1];
+    const quantity = Number(lineItemRow?.querySelector('[data-cart-line]')?.value) || 1;
+
+    this.updateQuantity({
+      line,
+      quantity,
+      sellingPlan,
+      action: 'change',
+    });
+  }
+
   /**
    * Updates the quantity.
    * @param {Object} config - The config.
    * @param {number} config.line - The line.
    * @param {number} config.quantity - The quantity.
    * @param {string} config.action - The action.
+   * @param {string | null} [config.sellingPlan] - The selling plan id to apply, or null to switch to one-time purchase.
    */
   updateQuantity(config) {
     const cartPerformaceUpdateMarker = cartPerformance.createStartingMarker(`${config.action}:user-action`);
 
     this.#disableCartItems();
 
-    const { line, quantity } = config;
+    const { line, quantity, sellingPlan } = config;
     const { cartTotal } = this.refs;
 
     const cartItemsComponents = document.querySelectorAll('cart-items-component');
@@ -224,6 +237,7 @@ export class CartItemsComponent extends createViewEventElement(Component) {
     const body = JSON.stringify({
       line: line,
       quantity: quantity,
+      ...(sellingPlan !== undefined && { selling_plan: sellingPlan }),
       sections: Array.from(sectionsToUpdate).join(','),
       sections_url: window.location.pathname,
     });
