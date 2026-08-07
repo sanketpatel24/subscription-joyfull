@@ -1562,6 +1562,11 @@
         "default": true
       },
       {
+        "type": "text",
+        "id": "empty_cart_button_text",
+        "label": "Button Label"
+      },
+      {
         "type": "url",
         "id": "empty_cart_button_link",
         "label": "t:settings.empty_cart_button_link",

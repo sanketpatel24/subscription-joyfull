@@ -84,7 +84,7 @@
 
       <div class="cart-progress-bar__tiers">
         {%- if all_tiers_reached -%}
-          <p class="cart-progress-bar__heading h5">
+          <p class="cart-progress-bar__heading">
             {{ 'content.cart_progress_bar.unlocked_top_tier' | t: tier_label: settings.cart_progress_tier_3_label }}
           </p>
         {%- else -%}
@@ -147,7 +147,7 @@
       -%}
 
       <div class="cart-progress-bar__shipping">
-        <p class="cart-progress-bar__heading h5">
+        <p class="cart-progress-bar__heading">
           {%- if shipping_unlocked -%}
             {{ 'content.cart_progress_bar.shipping_unlocked_free_shipping' | t }}
           {%- else -%}
@@ -167,7 +167,9 @@
           <div class="cart-progress-bar__track-fill"></div>
           <div class="cart-progress-bar__track-handle">
             <span class="svg-wrapper">
-              {{- 'icon-truck.svg' | inline_asset_content -}}
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="13" viewBox="0 0 16 13" fill="none">
+                <path d="M10.5 9.16667V0.5H0.5V9.16667H10.5ZM10.5 9.16667H15.1667V5.83333L13.1667 3.83333H10.5V9.16667ZM5.16667 10.8333C5.16667 11.7538 4.42048 12.5 3.5 12.5C2.57953 12.5 1.83333 11.7538 1.83333 10.8333C1.83333 9.91286 2.57953 9.16667 3.5 9.16667C4.42048 9.16667 5.16667 9.91286 5.16667 10.8333ZM13.8333 10.8333C13.8333 11.7538 13.0871 12.5 12.1667 12.5C11.2462 12.5 10.5 11.7538 10.5 10.8333C10.5 9.91286 11.2462 9.16667 12.1667 9.16667C13.0871 9.16667 13.8333 9.91286 13.8333 10.8333Z" stroke="#FFF9F0" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
             </span>
           </div>
         </div>
@@ -175,63 +177,3 @@
     {%- endif -%}
   </div>
 {%- endif -%}
-
-{% stylesheet %}
-  .cart-progress-bar {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-md);
-    padding: var(--padding-lg);
-    background-color: rgb(var(--color-foreground-rgb) / var(--opacity-5));
-  }
-
-  .cart-progress-bar__heading {
-    margin: 0;
-    text-align: center;
-  }
-
-  .cart-progress-bar__checkpoints {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: var(--gap-md);
-  }
-
-  .cart-progress-bar__track {
-    position: relative;
-    width: 100%;
-    height: 6px;
-    margin-block: 11px;
-    background-color: rgb(var(--color-foreground-rgb) / var(--opacity-10-25));
-  }
-
-  .cart-progress-bar__track-fill {
-    position: absolute;
-    inset-inline-start: 0;
-    height: 100%;
-    width: var(--progress, 0%);
-    background-color: var(--color-foreground);
-    transition: width var(--animation-speed, 0.3s) ease;
-  }
-
-  .cart-progress-bar__track-handle {
-    position: absolute;
-    top: 50%;
-    left: clamp(14px, var(--progress, 0%), calc(100% - 14px));
-    transform: translate(-50%, -50%);
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--color-foreground);
-    color: var(--color-background);
-    transition: left var(--animation-speed, 0.3s) ease;
-  }
-
-  .cart-progress-bar__track-handle svg {
-    width: 16px;
-    height: 16px;
-  }
-{% endstylesheet %}
