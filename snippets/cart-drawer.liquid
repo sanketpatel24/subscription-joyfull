@@ -130,11 +130,12 @@
 
                 <scroll-hint class="cart-drawer__items">
                   {% render 'cart-products', context: 'drawer' %}
+                  {% render 'cart-summary', section_id: 'cart-drawer-section', show_checkout: false %}
                   {% render 'cart-recommendations', section_id: 'cart-drawer-section', context: 'drawer' %}
                 </scroll-hint>
 
                 <div class="cart-drawer__summary">
-                  {% render 'cart-summary', section_id: 'cart-drawer-section' %}
+                  {% render 'cart-summary', section_id: 'cart-drawer-section', show_totals: false %}
                 </div>
               </scroll-hint>
             {%- endif -%}
@@ -263,8 +264,6 @@
 
   .cart-drawer--empty .cart-drawer__content {
     text-align: center;
-    align-items: center;
-    justify-content: center;
     min-height: auto;
   }
 
@@ -282,8 +281,6 @@
 
   cart-drawer-component:not(:has(.cart-form)) .cart-drawer__content {
     text-align: center;
-    align-items: center;
-    justify-content: center;
   }
 
   cart-drawer-component:not(:has(.cart-form)) .cart-drawer__items {

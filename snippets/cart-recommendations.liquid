@@ -41,15 +41,11 @@
         {%- endif -%}
         {%- liquid
           assign recommended_variant = recommended_product.selected_or_first_available_variant
-          assign recommended_supporting_text = recommended_product.metafields.custom.product_supporting_text.value
+          assign recommended_supporting_text = recommended_product.metafields.custom.grid_descriptor_text_list.value | join: ' · '
           assign recommended_rating = recommended_product.metafields.reviews.rating.value.rating | default: 0
           assign recommended_rating_number = recommended_rating | times: 1
           assign recommended_rating_max = recommended_product.metafields.reviews.rating.value.scale_max | default: 5
           assign recommended_rating_count = recommended_product.metafields.reviews.rating_count.value | default: 0
-
-          if recommended_supporting_text == blank
-            assign recommended_description = recommended_product.description | strip_html
-          endif
         -%}
         {%- if recommended_variant != blank -%}
           {%- assign recommendations_shown = recommendations_shown | plus: 1 -%}
@@ -99,8 +95,6 @@
 
               {%- if recommended_supporting_text != blank -%}
                 <p class="cart-recommendations__description">{{ recommended_supporting_text | escape }}</p>
-              {%- elsif recommended_description != blank -%}
-                <p class="cart-recommendations__description">{{ recommended_description | truncatewords: 8 | escape }}</p>
               {%- endif -%}
 
               <product-form-component

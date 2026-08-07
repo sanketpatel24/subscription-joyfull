@@ -3,14 +3,22 @@
 
   @param {string} [accelerated_checkout_buttons_layout] - { 'vertical' } Forced layout of the additional checkout buttons, instead of relying on platform's layout.
   @param {string} [section_id] - The section ID for cart discount component.
+  @param {boolean} [show_totals] - Whether to render the note/discounts/subtotal block. Defaults to true.
+  @param {boolean} [show_checkout] - Whether to render the checkout button block. Defaults to true.
 {%- enddoc -%}
+
+{%- liquid
+  assign show_totals = show_totals | default: true, allow_false: true
+  assign show_checkout = show_checkout | default: true, allow_false: true
+-%}
 
 {% render 'text-component-shimmer-styles' %}
 {{ 'cart-additional-checkout-buttons.css' | asset_url | stylesheet_tag }}
 
+{% if show_totals %}
 <div class="cart-totals">
 
-  {% if settings.show_cart_note or settings.show_add_discount_code %}
+  {% comment %} {% if settings.show_cart_note or settings.show_add_discount_code %}
     <div class="cart-actions">
       {% if settings.show_cart_note %}
         <script
@@ -186,7 +194,7 @@
         {% render 'accordion-custom-component', children: cart_discount_accordion_children, class: 'cart-discount' %}
       {% endif %}
     </div>
-  {% endif %}
+  {% endif %} {% endcomment %}
 
   {%- liquid
     if settings.currency_code_enabled_cart_total
@@ -215,10 +223,19 @@
     for item in cart.items
       assign item_is_tagged = false
 
-      assign item_category = item.product.category.name | downcase
-      if item_category == progress_tag
+      # Keep in sync with cart-progress-bar.liquid: a product that offers a subscription
+      # (has a selling plan group available) always counts as a "box" item, regardless of
+      # the product's tag/category.
+      if item.product.selling_plan_groups.size > 0
         assign item_is_tagged = true
       endif
+
+      unless item_is_tagged
+        assign item_category = item.product.category.name | downcase
+        if item_category == progress_tag
+          assign item_is_tagged = true
+        endif
+      endunless
 
       unless item_is_tagged
         for tag in item.product.tags
@@ -295,19 +312,21 @@
         </span>
       </span>
     </div>
-    {% if settings.show_installments %}
-      <span class="cart-totals__item cart-totals__installments">
-        {% form 'cart', cart %}
-          {{ form | payment_terms }}
-        {% endform %}
-      </span>
-    {% endif %}
-    <div class="cart-totals__item cart-totals__tax-note cart-primary-typography">
-      {% render 'tax-info', has_discounts_enabled: settings.show_add_discount_code %}
-    </div>
   </div>
 </div>
+{% endif %}
 
+{% if show_checkout %}
+{% if settings.show_installments %}
+  <span class="cart-totals__item cart-totals__installments">
+    {% form 'cart', cart %}
+      {{ form | payment_terms }}
+    {% endform %}
+  </span>
+{% endif %}
+<div class="cart-totals__item cart-totals__tax-note cart-primary-typography">
+  {% render 'tax-info', has_discounts_enabled: settings.show_add_discount_code %}
+</div>
 <div class="cart__ctas">
   <button
     type="submit"
@@ -346,6 +365,7 @@
     </div>
   {% endif %} {% endcomment %}
 </div>
+{% endif %}
 
 {% stylesheet %}
   .cart-actions {
@@ -551,6 +571,16 @@
   }
 
   .cart-drawer__summary .cart-totals:not(:has(.cart-totals__original-container:empty)) {
+    border-block-start: var(--style-border-width) solid rgb(var(--color-foreground-rgb) / var(--opacity-10-25));
+    padding-block-start: var(--padding-2xl);
+  }
+
+  /* When the totals block is rendered separately (show_totals: false), the sticky drawer
+     summary contains only the installments/tax-note + checkout CTAs — give the first of
+     those the same separator directly. */
+  .cart-drawer__summary > .cart-totals__installments:first-child,
+  .cart-drawer__summary > .cart-totals__tax-note:first-child,
+  .cart-drawer__summary > .cart__ctas:first-child {
     border-block-start: var(--style-border-width) solid rgb(var(--color-foreground-rgb) / var(--opacity-10-25));
     padding-block-start: var(--padding-2xl);
   }

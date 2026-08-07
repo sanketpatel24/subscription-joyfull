@@ -2,7 +2,8 @@
   Renders a cart progress bar.
 
   If any line item's product is tagged with, or has its product category set to,
-  `settings.cart_progress_bar_tag` (default: "probiotics"), a 3-checkpoint tier bar is shown
+  `settings.cart_progress_bar_tag` (default: "probiotics"), OR any line item's product offers a
+  subscription (has a selling plan group available), a 3-checkpoint tier bar is shown
   (Free Shipping / Tier 2 / Tier 3), driven by the quantity of matching "box" items in the cart.
   Otherwise, a simple free-shipping-only progress bar is shown, driven by cart subtotal.
 
@@ -23,10 +24,19 @@
       for item in cart.items
         assign item_is_tagged = false
 
-        assign item_category = item.product.category.name | downcase
-        if item_category == progress_tag
+        # A product that offers a subscription (has a selling plan group available) always
+        # counts as a "box" item, regardless of tag/category, so subscribable products
+        # trigger the tier bar too.
+        if item.product.selling_plan_groups.size > 0
           assign item_is_tagged = true
         endif
+
+        unless item_is_tagged
+          assign item_category = item.product.category.name | downcase
+          if item_category == progress_tag
+            assign item_is_tagged = true
+          endif
+        endunless
 
         unless item_is_tagged
           for tag in item.product.tags
