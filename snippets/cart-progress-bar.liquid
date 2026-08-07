@@ -1,0 +1,237 @@
+{% doc %}
+  Renders a cart progress bar.
+
+  If any line item's product is tagged with, or has its product category set to,
+  `settings.cart_progress_bar_tag` (default: "probiotics"), a 3-checkpoint tier bar is shown
+  (Free Shipping / Tier 2 / Tier 3), driven by the quantity of matching "box" items in the cart.
+  Otherwise, a simple free-shipping-only progress bar is shown, driven by cart subtotal.
+
+  @param {boolean} [force_empty] - Force-render the empty-cart (traditional shipping) state,
+    ignoring the live cart object. Use this for markup captured ahead of time (e.g. the
+    empty-cart template), so a stale snapshot never shows a tier bar for a cart that's since
+    been emptied.
+{% enddoc %}
+
+{%- if settings.show_cart_progress_bar -%}
+  {%- liquid
+    assign has_tagged_product = false
+    assign tagged_box_count = 0
+
+    unless force_empty
+      assign progress_tag = settings.cart_progress_bar_tag | strip | downcase
+
+      for item in cart.items
+        assign item_is_tagged = false
+
+        assign item_category = item.product.category.name | downcase
+        if item_category == progress_tag
+          assign item_is_tagged = true
+        endif
+
+        unless item_is_tagged
+          for tag in item.product.tags
+            assign normalized_tag = tag | downcase
+            if normalized_tag == progress_tag
+              assign item_is_tagged = true
+              break
+            endif
+          endfor
+        endunless
+
+        if item_is_tagged
+          assign has_tagged_product = true
+          assign tagged_box_count = tagged_box_count | plus: item.quantity
+        endif
+      endfor
+    endunless
+  -%}
+
+  <div class="cart-progress-bar" data-cart-progress-bar>
+    {%- if has_tagged_product -%}
+      {%- liquid
+        assign tier_1_amount = settings.cart_progress_free_shipping_amount
+        assign tier_2_qty = settings.cart_progress_tier_2_quantity
+        assign tier_3_qty = settings.cart_progress_tier_3_quantity
+
+        assign cart_subtotal = cart.items_subtotal_price
+        assign tier_1_threshold_cents = tier_1_amount | times: 100
+        assign tier_1_amount_money = tier_1_threshold_cents | money
+        assign tier_1_reached = false
+        if cart_subtotal >= tier_1_threshold_cents
+          assign tier_1_reached = true
+        endif
+
+        assign tier_2_reached = false
+        if tagged_box_count >= tier_2_qty
+          assign tier_2_reached = true
+        endif
+
+        assign tier_3_reached = false
+        if tagged_box_count >= tier_3_qty
+          assign tier_3_reached = true
+        endif
+
+        assign all_tiers_reached = false
+        if tier_1_reached and tier_2_reached and tier_3_reached
+          assign all_tiers_reached = true
+        endif
+
+        assign tier_1_top_label = 'content.cart_progress_bar.spend_amount_checkpoint_label' | t: amount: tier_1_amount_money
+        assign tier_1_bottom_label = 'content.cart_progress_bar.free_shipping_checkpoint_label' | t
+        assign tier_2_top_label = 'content.cart_progress_bar.box_quantity_checkpoint_label' | t: count: tier_2_qty
+        assign tier_3_top_label = 'content.cart_progress_bar.box_quantity_checkpoint_label_plus' | t: count: tier_3_qty
+      -%}
+
+      <div class="cart-progress-bar__tiers">
+        {%- if all_tiers_reached -%}
+          <p class="cart-progress-bar__heading h5">
+            {{ 'content.cart_progress_bar.unlocked_top_tier' | t: tier_label: settings.cart_progress_tier_3_label }}
+          </p>
+        {%- else -%}
+          {%- liquid
+            assign boxes_needed = 0
+            if tier_2_reached == false
+              assign boxes_needed = tier_2_qty | minus: tagged_box_count
+              assign next_tier_label = settings.cart_progress_tier_2_label
+            elsif tier_3_reached == false
+              assign boxes_needed = tier_3_qty | minus: tagged_box_count
+              assign next_tier_label = settings.cart_progress_tier_3_label
+            endif
+          -%}
+          {%- if boxes_needed > 0 -%}
+            <p class="cart-progress-bar__heading h5">
+              {{ 'content.cart_progress_bar.away_from_next_tier' | t: count: boxes_needed, tier_label: next_tier_label }}
+            </p>
+          {%- endif -%}
+        {%- endif -%}
+
+        <div class="cart-progress-bar__checkpoints" data-checkpoint-count="3">
+          {%- render 'cart-progress-bar-checkpoint',
+            reached: tier_1_reached,
+            top_label: tier_1_top_label,
+            bottom_label: tier_1_bottom_label
+          -%}
+          {%- render 'cart-progress-bar-checkpoint',
+            reached: tier_2_reached,
+            top_label: tier_2_top_label,
+            bottom_label: settings.cart_progress_tier_2_label
+          -%}
+          {%- render 'cart-progress-bar-checkpoint',
+            reached: tier_3_reached,
+            top_label: tier_3_top_label,
+            bottom_label: settings.cart_progress_tier_3_label
+          -%}
+        </div>
+      </div>
+    {%- else -%}
+      {%- liquid
+        assign free_shipping_amount = settings.cart_progress_free_shipping_amount
+        assign free_shipping_threshold_cents = free_shipping_amount | times: 100
+        assign cart_subtotal = 0
+        unless force_empty
+          assign cart_subtotal = cart.items_subtotal_price
+        endunless
+        assign remaining_cents = free_shipping_threshold_cents | minus: cart_subtotal
+        assign shipping_unlocked = false
+        if cart_subtotal >= free_shipping_threshold_cents
+          assign shipping_unlocked = true
+        endif
+        assign progress_percent = 100
+        if shipping_unlocked == false and free_shipping_threshold_cents > 0
+          assign progress_percent = cart_subtotal | times: 100 | divided_by: free_shipping_threshold_cents
+          if progress_percent > 100
+            assign progress_percent = 100
+          endif
+        endif
+        assign remaining_amount_money = remaining_cents | money
+      -%}
+
+      <div class="cart-progress-bar__shipping">
+        <p class="cart-progress-bar__heading h5">
+          {%- if shipping_unlocked -%}
+            {{ 'content.cart_progress_bar.shipping_unlocked_free_shipping' | t }}
+          {%- else -%}
+            {{ 'content.cart_progress_bar.shipping_away_from_free_shipping' | t: amount: remaining_amount_money }}
+          {%- endif -%}
+        </p>
+
+        <div
+          class="cart-progress-bar__track"
+          role="progressbar"
+          aria-valuenow="{{ progress_percent }}"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-label="{{ 'content.cart_progress_bar.free_shipping_checkpoint_label' | t }}"
+          style="--progress: {{ progress_percent }}%;"
+        >
+          <div class="cart-progress-bar__track-fill"></div>
+          <div class="cart-progress-bar__track-handle">
+            <span class="svg-wrapper">
+              {{- 'icon-truck.svg' | inline_asset_content -}}
+            </span>
+          </div>
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .cart-progress-bar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-md);
+    padding: var(--padding-lg);
+    background-color: rgb(var(--color-foreground-rgb) / var(--opacity-5));
+  }
+
+  .cart-progress-bar__heading {
+    margin: 0;
+    text-align: center;
+  }
+
+  .cart-progress-bar__checkpoints {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--gap-md);
+  }
+
+  .cart-progress-bar__track {
+    position: relative;
+    width: 100%;
+    height: 6px;
+    margin-block: 11px;
+    background-color: rgb(var(--color-foreground-rgb) / var(--opacity-10-25));
+  }
+
+  .cart-progress-bar__track-fill {
+    position: absolute;
+    inset-inline-start: 0;
+    height: 100%;
+    width: var(--progress, 0%);
+    background-color: var(--color-foreground);
+    transition: width var(--animation-speed, 0.3s) ease;
+  }
+
+  .cart-progress-bar__track-handle {
+    position: absolute;
+    top: 50%;
+    left: clamp(14px, var(--progress, 0%), calc(100% - 14px));
+    transform: translate(-50%, -50%);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-foreground);
+    color: var(--color-background);
+    transition: left var(--animation-speed, 0.3s) ease;
+  }
+
+  .cart-progress-bar__track-handle svg {
+    width: 16px;
+    height: 16px;
+  }
+{% endstylesheet %}

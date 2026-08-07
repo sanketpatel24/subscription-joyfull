@@ -27,6 +27,8 @@
       class="cart-drawer__content"
       aria-label="{{ 'accessibility.cart' | t }}"
     >
+      {% render 'cart-progress-bar', force_empty: true %}
+
       <h2
         class="theme-drawer__title h4"
         id="cart-drawer-heading"
@@ -111,6 +113,8 @@
                 aria-label="{{ 'accessibility.cart' | t }}"
                 style="--header-height: 60px;"
               >
+                {% render 'cart-progress-bar' %}
+
                 <scroll-hint class="cart-drawer__items">
                   {% render 'cart-products', context: 'drawer' %}
                 </scroll-hint>
@@ -171,6 +175,7 @@
     flex-direction: column;
     padding-inline: var(--cart-drawer-padding);
     overflow-y: auto;
+    margin-top: 10px;
   }
 
   .cart-drawer__items .cart-items__table-row {
@@ -247,6 +252,14 @@
     align-items: center;
     justify-content: center;
     min-height: auto;
+  }
+
+  .cart-drawer--empty .cart-drawer__content > .cart-progress-bar {
+    align-self: stretch;
+    /* justify-content: center on the parent would otherwise center this along
+       with the empty-cart message — pin it to the top instead, letting the
+       auto margin push the rest of the centered content down below it. */
+    margin-block-end: auto;
   }
 
   .cart-drawer--empty .cart-drawer__items {

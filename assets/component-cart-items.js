@@ -28,6 +28,7 @@ import {
  * @property {HTMLElement[]} quantitySelectors - The quantity selector elements.
  * @property {HTMLTableRowElement[]} cartItemRows - The cart item rows.
  * @property {TextComponent} cartTotal - The cart total.
+ * @property {TextComponent} checkoutButtonTotal - The total shown inside the checkout button.
  *
  * @extends {Component<Refs>}
  */
@@ -61,7 +62,10 @@ export class CartItemsComponent extends createViewEventElement(Component) {
       ?.then(({ detail }) => {
         const sectionsHtml = detail?.sections?.[this.sectionId];
         if (sectionsHtml) {
-          morphSection(this.sectionId, sectionsHtml, { mode: this.isDrawer ? 'hydration' : 'full' });
+          morphSection(this.sectionId, sectionsHtml, {
+            mode: this.isDrawer ? 'hydration' : 'full',
+            injectStylesheet: this.isDrawer,
+          });
           this.#updateCartQuantitySelectorButtonStates();
         } else if (external) {
           // External caller (Shopify.actions.updateCart or SFAPI default handler) didn't
@@ -88,11 +92,15 @@ export class CartItemsComponent extends createViewEventElement(Component) {
         const sections = /** @type {Record<string, string> | undefined} */ (detail?.sections);
         const sectionsHtml = sections?.[this.sectionId];
         if (sectionsHtml) {
-          morphSection(this.sectionId, sectionsHtml, { mode: this.isDrawer ? 'hydration' : 'full' });
+          morphSection(this.sectionId, sectionsHtml, {
+            mode: this.isDrawer ? 'hydration' : 'full',
+            injectStylesheet: this.isDrawer,
+          });
         } else {
           sectionRenderer.renderSection(this.sectionId, {
             cache: false,
             mode: this.isDrawer ? 'hydration' : 'full',
+            injectStylesheet: this.isDrawer,
           });
         }
       })
@@ -207,6 +215,11 @@ export class CartItemsComponent extends createViewEventElement(Component) {
       quantity,
       sellingPlan,
       action: 'change',
+      // A selling-plan swap changes line pricing (subscription vs. one-time), which the
+      // subtotal-driven progress bar depends on. Force a fresh section fetch + full re-render
+      // here instead of morphing the /cart/change.js response, to rule out any morph-diffing
+      // edge case on this specific mutation.
+      forceFullRender: true,
     });
   }
 
@@ -217,14 +230,16 @@ export class CartItemsComponent extends createViewEventElement(Component) {
    * @param {number} config.quantity - The quantity.
    * @param {string} config.action - The action.
    * @param {string | null} [config.sellingPlan] - The selling plan id to apply, or null to switch to one-time purchase.
+   * @param {boolean} [config.forceFullRender] - Skip morphing the mutation response and instead
+   *   re-fetch + fully re-render the section via the Section Rendering API.
    */
   updateQuantity(config) {
     const cartPerformaceUpdateMarker = cartPerformance.createStartingMarker(`${config.action}:user-action`);
 
     this.#disableCartItems();
 
-    const { line, quantity, sellingPlan } = config;
-    const { cartTotal } = this.refs;
+    const { line, quantity, sellingPlan, forceFullRender } = config;
+    const { cartTotal, checkoutButtonTotal } = this.refs;
 
     const cartItemsComponents = document.querySelectorAll('cart-items-component');
     const sectionsToUpdate = new Set([this.sectionId]);
@@ -243,6 +258,7 @@ export class CartItemsComponent extends createViewEventElement(Component) {
     });
 
     cartTotal?.shimmer();
+    checkoutButtonTotal?.shimmer();
 
     const deferredUpdatePromise = CartLinesUpdateEvent.createPromise();
     const lineId = this.refs.cartItemRows[line - 1]?.dataset.key ?? '';
@@ -293,9 +309,20 @@ export class CartItemsComponent extends createViewEventElement(Component) {
           },
         });
 
-        morphSection(this.sectionId, parsedResponseText.sections[this.sectionId], {
-          mode: this.isDrawer ? 'hydration' : 'full',
-        });
+        if (forceFullRender) {
+          sectionRenderer.renderSection(this.sectionId, {
+            cache: false,
+            mode: this.isDrawer ? 'hydration' : 'full',
+            injectStylesheet: this.isDrawer,
+          });
+        } else {
+          morphSection(this.sectionId, parsedResponseText.sections[this.sectionId], {
+            mode: this.isDrawer ? 'hydration' : 'full',
+            // A quantity change can flip conditional markup into view (e.g. a tiered
+            // progress bar) whose styles weren't part of the initial page render.
+            injectStylesheet: this.isDrawer,
+          });
+        }
 
         this.#updateCartQuantitySelectorButtonStates();
       })
@@ -360,14 +387,18 @@ export class CartItemsComponent extends createViewEventElement(Component) {
         const sections = detail?.sections;
         const cartItemsHtml = sections?.[this.sectionId];
         // Animate empty → non-empty in the drawer (possible in squeeze mode
-        // where the page is interactive alongside the open drawer). This also
-        // needs the response stylesheet because it adds the cart summary markup.
+        // where the page is interactive alongside the open drawer).
         const wasEmptyCartDrawer = this.isDrawer && this.querySelector('[data-cart-drawer-empty]') !== null;
         /** @type {'hydration' | 'full'} */
         const mode = this.isDrawer ? 'hydration' : 'full';
         const morphOptions = {
           mode,
-          injectStylesheet: wasEmptyCartDrawer,
+          // Any cart update can bring in markup whose styles weren't part of the
+          // initial page render (e.g. the cart summary on empty → non-empty, or a
+          // conditional block like the tiered progress bar that only appears once a
+          // tagged product is in the cart). Always sync the section stylesheet in the
+          // drawer so newly-morphed-in markup isn't left unstyled until a full refresh.
+          injectStylesheet: this.isDrawer,
         };
 
         if (cartItemsHtml) {

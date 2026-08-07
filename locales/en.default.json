@@ -174,7 +174,25 @@
     "cart_title": "Cart",
     "cart_subtotal": "Subtotal",
     "cart_total": "Cart total",
+    "cart_progress_bar": {
+      "free_shipping_checkpoint_label": "Free Shipping",
+      "spend_amount_checkpoint_label": "Spend {{ amount }}",
+      "box_quantity_checkpoint_label": {
+        "one": "{{ count }} Box",
+        "other": "{{ count }} Boxes"
+      },
+      "box_quantity_checkpoint_label_plus": "{{ count }}+ Boxes",
+      "away_from_next_tier": {
+        "one": "You're {{ count }} box away from {{ tier_label }}",
+        "other": "You're {{ count }} boxes away from {{ tier_label }}"
+      },
+      "unlocked_top_tier": "Congrats! You unlocked {{ tier_label }}!",
+      "shipping_away_from_free_shipping": "You're {{ amount }} away from free shipping",
+      "shipping_unlocked_free_shipping": "Congrats! You unlocked free shipping!"
+    },
     "checkout": "Check out",
+    "checkout_with_total": "Check out — {{ amount }}",
+    "subscribe_and_save_discount_label": "Subscribe & Save Discount ({{ percent }} off)",
     "collection_placeholder": "Collection title",
     "discount_code": "Discount code",
     "shipping_discount_error": "Shipping discounts are shown at checkout after adding an address",

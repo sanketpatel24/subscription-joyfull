@@ -1,0 +1,84 @@
+{% doc %}
+  Renders a single checkpoint (top label / own full-width track with a marker / bottom label)
+  for the cart progress bar. Each checkpoint owns its own track, which is either fully solid
+  with a checkmark (reached) or fully hollow with an empty circle (not reached) — there is no
+  partial/proportional fill within a single checkpoint's track.
+
+  @param {boolean} reached - Whether this checkpoint has been reached.
+  @param {string} top_label - The label shown above the marker (e.g. "Spend $20", "2 Boxes").
+  @param {string} bottom_label - The label shown below the marker (e.g. "Free Shipping", "Save 10%").
+{% enddoc %}
+
+<div class="cart-progress-bar-checkpoint{% if reached %} cart-progress-bar-checkpoint--reached{% endif %}">
+  <p class="cart-progress-bar-checkpoint__top-label caption">{{ top_label }}</p>
+
+  <div class="cart-progress-bar-checkpoint__track">
+    <div class="cart-progress-bar-checkpoint__marker">
+      <span class="svg-wrapper">
+        {{- 'icon-checkmark.svg' | inline_asset_content -}}
+      </span>
+    </div>
+  </div>
+
+  <p class="cart-progress-bar-checkpoint__bottom-label caption">{{ bottom_label }}</p>
+</div>
+
+{% stylesheet %}
+  .cart-progress-bar-checkpoint {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--gap-xs);
+    text-align: center;
+  }
+
+  .cart-progress-bar-checkpoint__top-label,
+  .cart-progress-bar-checkpoint__bottom-label {
+    margin: 0;
+  }
+
+  .cart-progress-bar-checkpoint__track {
+    position: relative;
+    width: 100%;
+    height: 4px;
+    background-color: rgb(var(--color-foreground-rgb) / var(--opacity-10-25));
+    transition: background-color var(--animation-speed, 0.2s) ease;
+  }
+
+  .cart-progress-bar-checkpoint--reached .cart-progress-bar-checkpoint__track {
+    background-color: var(--color-foreground);
+  }
+
+  .cart-progress-bar-checkpoint__marker {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-foreground);
+    color: var(--color-background);
+    transition: background-color var(--animation-speed, 0.2s) ease;
+  }
+
+  .cart-progress-bar-checkpoint__marker svg {
+    width: 14px;
+    height: 14px;
+    opacity: 0;
+    transition: opacity var(--animation-speed, 0.2s) ease;
+  }
+
+  .cart-progress-bar-checkpoint--reached .cart-progress-bar-checkpoint__marker svg {
+    opacity: 1;
+  }
+
+  .cart-progress-bar-checkpoint:not(.cart-progress-bar-checkpoint--reached) .cart-progress-bar-checkpoint__marker {
+    background-color: var(--color-background);
+    border: 1px solid rgb(var(--color-foreground-rgb) / var(--opacity-10-25));
+  }
+{% endstylesheet %}

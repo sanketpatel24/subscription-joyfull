@@ -6,39 +6,9 @@
 {%- enddoc -%}
 
 {% render 'text-component-shimmer-styles' %}
+{{ 'cart-additional-checkout-buttons.css' | asset_url | stylesheet_tag }}
 
 <div class="cart-totals">
-  {% # We need to keep this node in place to allow morphing to work properly # %}
-  <div class="cart-totals__original-container cart-primary-typography">
-    {%- if cart.cart_level_discount_applications.size > 0 -%}
-      <span class="cart-totals__item cart-totals__original">
-        <span class="cart-totals__original-label">{{ 'content.cart_subtotal' | t }}</span>
-        <span
-          class="cart-totals__original-value cart-secondary-typography"
-          data-testid="cart-subtotal-value"
-        >
-          {{- cart.items_subtotal_price | money -}}
-        </span>
-      </span>
-      <ul
-        class="cart-discounts"
-        role="list"
-        aria-label="{{ 'content.discounts' | t }}"
-      >
-        {%- for discount in cart.cart_level_discount_applications -%}
-          <li class="cart-discounts__item">
-            <span class="cart-discounts__label">
-              {{- 'icon-discount.svg' | inline_asset_content -}}
-              {{ discount.title | escape }}
-            </span>
-            <span class="cart-discounts__value cart-secondary-typography"
-              >-{{ discount.total_allocated_amount | money -}}
-            </span>
-          </li>
-        {%- endfor -%}
-      </ul>
-    {%- endif -%}
-  </div>
 
   {% if settings.show_cart_note or settings.show_add_discount_code %}
     <div class="cart-actions">
@@ -226,23 +196,105 @@
     endif
   -%}
 
+  {%- comment -%}
+    Recompute the box-tier state (same tag/category match as cart-progress-bar.liquid) so the
+    box-tier discount's line reflects the tier actually reached right now, instead of trusting
+    the applied discount's own Admin title (which can be anything — "Subscribe & Save Discount
+    (10% off)", "BUY MORE SAVE MORE (HYEB6-1)", etc. — and won't necessarily match a fixed string).
+
+    To find *which* discount in cart.discount_applications is the box-tier one without relying on
+    its title, identify it by what it discounts: collect the titles of every discount allocated
+    against a tagged box line item, via line_level_discount_allocations. Any discount whose title
+    shows up there is targeting box products, so it's the one to relabel.
+  {%- endcomment -%}
+  {%- liquid
+    assign progress_tag = settings.cart_progress_bar_tag | strip | downcase
+    assign tagged_box_count = 0
+    assign box_tier_discount_titles = ''
+
+    for item in cart.items
+      assign item_is_tagged = false
+
+      assign item_category = item.product.category.name | downcase
+      if item_category == progress_tag
+        assign item_is_tagged = true
+      endif
+
+      unless item_is_tagged
+        for tag in item.product.tags
+          assign normalized_tag = tag | downcase
+          if normalized_tag == progress_tag
+            assign item_is_tagged = true
+            break
+          endif
+        endfor
+      endunless
+
+      if item_is_tagged
+        assign tagged_box_count = tagged_box_count | plus: item.quantity
+
+        for allocation in item.line_level_discount_allocations
+          assign box_tier_discount_titles = box_tier_discount_titles | append: '|' | append: allocation.discount_application.title
+        endfor
+      endif
+    endfor
+
+    assign subscribe_and_save_tier_label = blank
+    if tagged_box_count >= settings.cart_progress_tier_3_quantity
+      assign subscribe_and_save_tier_label = settings.cart_progress_tier_3_label
+    elsif tagged_box_count >= settings.cart_progress_tier_2_quantity
+      assign subscribe_and_save_tier_label = settings.cart_progress_tier_2_label
+    endif
+
+    if subscribe_and_save_tier_label != blank
+      # Tier labels read "Save 10%" / "Save 15%" — drop the leading "Save " so it composes as
+      # "Subscribe & Save Discount (10% off)" instead of "...(Save 10% off)".
+      assign subscribe_and_save_percent = subscribe_and_save_tier_label | remove_first: 'Save ' | strip
+      assign subscribe_and_save_label = 'content.subscribe_and_save_discount_label' | t: percent: subscribe_and_save_percent
+    endif
+  -%}
+
   <div class="cart-totals__container{% if settings.show_installments %} cart-totals__container--has-installments{% endif %}">
-    <span
-      class="cart-totals__item cart-totals__total"
-      role="status"
-    >
-      <span class="cart-totals__total-label cart-primary-typography">{{ 'content.cart_estimated_total' | t }}</span>
-      <text-component
-        ref="cartTotal"
-        value="{{ total_price | strip_html }}"
-        class="cart-totals__total-value cart-secondary-typography"
-        {% comment %} Used by payment_terms web component {% endcomment %}
-        data-testid="cart-total-value"
-        data-cart-subtotal
-      >
-        {{ total_price }}
-      </text-component>
-    </span>
+    <div class="cart-totals__original-container cart-primary-typography">
+
+      {%- if cart.discount_applications.size > 0 -%}
+        <ul
+          class="cart-discounts"
+          role="list"
+          aria-label="{{ 'content.discounts' | t }}"
+        >
+          {%- for discount in cart.discount_applications -%}
+            {%- liquid
+              assign discount_title = discount.title | escape
+              assign discount_title_marker = '|' | append: discount.title
+              if subscribe_and_save_label != blank and box_tier_discount_titles contains discount_title_marker
+                # Our own composed label, already safe from the locale file — don't re-escape it,
+                # or its literal "&" renders as "&amp;".
+                assign discount_title = subscribe_and_save_label
+              endif
+            -%}
+            <li class="cart-discounts__item">
+              <span class="cart-discounts__label">
+                {{- 'icon-discount.svg' | inline_asset_content -}}
+                {{ discount_title }}
+              </span>
+              <span class="cart-discounts__value cart-secondary-typography"
+                >-{{ discount.total_allocated_amount | money -}}
+              </span>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+      <span class="cart-totals__item cart-totals__original">
+        <span class="cart-totals__original-label">{{ 'content.cart_subtotal' | t }}</span>
+        <span
+          class="cart-totals__original-value cart-secondary-typography"
+          data-testid="cart-subtotal-value"
+        >
+          {{- cart.items_subtotal_price | money -}}
+        </span>
+      </span>
+    </div>
     {% if settings.show_installments %}
       <span class="cart-totals__item cart-totals__installments">
         {% form 'cart', cart %}
@@ -268,11 +320,22 @@
     form="cart-form"
   >
     <span class="button-text">
-      {{ 'content.checkout' | t }}
+      {%- liquid
+        # Always plain money here, independent of settings.currency_code_enabled_cart_total —
+        # the button label should never show the currency code, only the summary total above may.
+        assign checkout_button_amount = cart.total_price | money
+      -%}
+      <text-component
+        ref="checkoutButtonTotal"
+        value="{{ 'content.checkout_with_total' | t: amount: checkout_button_amount | strip_html }}"
+        data-testid="checkout-button-total"
+      >
+        {{ 'content.checkout_with_total' | t: amount: checkout_button_amount }}
+      </text-component>
     </span>
   </button>
 
-  {% if additional_checkout_buttons and settings.show_accelerated_checkout_buttons %}
+  {% comment %} {% if additional_checkout_buttons and settings.show_accelerated_checkout_buttons %}
     <div
       class="
         additional-checkout-buttons
@@ -281,7 +344,7 @@
     >
       {{ content_for_additional_checkout_buttons }}
     </div>
-  {% endif %}
+  {% endif %} {% endcomment %}
 </div>
 
 {% stylesheet %}
@@ -480,6 +543,11 @@
     width: 100%;
     height: clamp(25px, var(--height-buy-buttons), 55px);
     padding-inline: var(--padding-4xl);
+  }
+
+  .cart__checkout-button text-component {
+    --shimmer-text-color: color-mix(in srgb, var(--color-primary-button-text) 50%, transparent);
+    --shimmer-color-light: color-mix(in srgb, var(--color-primary-button-text) 10%, transparent);
   }
 
   .cart-drawer__summary .cart-totals:not(:has(.cart-totals__original-container:empty)) {

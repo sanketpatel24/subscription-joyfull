@@ -1,0 +1,22 @@
+/* ==========================================================================
+   Cart — Additional (accelerated) checkout buttons
+
+   Styles the wrapper around Shopify's additional checkout buttons
+   (e.g. Shop Pay, PayPal, Apple Pay) rendered below the main checkout
+   button in the cart summary. Uses the shared design-token system
+   (see assets/design-tokens.css / snippets/theme-styles-variables.liquid)
+   rather than hardcoded spacing values.
+   ========================================================================== */
+
+.additional-checkout-buttons {
+  display: grid;
+  gap: var(--checkout-button-gap, var(--gap-sm));
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  width: 100%;
+}
+
+.additional-checkout-buttons--vertical {
+  grid-auto-flow: row;
+  grid-auto-columns: unset;
+}
