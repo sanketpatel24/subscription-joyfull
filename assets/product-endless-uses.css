@@ -71,8 +71,8 @@
   line-height: var(--line-height-heading);
   text-align: center;
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease;
 }
+
 
 .product-endless-uses-tab[aria-selected='true'] {
   background: var(--product-endless-uses-badge-background, var(--color-aqua));
@@ -149,6 +149,7 @@
   margin: 0;
   color: var(--color-text-body);
   line-height: var(--line-height-s1);
+  max-width:18rem;
 }
 @media (max-width: 749px) {
   .product-endless-uses-media{

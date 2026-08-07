@@ -52,6 +52,16 @@
 
     .product-promotion-banner {
       font-size: var(--font-size-12);
+      font-weight:var(--font-weight-semibold);
+    }
+    .product-promotion-banner strong{
+      font-weight:var(--font-weight-semibold);
+    }
+    .product-promotion-banner-mobile__secondary{
+      font-weight:var(--font-weight-semibold);
+    }
+    .product-promotion-banner-mobile__secondary strong{
+      font-weight:var(--font-weight-semibold);
     }
 
     .product-promotion-banner--mobile {

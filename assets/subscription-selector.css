@@ -155,6 +155,7 @@
   font-size:var(--font-size-14);
   appearance: none;
   background:url(https://cdn.shopify.com/s/files/1/0931/5355/8847/files/16px-chevron-down.svg?v=1785494949) no-repeat center right;
+  outline:none;
 }
 
 .subscription-selector__benefits {

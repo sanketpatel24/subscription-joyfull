@@ -1,5 +1,6 @@
 .product-info-marquee {
-    display: block;
+    display: flex;
+    justify-content:flex-end;
     width: 100%;
     overflow: hidden;
     margin-bottom:var(--spacing-40);
@@ -49,7 +50,7 @@
 
   @keyframes product-info-marquee-motion {
     to {
-      transform: translate3d(-50%, 0, 0);
+      transform: translate3d(50%, 0, 0);
     }
   }
 

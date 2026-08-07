@@ -106,7 +106,7 @@
 
 .product-grid__main-wrap{display:flex !important; flex-direction:column !important; grid-gap:var(--spacing-16) !important; position: relative;}
 .product-grid__main-wrap.card-gallery{position: relative; }
-.product-media img{border-radius:var(--spacing-16) !important;}
+.while-youre-here__inner .product-media img{border-radius:var(--spacing-16) !important;}
 .product-badges{position:absolute; top:0 !important; right:0 !important; padding:var(--spacing-12) !important;}
 .product-badges__badge{position: relative;  width:var(--spacing-48); height:var(--spacing-48); padding:var(--spacing-5) !important; display:flex; align-items:center; justify-content:center; background-color:var(--color-joy) !important;}
 .product-badges__badge:after{content: '';   position: absolute;  z-index: -1; top: calc(-1 * var(--spacing-1));  left: calc(-1 * var(--spacing-1));   width: calc(100% + var(--spacing-3));  height: calc(100% + var(--spacing-3)); border-radius:100%; background: url(feature_desktop_slider_border.svg) no-repeat left center; background-size:100%; margin: calc(-1 * var(--spacing-1));}

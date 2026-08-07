@@ -26,8 +26,16 @@
     .product-information__grid:not(.product-information--media-none).product-information--media-left .slideshow-controls__thumbnails-container{
       mask:none !important;
     }
+    .faqs__links-wrap .common-link .common-link-text{
+      transition:all .2s ease;
+    }
+    .faqs__links-wrap .common-link:hover .common-link-text{
+      gap:var(--spacing-15);
+    }
 }
-
+.slideshow-controls__thumbnails .slideshow-control img{
+  border-radius:0;
+}
 .slideshow-controls__thumbnails{
     gap:var(--spacing-16);
 }
@@ -75,7 +83,7 @@
     line-height: var(--line-height-t1); 
 }
 .product-information__grid .product-form-buttons .button.add-to-cart-button{
-    padding:0 var(--spacing-20);
+    padding:var(--spacing-2) var(--spacing-20) 0;
     height:var(--spacing-48);
     font-size: var(--spacing-16);
     font-weight: var(--font-weight-bold);
@@ -412,6 +420,9 @@
   font-weight: var(--font-weight-regular, 400) !important;
   line-height: 1.28 !important;
 }
+#judgeme_product_reviews .jm-pagination-controls__button:disabled{
+  display:none;
+}
 
 #judgeme_product_reviews .jm-pagination-controls {
   gap: var(--spacing-8, 0.5rem) !important;
@@ -512,10 +523,14 @@ body .pdp_review_section #judgeme_product_reviews .jm-reviewer-info__details p.j
 #judgeme_product_reviews .jm-review-item > .jm-stack > .jm-cluster:has(.jm-cluster.jm-voting-controls){
   display:none;
 }
-
+#judgeme_product_reviews .jm-cluster.jm-action-buttons button.jm-button {
+    max-width: 190px;
+    margin: 0 auto;
+    display: flex;
+}
 #judgeme_product_reviews .jm-cluster.jm-action-buttons button.jm-button.jm-button--secondary {
     background-color: transparent!important;
-    width: auto;
+    width: 100%;
     margin: var(--spacing-16) auto 0;
     padding: 0 0 var(--spacing-6);
     display: flex;
@@ -523,6 +538,7 @@ body .pdp_review_section #judgeme_product_reviews .jm-reviewer-info__details p.j
     gap: var(--spacing-10);
     height: var(--spacing-36);
     position: relative;
+    justify-content:space-between;
 }
 #judgeme_product_reviews .jm-cluster.jm-action-buttons button.jm-button.jm-button--secondary:before {
     display: block;
@@ -621,4 +637,3 @@ body .pdp_review_section #judgeme_product_reviews .jm-reviewer-info__details p.j
     margin: 0 0 16px;
 }
 }
-

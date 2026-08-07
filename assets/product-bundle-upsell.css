@@ -133,5 +133,14 @@
     .product-bundle-upsell__button{
       margin-top:var(--spacing-5);
     }
+    .product-bundle-upsell__heading{
+      font-weight:var(--font-weight-semibold);
+    }
+    .product-bundle-upsell__title{
+      font-weight:var(--font-weight-semibold);
+    }
+    .product-bundle-upsell__button{
+      font-weight:var(--font-weight-semibold);
+    }
   }
 

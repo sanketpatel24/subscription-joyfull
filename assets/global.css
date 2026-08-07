@@ -107,6 +107,7 @@ h1, h2, h3, h4, .h1, .h2, .h3, .h4 {
             .answer {
                 display: none;
                 overflow: hidden;
+                margin-top: calc(var(--spacing-12) * -1);
             }
         }
     }
@@ -147,7 +148,7 @@ h1, h2, h3, h4, .h1, .h2, .h3, .h4 {
 
 .common-link{ display: inline-block; }
 .common-link-text{ position:relative; display: flex; align-items:center; gap:var(--spacing-8); font-weight: var(--font-weight-bold); font-size: var(--font-size-16); line-height: var(--line-height-tight); text-transform: uppercase; padding-bottom: var(--spacing-6);  }
-.common-link-divider{ position: absolute; left: 0; bottom: 0; width: 100%; height: 3px; background: currentColor; -webkit-mask: url("border.svg") repeat-x; -webkit-mask-size: 100% 3px; mask: url("border.svg") repeat-x; mask-size: 100% 3px; }
+.common-link-divider{ position: absolute; left: 0; bottom: 0; width: 100%; height: 3px; background: currentColor; -webkit-mask: url("border.svg") repeat-x; -webkit-mask-size: 100% 3px; mask: url(Line-8.png) repeat-x; mask-size: 100% 3px; }
 .common-link-text svg{ width: var(--spacing-24); height: var(--spacing-24); }
 
 @media (min-width: 750px) {
