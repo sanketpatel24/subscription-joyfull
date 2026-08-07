@@ -39,6 +39,7 @@
       <div class="cart-drawer__items">
         {% render 'cart-products', force_empty: true, context: 'drawer' %}
       </div>
+      {% render 'cart-recommendations', section_id: 'cart-drawer-section', context: 'drawer' %}
       </div>
     </div>
     <div class="cart-items__empty-button_bg">
@@ -129,6 +130,7 @@
 
                 <scroll-hint class="cart-drawer__items">
                   {% render 'cart-products', context: 'drawer' %}
+                  {% render 'cart-recommendations', section_id: 'cart-drawer-section', context: 'drawer' %}
                 </scroll-hint>
 
                 <div class="cart-drawer__summary">

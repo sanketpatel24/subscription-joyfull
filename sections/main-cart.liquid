@@ -29,6 +29,7 @@
         </div>
         <div class="cart-page__items">
           {%- content_for 'block', id: 'cart-page-items', type: '_cart-products', force_empty: true %}
+          {% render 'cart-recommendations', section_id: section.id %}
         </div>
         {{ cart_page_more_blocks_content }}
       </div>
@@ -49,6 +50,7 @@
 
       <div class="cart-page__items">
         {%- content_for 'block', id: 'cart-page-items', type: '_cart-products' %}
+        {% render 'cart-recommendations', section_id: section.id %}
       </div>
 
       {%- unless cart.empty? -%}

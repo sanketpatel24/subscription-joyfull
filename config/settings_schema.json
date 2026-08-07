@@ -1677,6 +1677,35 @@
         "step": 1,
         "unit": "px",
         "default": 0
+      },
+      {
+        "type": "header",
+        "content": "t:content.cart_recommendations"
+      },
+      {
+        "type": "checkbox",
+        "id": "cart_recommendations_enable",
+        "label": "t:settings.cart_recommendations_enable",
+        "info": "t:settings.cart_recommendations_enable_info",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "cart_recommendations_heading",
+        "label": "t:settings.cart_recommendations_heading",
+        "default": "t:text_defaults.cart_recommendations_heading"
+      },
+      {
+        "type": "collection",
+        "id": "cart_recommendations_collection",
+        "label": "t:settings.cart_recommendations_collection",
+        "info": "t:settings.cart_recommendations_collection_info"
+      },
+      {
+        "type": "number",
+        "id": "cart_recommendations_limit",
+        "label": "t:settings.cart_recommendations_limit",
+        "default": 6
       }
     ]
   },

@@ -1,0 +1,151 @@
+{% doc %}
+  @param {string} [section_id] - The id of the enclosing section, used to build unique element ids.
+  @param {string} [context] - Render context — pass `'drawer'` when rendered inside the cart drawer.
+
+  @example
+  {% render 'cart-recommendations', section_id: section.id, context: 'drawer' %}
+{% enddoc %}
+
+{%- liquid
+  assign show_recommendations = settings.cart_recommendations_enable
+  assign recommendations_collection = settings.cart_recommendations_collection
+  assign recommendations_heading = settings.cart_recommendations_heading
+  if recommendations_heading == blank
+    assign recommendations_heading = 'content.cart_recommendations_heading' | t
+  endif
+  assign recommendations_limit = settings.cart_recommendations_limit | default: 6
+
+  if show_recommendations and recommendations_collection != blank
+    assign cart_product_ids = cart.items | map: 'product_id' | join: ',' | prepend: ',' | append: ','
+    assign recommended_products = recommendations_collection.products
+  endif
+-%}
+
+{%- if show_recommendations and recommended_products.size > 0 -%}
+  {{ 'cart-recommendations.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'cart-recommendations.js' | asset_url }}" type="module" fetchpriority="low"></script>
+
+  <div class="cart-recommendations{% if context == 'drawer' %} cart-recommendations--drawer{% endif %}">
+    <h2 class="cart-recommendations__heading">{{ recommendations_heading | escape }}</h2>
+
+    <cart-recommendations-slider class="cart-recommendations__list swiper">
+    <div class="swiper-wrapper">
+      {%- assign recommendations_shown = 0 -%}
+      {%- for recommended_product in recommended_products -%}
+        {%- if recommendations_shown >= recommendations_limit -%}
+          {%- break -%}
+        {%- endif -%}
+        {%- assign recommended_product_id_string = ',' | append: recommended_product.id | append: ',' -%}
+        {%- if cart_product_ids contains recommended_product_id_string -%}
+          {%- continue -%}
+        {%- endif -%}
+        {%- liquid
+          assign recommended_variant = recommended_product.selected_or_first_available_variant
+          assign recommended_supporting_text = recommended_product.metafields.custom.product_supporting_text.value
+          assign recommended_rating = recommended_product.metafields.reviews.rating.value.rating | default: 0
+          assign recommended_rating_number = recommended_rating | times: 1
+          assign recommended_rating_max = recommended_product.metafields.reviews.rating.value.scale_max | default: 5
+          assign recommended_rating_count = recommended_product.metafields.reviews.rating_count.value | default: 0
+
+          if recommended_supporting_text == blank
+            assign recommended_description = recommended_product.description | strip_html
+          endif
+        -%}
+        {%- if recommended_variant != blank -%}
+          {%- assign recommendations_shown = recommendations_shown | plus: 1 -%}
+          <div class="cart-recommendations__card swiper-slide">
+            {%- if recommended_product.featured_image != blank -%}
+              <a class="cart-recommendations__media" href="{{ recommended_product.url }}">
+                {{
+                  recommended_product.featured_image
+                  | image_url: width: 300
+                  | image_tag:
+                    class: 'cart-recommendations__image',
+                    widths: '120, 160, 240, 300',
+                    sizes: '96px',
+                    loading: 'lazy'
+                }}
+              </a>
+            {%- endif -%}
+
+            <div class="cart-recommendations__info">
+              {%- if recommended_rating_count > 0 -%}
+                <div
+                  class="cart-recommendations__reviews"
+                  aria-label="{{ recommended_rating }} out of {{ recommended_rating_max }} stars"
+                >
+                  <span class="cart-recommendations__stars" aria-hidden="true">
+                    {%- for star in (1..recommended_rating_max) -%}
+                      {%- if star <= recommended_rating_number -%}
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true">
+                          <path d="M6.01 1.22c.5 1.5.9 3 1.36 4.5l.35-.01c.24 0 .5-.03.72-.03.4 0 1.4.06 1.86.06-.6.45-1.2.9-1.85 1.32-.2.14-.4.27-.55.42l.24.62c.3.9.6 1.8.9 2.7-.9-.65-1.8-1.35-2.7-2l-.4-.3-.4.26c-.35.22-.7.47-1.05.68-.3-.6-.6-1.2-.85-1.8l.35-1.15-.4-.3c-.35-.25-.7-.5-1.05-.78-.35-.26-.7-.55-1.05-.83.5 0 1.05-.02 1.5 0 .5 0 1.05.03 1.5-.05.2 3.3.05-3.3-.05-2.7.1-1.2.35-1.75.5-2.2z" />
+                        </svg>
+                      {%- else -%}
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                          <path d="M6.01074 1.22363C6.36019 2.3277 6.70421 3.52607 7.04102 4.62598L7.14648 4.96777L7.50391 4.97949C7.64344 4.98376 7.78834 4.97085 7.89648 4.96191C8.01779 4.95189 8.10271 4.94589 8.17383 4.94824H8.18555C8.28665 4.94918 8.38968 4.9559 8.50781 4.96387C8.62143 4.97153 8.75211 4.98059 8.88379 4.98242H8.89453C9.14293 4.98021 9.72893 4.95127 9.95703 4.94336L9.96094 4.94238L10.6406 4.91211L10.6416 4.91309C10.7442 4.91131 10.8452 4.9148 10.9492 4.9209C10.5948 5.1944 10.2501 5.47483 9.91309 5.74512C9.3982 6.15801 8.89429 6.55092 8.36133 6.89355L8.28223 6.93848V6.93945C8.23009 6.96753 8.18722 6.99713 8.15625 7.02246L7.89941 7.23145L7.99316 7.5498C7.99745 7.5644 8.00482 7.58661 8.0166 7.61914V7.62012C8.21467 8.24432 8.41615 8.874 8.60547 9.49512C8.7361 9.95652 8.8655 10.4358 9.00781 10.916C8.09615 10.2626 7.16348 9.56699 6.29688 8.90039L6.02051 8.6875L5.72461 8.87402C5.58197 8.96417 5.44925 9.06127 5.33008 9.14844C5.2092 9.23685 5.10225 9.31473 4.99219 9.38672C4.83987 9.48236 4.55572 9.63626 4.34277 9.8125L4.33008 9.82422C4.14227 9.99095 4.07744 10.0651 3.9248 10.1934C3.61879 10.463 3.36837 10.6944 3.0752 10.8838C3.02475 10.9137 2.9733 10.9452 2.9209 10.9775C3.28047 9.85179 3.65176 8.6913 4.01465 7.58887L4.12598 7.25195L3.84473 7.03613C3.63158 6.87245 3.41682 6.71067 3.20215 6.55078L2.55957 6.07617C2.20514 5.8147 1.53488 5.32182 0.995117 4.9248C1.44854 4.92065 1.98043 4.91838 2.36426 4.93457L2.39551 4.93652L2.42676 4.93359C2.86067 4.89766 3.35602 4.91999 3.84863 4.92676C3.90953 4.92843 3.99054 4.92717 4.04883 4.92578C4.07376 4.92835 4.09827 4.93048 4.13086 4.93359C4.15706 4.9361 4.20847 4.9416 4.25684 4.94336C4.3051 4.94363 4.35892 4.94447 4.41309 4.9375C4.44151 4.93383 4.47869 4.92752 4.51953 4.91504C4.54065 4.90858 4.57438 4.89359 4.61523 4.87207C4.73714 4.81009 4.80869 4.71878 4.8291 4.69141C4.86355 4.6452 4.89046 4.59675 4.91016 4.56055C4.94941 4.48839 4.98834 4.40324 5.01367 4.34863L5.01562 4.34473C5.26644 3.79076 5.42066 3.18016 5.57617 2.66602C5.70346 2.24625 5.87324 1.68655 6.01074 1.22363Z" stroke="currentColor"/>
+                        </svg>
+                      {%- endif -%}
+                    {%- endfor -%}
+                  </span>
+                  <span class="cart-recommendations__review-count">
+                    {{- 'content.cart_recommendations_reviews_count' | t: count: recommended_rating_count -}}
+                  </span>
+                </div>
+              {%- endif -%}
+
+              <a class="cart-recommendations__title" href="{{ recommended_product.url }}">
+                {{ recommended_product.title | escape }}
+              </a>
+
+              {%- if recommended_supporting_text != blank -%}
+                <p class="cart-recommendations__description">{{ recommended_supporting_text | escape }}</p>
+              {%- elsif recommended_description != blank -%}
+                <p class="cart-recommendations__description">{{ recommended_description | truncatewords: 8 | escape }}</p>
+              {%- endif -%}
+
+              <product-form-component
+                class="cart-recommendations__form"
+                data-section-id="{{ section_id }}"
+                data-product-id="{{ recommended_product.id }}"
+                data-product-url="{{ recommended_product.url }}"
+                on:submit="/handleSubmit"
+              >
+                <div
+                  class="visually-hidden"
+                  aria-live="assertive"
+                  role="status"
+                  aria-atomic="true"
+                  ref="liveRegion"
+                ></div>
+                {%- assign recommendation_form_id = 'CartRecommendationForm-' | append: section_id | append: '-' | append: forloop.index -%}
+                {%- form 'product', recommended_product, id: recommendation_form_id, data-type: 'add-to-cart-form' -%}
+                  <input type="hidden" name="id" ref="variantId" value="{{ recommended_variant.id }}">
+                  <button
+                    class="cart-recommendations__button"
+                    type="submit"
+                    name="add"
+                    ref="addToCartButton"
+                    {% unless recommended_variant.available %}disabled{% endunless %}
+                  >
+                    <span>
+                      {%- if recommended_variant.available -%}
+                        {%- assign recommended_variant_price = recommended_variant.price | money_without_trailing_zeros -%}
+                        {{- 'content.cart_recommendations_add' | t: price: recommended_variant_price -}}
+                        {%- if recommended_variant.compare_at_price > recommended_variant.price -%}
+                          <s>{{ recommended_variant.compare_at_price | money_without_trailing_zeros }}</s>
+                        {%- endif -%}
+                      {%- else -%}
+                        {{- 'content.cart_recommendations_sold_out' | t -}}
+                      {%- endif -%}
+                    </span>
+                  </button>
+                {%- endform -%}
+              </product-form-component>
+            </div>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+    </cart-recommendations-slider>
+  </div>
+{%- endif -%}
