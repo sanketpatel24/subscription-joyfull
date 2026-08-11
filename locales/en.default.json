@@ -195,8 +195,8 @@
       "shipping_unlocked_free_shipping": "Congrats! You unlocked free shipping!"
     },
     "checkout": "Check out",
-    "checkout_with_total": "Check out — {{ amount }}",
-    "subscribe_and_save_discount_label": "Subscribe & Save Discount ({{ percent }} off)",
+    "checkout_with_total": "Checkout &ndash; {{ amount }}",
+    "subscribe_and_save_discount_label": "Subscribe & Save Discount ({{ percent }})",
     "collection_placeholder": "Collection title",
     "discount_code": "Discount code",
     "shipping_discount_error": "Shipping discounts are shown at checkout after adding an address",

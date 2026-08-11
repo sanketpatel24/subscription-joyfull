@@ -65,7 +65,7 @@
 
         assign cart_subtotal = cart.items_subtotal_price
         assign tier_1_threshold_cents = tier_1_amount | times: 100
-        assign tier_1_amount_money = tier_1_threshold_cents | money
+        assign tier_1_amount_money = tier_1_threshold_cents | money_without_trailing_zeros
         assign tier_1_reached = false
         if cart_subtotal >= tier_1_threshold_cents
           assign tier_1_reached = true
@@ -109,7 +109,7 @@
             endif
           -%}
           {%- if boxes_needed > 0 -%}
-            <p class="cart-progress-bar__heading h5">
+            <p class="cart-progress-bar__heading">
               {{ 'content.cart_progress_bar.away_from_next_tier' | t: count: boxes_needed, tier_label: next_tier_label }}
             </p>
           {%- endif -%}
@@ -153,7 +153,7 @@
             assign progress_percent = 100
           endif
         endif
-        assign remaining_amount_money = remaining_cents | money
+        assign remaining_amount_money = remaining_cents | money_without_trailing_zeros
       -%}
 
       <div class="cart-progress-bar__shipping">

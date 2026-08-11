@@ -97,7 +97,13 @@
             role="caption"
           >
             {{ 'content.cart_total' | t }}
-            <span>{{ cart.total_price | money_with_currency }}</span>
+            <span>
+              {% if context == 'drawer' %}
+                {{ cart.total_price | money_without_trailing_zeros }}
+              {% else %}
+                {{ cart.total_price | money_with_currency }}
+              {% endif %}
+            </span>
           </caption>
 
           <thead
@@ -141,6 +147,12 @@
 
           <tbody role="rowgroup">
             {% for item in cart.items %}
+              {% liquid
+                assign cart_item_image = item.product.metafields.custom.grid_primary_custom_image.value
+                if cart_item_image == blank
+                  assign cart_item_image = item.image
+                endif
+              %}
               <tr
                 id="CartItem-{{ item.key }}"
                 role="row"
@@ -154,7 +166,7 @@
                   role="cell"
                   headers="productImage"
                 >
-                  {% if item.image -%}
+                  {% if cart_item_image -%}
                     {% liquid
                       assign ratio = 1
                       assign border_opacity = settings.cart_thumbnail_border_opacity | divided_by: 100.0
@@ -166,7 +178,7 @@
                       if block_settings.image_ratio == 'portrait'
                         assign ratio = 0.8
                       elsif block_settings.image_ratio == 'adapt'
-                        assign ratio = item.image.aspect_ratio
+                        assign ratio = cart_item_image.aspect_ratio
                       endif
                     %}
                     <a
@@ -175,7 +187,7 @@
                       style="--ratio:{{ ratio }};"
                     >
                       {%- liquid
-                        echo item.image | image_url: width: 250 | image_tag: class: 'cart-items__media-image border-style', style: border_override
+                        echo cart_item_image | image_url: width: 250 | image_tag: class: 'cart-items__media-image border-style', style: border_override
                       -%}
                     </a>
                   {%- endif %}
@@ -188,25 +200,44 @@
                   >
                     <div class="cart-items__product-info">
                       <div class="cart-items__title-row">
-                        <a
+                        <div  class="cart-items__title-flaver">
+                        {% if item.product.metafields.custom.product_display_title.value != blank %}
+                          <a
                           href="{{ item.url }}"
                           class="cart-items__title"
                           {% if item.parent_relationship.parent != null %}
                             aria-label="{{ 'accessibility.nested_product' | t: product_title: item.product.title, parent_title: item.parent_relationship.parent.title | escape }}"
                           {% endif %}
                         >
-                          {{- item.product.title -}}
-                        </a>
+                            {{ item.product.metafields.custom.product_display_title.value | escape }}
+                          </a>
+                        {% else %}
+                          <a
+                          href="{{ item.url }}"
+                          class="cart-items__title"
+                          {% if item.parent_relationship.parent != null %}
+                            aria-label="{{ 'accessibility.nested_product' | t: product_title: item.product.title, parent_title: item.parent_relationship.parent.title | escape }}"
+                          {% endif %}
+                        >
+                            {{- item.product.title -}}
+                          </a>
+                        {% endif %}
+                        {% if item.product.metafields.custom.pdp_product_flavor_text.value != blank %}
+                          <p class="cart-items__flavor-text">
+                            {{ item.product.metafields.custom.pdp_product_flavor_text.value | escape }}
+                          </p>
+                        {% endif %}
+                      </div>
                         <div class="cart-items__price-inline cart-secondary-typography">
                           {% if item.original_price != item.final_price %}
                             <span class="visually-hidden">{{ 'content.price_sale' | t }}</span>
-                            <span>{{ item.final_price | money }}</span>
+                            <span>{{ item.final_price | money_without_trailing_zeros }}</span>
                             <span class="visually-hidden">{{ 'content.price_regular' | t }}</span>
                             <s class="compare-at-price">
                               {% if item.variant.compare_at_price > item.original_price %}
-                                {{ item.variant.compare_at_price | money }}
+                                {{ item.variant.compare_at_price | money_without_trailing_zeros }}
                               {% else %}
-                                {{ item.original_price | money }}
+                                {{ item.original_price | money_without_trailing_zeros }}
                               {% endif %}
                             </s>
                           {% else %}
@@ -216,11 +247,11 @@
                               <span class="visually-hidden">{{ 'content.price' | t }}</span>
                             {% endif %}
 
-                            <span>{{ item.original_price | money }}</span>
+                            <span>{{ item.original_price | money_without_trailing_zeros }}</span>
 
                             {% if item.variant.compare_at_price > item.original_price %}
                               <span class="visually-hidden">{{ 'content.price_regular' | t }}</span>
-                              <s class="compare-at-price">{{ item.variant.compare_at_price | money }}</s>
+                              <s class="compare-at-price">{{ item.variant.compare_at_price | money_without_trailing_zeros }}</s>
                             {% endif %}
                           {% endif %}
                         </div>
@@ -236,12 +267,12 @@
                       </p>
                     {%- endif -%}
 
-                    {% render 'cart-line-subscription-selector', item: item, line_index: item.index %}
-
+                    
                     {% assign can_update_quantity = item.instructions.can_update_quantity
                       | default: true, allow_false: true
                     %}
                     <div class="cart-items__quantity-controls cart-items__quantity-controls--drawer">
+                      {% render 'cart-line-subscription-selector', item: item, line_index: item.index %}
                       {% render 'quantity-selector',
                         product: item.product,
                         variant: item.variant,
@@ -261,7 +292,9 @@
                           hidden
                         {% endif %}
                       >
-                        {{- 'icon-delete.svg' | inline_asset_content -}}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                          <path d="M14 11V17M10 11V17M6 7V19C6 19.5304 6.21071 20.0391 6.58579 20.4142C6.96086 20.7893 7.46957 21 8 21H16C16.5304 21 17.0391 20.7893 17.4142 20.4142C17.7893 20.0391 18 19.5304 18 19V7M4 7H20M6.74999 6L9 3H15L17.25 6" stroke="#2F261C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
                         <span class="visually-hidden">{{ 'accessibility.remove' | t }}</span>
                       </button>
                     </div>
@@ -292,6 +325,11 @@
                           mode: 'trigger'
                         %}
                       </div>
+                      {% if item.product.metafields.custom.pdp_product_flavor_text.value != blank %}
+                        <p class="cart-items__flavor-text">
+                          {{ item.product.metafields.custom.pdp_product_flavor_text.value | escape }}
+                        </p>
+                      {% endif %}
                       {% if item.product.vendor and block_settings.vendor %}
                         <p>
                           {{ item.product.vendor }}

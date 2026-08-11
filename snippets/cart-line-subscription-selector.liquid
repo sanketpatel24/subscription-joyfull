@@ -23,11 +23,22 @@
 
 {%- if allocations.size > 0 -%}
   {%- if selected_allocation -%}
-    {%- assign current_summary = 'products.product.subscription.deliver_every' | t | append: ' ' | append: selected_allocation.selling_plan.name -%}
+  {%- assign delivery_frequency = '' -%}
+
+  {%- for option in selected_allocation.selling_plan.options -%}
+    {%- if option.name == 'Order Frequency and Unit' -%}
+      {%- assign delivery_frequency = option.value -%}
+    {%- endif -%}
+  {%- endfor -%}
+
+  {%- assign current_summary = 'products.product.subscription.deliver_every'
+    | t
+    | append: ' '
+    | append: delivery_frequency
+  -%}
   {%- else -%}
     {%- assign current_summary = 'products.product.subscription.one_time_purchase' | t -%}
   {%- endif -%}
-
   <cart-line-subscription-selector
     class="cart-line-subscription-selector"
     data-line="{{ line }}"
@@ -53,7 +64,9 @@
             {{- current_summary -}}
           </span>
           <span class="svg-wrapper icon-caret icon-animated" aria-hidden="true">
-            {{- 'icon-caret.svg' | inline_asset_content -}}
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M12 5.75L7.5 10.25L3 5.75" stroke="#2F261C" stroke-width="2" stroke-linecap="round"/>
+            </svg>
           </span>
         </summary>
 
@@ -72,24 +85,31 @@
                   data-selected
                 {% endif %}
               >
+                {%- assign option_frequency = '' -%}
+                {%- for option in allocation.selling_plan.options -%}
+                  {%- if option.name == 'Order Frequency and Unit' -%}
+                    {%- assign option_frequency = option.value -%}
+                  {%- endif -%}
+                {%- endfor -%}
                 <input
                   type="radio"
                   name="{{ unique_id }}-purchase-option"
                   value="{{ allocation.selling_plan.id }}"
-                  data-summary="{{ 'products.product.subscription.deliver_every' | t }} {{ allocation.selling_plan.name }}"
+                  data-summary="{{ 'products.product.subscription.deliver_every' | t }} {{ option_frequency }}"
                   {% if selected_allocation.selling_plan.id == allocation.selling_plan.id %}
                     checked
                   {% endif %}
                 >
+
                 <span class="svg-wrapper icon-checkmark cart-line-subscription-selector__checkmark" aria-hidden="true">
                   {{- 'icon-checkmark.svg' | inline_asset_content -}}
                 </span>
+
                 <span class="cart-line-subscription-selector__option-label">
-                  {{- 'products.product.subscription.deliver_every' | t }} {{ allocation.selling_plan.name -}}
+                  {{ 'products.product.subscription.deliver_every' | t }} {{ option_frequency }}
                 </span>
               </label>
             {%- endfor -%}
-
             <label
               class="cart-line-subscription-selector__option"
               data-option-row

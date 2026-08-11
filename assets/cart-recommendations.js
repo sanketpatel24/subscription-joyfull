@@ -82,8 +82,8 @@ class CartRecommendationsSlider extends Component {
     }
 
     this.swiper = new window.Swiper(this, {
-      slidesPerView: 'auto',
-      spaceBetween: 12,
+      slidesPerView: 1.1857,
+      spaceBetween: 16,
       speed: 450,
       threshold: 8,
       grabCursor: true,
@@ -108,6 +108,12 @@ class CartRecommendationsSlider extends Component {
         containerRoleDescriptionMessage: 'Product carousel',
         itemRoleDescriptionMessage: 'Product slide',
       },
+      breakpoints: {
+      750: {
+        slidesPerView: 1.3269,
+        spaceBetween: 16,
+      },
+    }
     });
   }
 }
