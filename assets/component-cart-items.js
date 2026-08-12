@@ -386,8 +386,9 @@ export class CartItemsComponent extends createViewEventElement(Component) {
       ?.then(async ({ detail }) => {
         const sections = detail?.sections;
         const cartItemsHtml = sections?.[this.sectionId];
-        // Animate empty → non-empty in the drawer (possible in squeeze mode
-        // where the page is interactive alongside the open drawer).
+        // Detects empty → non-empty in the drawer (possible in squeeze mode
+        // where the page is interactive alongside the open drawer), so the
+        // first row added isn't given the "adding" slide-in treatment below.
         const wasEmptyCartDrawer = this.isDrawer && this.querySelector('[data-cart-drawer-empty]') !== null;
         /** @type {'hydration' | 'full'} */
         const mode = this.isDrawer ? 'hydration' : 'full';
@@ -404,13 +405,7 @@ export class CartItemsComponent extends createViewEventElement(Component) {
         if (cartItemsHtml) {
           const existingKeys = new Set(this.refs.cartItemRows?.map((row) => row.dataset.key) ?? []);
 
-          if (wasEmptyCartDrawer) {
-            startViewTransition(() => {
-              morphSection(this.sectionId, cartItemsHtml, morphOptions);
-            }, ['fill-cart-drawer']);
-          } else {
-            await morphSection(this.sectionId, cartItemsHtml, morphOptions);
-          }
+          await morphSection(this.sectionId, cartItemsHtml, morphOptions);
 
           // Animate newly added rows (reverse of the remove animation).
           if (!wasEmptyCartDrawer && !prefersReducedMotion()) {
