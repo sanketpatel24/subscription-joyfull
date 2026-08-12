@@ -4,6 +4,8 @@
 
 {% liquid
   assign source_product = section.settings.product | default: product
+  assign comparison = source_product.metafields.custom.comparison_section.value
+  assign cta_icon = comparison.cta_icon.value
   assign shop_all_url = section.settings.collection.url | default: routes.all_products_collection_url
 
   if recommendations.performed
@@ -41,9 +43,26 @@
     <div class="while-youre-here__header">
       <h2 class="while-youre-here__heading">{{ section.settings.heading | escape }}</h2>
       {% if section.settings.show_shop_all %}
-        <a class="while-youre-here__shop-all while-youre-here__shop-all--desktop" href="{{ shop_all_url }}">
-          {{ section.settings.button_label | escape }}
-        </a>
+        <div class="while-youre-here__shop-all-wrap">
+          <a class="while-youre-here__shop-all while-youre-here__shop-all--desktop" href="{{ shop_all_url }}">
+            {{ section.settings.button_label | escape }}
+          </a>
+          {%- if cta_icon != blank -%}
+            <a class="product-comparison-cta-icon" href="{{ shop_all_url }}" tabindex="-1" aria-hidden="true">
+              {{-
+                cta_icon
+                | image_url: width: 128
+                | image_tag:
+                  widths: '32, 64, 96, 128',
+                  sizes: '32px',
+                  loading: 'lazy',
+                  decoding: 'async',
+                  class: 'product-comparison-cta-icon-image',
+                  alt: ''
+              -}}
+            </a>
+          {%- endif -%}
+        </div>
       {% endif %}
     </div>
 

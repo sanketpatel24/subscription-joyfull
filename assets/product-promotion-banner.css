@@ -32,6 +32,9 @@
   .product-promotion-banner-mobile__secondary p {
     margin: 0;
   }
+  .product-promotion-banner__text p strong{
+    font-weight: var(--font-weight-semibold);
+  }
 
   .product-promotion-banner-mobile {
     display: none;

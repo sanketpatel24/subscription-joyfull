@@ -17,8 +17,7 @@
           "settings": {
             "main_background_color": "#ffefc8",
             "main_information_color": "",
-            "main_desktop_image": "shopify://shop_images/Frame_1000005507_1.jpg",
-            "main_mobile_image": "shopify://shop_images/Frame_1000005554_1.jpg",
+            "main_desktop_image": "shopify://shop_images/Frame_1000005507_2.jpg",
             "custom_text": "Vet-Formulated + Research-Backed",
             "heading_text": "Treat your pet to better gut health",
             "details_text": "<p>Treats with benefits, gut-supporting supplements. We did the research so you can enjoy the belly rubs.</p>",
@@ -36,13 +35,13 @@
         },
         "full_bleed_with_box_mgr3wC": {
           "type": "full_bleed_with_box",
+          "disabled": true,
           "settings": {
             "main_background_color": "#ffefc8",
             "inner_background_color": "#fff9f0",
             "main_information_color": "",
             "need_transperant_header": true,
-            "main_desktop_image": "shopify://shop_images/Frame_1000005882_2.jpg",
-            "main_mobile_image": "shopify://shop_images/hero_2_1.jpg",
+            "main_desktop_image": "shopify://shop_images/hero.jpg",
             "custom_text": "Vet-Formulated + Research-Backed",
             "heading_text": "Happy gut, happy pet",
             "details_text": "<p>Treats with benefits and <br/>gut-supporting supplements.</p>",
@@ -53,6 +52,7 @@
         },
         "full_bleed_with_text_pGE9BR": {
           "type": "full_bleed_with_text",
+          "disabled": true,
           "settings": {
             "main_background_color": "#ffefc8",
             "main_information_color": "#fff9f0",
@@ -73,6 +73,154 @@
         "split_banner_content_yKErD7",
         "full_bleed_with_box_mgr3wC",
         "full_bleed_with_text_pGE9BR"
+      ],
+      "name": "Index Custom Slideshow",
+      "settings": {
+        "desktop_top_padding": 0,
+        "desktop_bottom_padding": 0,
+        "mobile_top_padding": 0,
+        "mobile_bottom_padding": 0,
+        "main_heading_size": "h1"
+      }
+    },
+    "index_custom_slideshow_7Ht64Y": {
+      "type": "index-custom-slideshow",
+      "blocks": {
+        "split_banner_content_UBLeC7": {
+          "type": "split_banner_content",
+          "disabled": true,
+          "settings": {
+            "main_background_color": "#ffefc8",
+            "main_information_color": "",
+            "main_desktop_image": "shopify://shop_images/Frame_1000005507_2.jpg",
+            "custom_text": "Vet-Formulated + Research-Backed",
+            "heading_text": "Treat your pet to better gut health",
+            "details_text": "<p>Treats with benefits, gut-supporting supplements. We did the research so you can enjoy the belly rubs.</p>",
+            "button_text": "Shop Now",
+            "button_link": "shopify://collections/all",
+            "button_style": "primary-button",
+            "main_common_video": "shopify://files/videos/stitch (1).mp4",
+            "product_image_1": "shopify://shop_images/image_29_1_1.png",
+            "product_title_1": "Treats with \nbenefits",
+            "product_link_1": "shopify://products/prebiotic-squeeze-treats-for-dogs",
+            "product_image_2": "shopify://shop_images/image_29_2.png",
+            "product_title_2": "Science-backed \nSupplements",
+            "product_link_2": "shopify://collections/probiotics"
+          }
+        },
+        "full_bleed_with_box_PVwLPg": {
+          "type": "full_bleed_with_box",
+          "settings": {
+            "main_background_color": "#ffefc8",
+            "inner_background_color": "#fff9f0",
+            "main_information_color": "",
+            "need_transperant_header": true,
+            "main_desktop_image": "shopify://shop_images/hero.jpg",
+            "custom_text": "Vet-Formulated + Research-Backed",
+            "heading_text": "Happy gut, happy pet",
+            "details_text": "<p>Treats with benefits and <br/>gut-supporting supplements.</p>",
+            "button_text": "Shop Now",
+            "button_link": "shopify://collections/all",
+            "button_style": "primary-button"
+          }
+        },
+        "full_bleed_with_text_8VkkfY": {
+          "type": "full_bleed_with_text",
+          "disabled": true,
+          "settings": {
+            "main_background_color": "#ffefc8",
+            "main_information_color": "#fff9f0",
+            "main_desktop_image": "shopify://shop_images/Frame_1000005882_1_1.jpg",
+            "main_mobile_image": "shopify://shop_images/hero_3_1.jpg",
+            "custom_text": "Vet-Formulated + Research-Backed",
+            "heading_text": "Joy starts in the gut",
+            "details_text": "<p>Treats with benefits and gut-supporting supplements. We did the research so you can enjoy the belly rubs.</p>",
+            "button_text": "Shop Now",
+            "button_link": "shopify://collections/all",
+            "button_style": "primary-button",
+            "custom_image_1": "shopify://shop_images/Slideshow-Logo-Image-New-1.svg",
+            "custom_image_2": "shopify://shop_images/Slideshow-Logo-Image-New-2.svg"
+          }
+        }
+      },
+      "block_order": [
+        "split_banner_content_UBLeC7",
+        "full_bleed_with_box_PVwLPg",
+        "full_bleed_with_text_8VkkfY"
+      ],
+      "name": "Index Custom Slideshow",
+      "settings": {
+        "desktop_top_padding": 0,
+        "desktop_bottom_padding": 0,
+        "mobile_top_padding": 0,
+        "mobile_bottom_padding": 0,
+        "main_heading_size": "h1"
+      }
+    },
+    "index_custom_slideshow_zxNwpx": {
+      "type": "index-custom-slideshow",
+      "blocks": {
+        "split_banner_content_k3nC6J": {
+          "type": "split_banner_content",
+          "disabled": true,
+          "settings": {
+            "main_background_color": "#ffefc8",
+            "main_information_color": "",
+            "main_desktop_image": "shopify://shop_images/Frame_1000005507_2.jpg",
+            "custom_text": "Vet-Formulated + Research-Backed",
+            "heading_text": "Treat your pet to better gut health",
+            "details_text": "<p>Treats with benefits, gut-supporting supplements. We did the research so you can enjoy the belly rubs.</p>",
+            "button_text": "Shop Now",
+            "button_link": "shopify://collections/all",
+            "button_style": "primary-button",
+            "main_common_video": "shopify://files/videos/stitch (1).mp4",
+            "product_image_1": "shopify://shop_images/image_29_1_1.png",
+            "product_title_1": "Treats with \nbenefits",
+            "product_link_1": "shopify://products/prebiotic-squeeze-treats-for-dogs",
+            "product_image_2": "shopify://shop_images/image_29_2.png",
+            "product_title_2": "Science-backed \nSupplements",
+            "product_link_2": "shopify://collections/probiotics"
+          }
+        },
+        "full_bleed_with_box_Dggtaq": {
+          "type": "full_bleed_with_box",
+          "disabled": true,
+          "settings": {
+            "main_background_color": "#ffefc8",
+            "inner_background_color": "#fff9f0",
+            "main_information_color": "",
+            "need_transperant_header": true,
+            "main_desktop_image": "shopify://shop_images/hero.jpg",
+            "custom_text": "Vet-Formulated + Research-Backed",
+            "heading_text": "Happy gut, happy pet",
+            "details_text": "<p>Treats with benefits and <br/>gut-supporting supplements.</p>",
+            "button_text": "Shop Now",
+            "button_link": "shopify://collections/all",
+            "button_style": "primary-button"
+          }
+        },
+        "full_bleed_with_text_jbLe7b": {
+          "type": "full_bleed_with_text",
+          "settings": {
+            "main_background_color": "#ffefc8",
+            "main_information_color": "#fff9f0",
+            "main_desktop_image": "shopify://shop_images/Frame_1000005882_1_1.jpg",
+            "main_mobile_image": "shopify://shop_images/hero_3_1.jpg",
+            "custom_text": "Vet-Formulated + Research-Backed",
+            "heading_text": "Joy starts in the gut",
+            "details_text": "<p>Treats with benefits and gut-supporting supplements. We did the research so you can enjoy the belly rubs.</p>",
+            "button_text": "Shop Now",
+            "button_link": "shopify://collections/all",
+            "button_style": "primary-button",
+            "custom_image_1": "shopify://shop_images/Slideshow-Logo-Image-New-1.svg",
+            "custom_image_2": "shopify://shop_images/Slideshow-Logo-Image-New-2.svg"
+          }
+        }
+      },
+      "block_order": [
+        "split_banner_content_k3nC6J",
+        "full_bleed_with_box_Dggtaq",
+        "full_bleed_with_text_jbLe7b"
       ],
       "name": "Index Custom Slideshow",
       "settings": {
@@ -463,6 +611,8 @@
   },
   "order": [
     "index_custom_slideshow_f9CrAt",
+    "index_custom_slideshow_7Ht64Y",
+    "index_custom_slideshow_zxNwpx",
     "index_content_marquee_bar_nCUff3",
     "index_treats_logos_lists_4jJ83f",
     "index_feature_collections_JHG67Q",
