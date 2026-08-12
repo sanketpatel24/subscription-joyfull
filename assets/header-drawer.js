@@ -2,6 +2,61 @@ import { Component } from '@theme/component';
 import { trapFocus, removeTrapFocus } from '@theme/focus';
 import { onAnimationEnd, removeWillChangeOnAnimationEnd } from '@theme/utilities';
 
+function ensureHeaderGroupHeight() {
+  const headerGroup = document.querySelector('#header-group');
+  const header = document.querySelector('header-component');
+  if (!headerGroup || !header) return;
+
+  let headerGroupHeight = 0;
+  Array.from(headerGroup.children).forEach((element) => {
+    if (element === header || !(element instanceof HTMLElement)) return;
+    headerGroupHeight += element.offsetHeight;
+  });
+
+  if (header.hasAttribute('transparent') && header.parentElement?.nextElementSibling) {
+    headerGroupHeight += header.offsetHeight;
+  }
+
+  document.body.style.setProperty('--header-group-height', `${Math.round(headerGroupHeight)}px`);
+}
+
+function setHeaderOpaqueForDrawer(isOpen) {
+  const header = document.querySelector('#header-component');
+  if (!header) return;
+
+  if (isOpen) {
+    if (header.dataset.slideWantsTransparent === 'true') {
+      header.dataset.slideWantsTransparentBeforeDrawer = 'true';
+      header.setAttribute('data-slide-wants-transparent', 'false');
+    }
+
+    header.querySelectorAll('.header__row').forEach((row) => {
+      if (row.dataset.borderWidthBeforeTransparent !== undefined) {
+        row.style.setProperty('--border-bottom-width', row.dataset.borderWidthBeforeTransparent);
+      }
+      if (row.dataset.borderWidthMobileBeforeTransparent !== undefined) {
+        row.style.setProperty('--border-bottom-width-mobile', row.dataset.borderWidthMobileBeforeTransparent);
+      }
+    });
+  } else {
+    if (header.dataset.slideWantsTransparentBeforeDrawer === 'true') {
+      header.setAttribute('data-slide-wants-transparent', 'true');
+      delete header.dataset.slideWantsTransparentBeforeDrawer;
+    }
+
+    if (header.dataset.slideWantsTransparent === 'true') {
+      header.querySelectorAll('.header__row').forEach((row) => {
+        if (row.dataset.borderWidthBeforeTransparent !== undefined) {
+          row.style.setProperty('--border-bottom-width', '0px');
+        }
+        if (row.dataset.borderWidthMobileBeforeTransparent !== undefined) {
+          row.style.setProperty('--border-bottom-width-mobile', '0px');
+        }
+      });
+    }
+  }
+}
+
 /**
  * A custom element that manages the main menu drawer.
  *
@@ -72,11 +127,19 @@ class HeaderDrawer extends Component {
 
     if (!summary) return;
 
+    if (details === this.refs.details) {
+      ensureHeaderGroupHeight();
+    }
+
     summary.setAttribute('aria-expanded', 'true');
 
     this.preventInitialAccordionAnimations(details);
     requestAnimationFrame(() => {
       details.classList.add('menu-open');
+
+      if (details === this.refs.details) {
+        setHeaderOpaqueForDrawer(true);
+      }
 
       if (target) {
         this.refs.menuDrawer.classList.add('menu-drawer--has-submenu-opened');
@@ -116,6 +179,10 @@ class HeaderDrawer extends Component {
     summary.setAttribute('aria-expanded', 'false');
     details.classList.remove('menu-open');
     this.refs.menuDrawer.classList.remove('menu-drawer--has-submenu-opened');
+
+    if (details === this.refs.details) {
+      setHeaderOpaqueForDrawer(false);
+    }
 
     // Wait for the .menu-drawer element's transition, not the entire details subtree
     // This avoids waiting for child accordion/resource-card animations which can cause issues on Firefox

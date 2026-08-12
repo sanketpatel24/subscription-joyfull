@@ -86,19 +86,17 @@
     {%- if section.settings.background_color != blank %} color-custom-{{ section.id }}{% endif %}
     {%- if section.settings.product_grid_width == 'full-width' %} collection-wrapper--full-width{% endif %}
     {%- if section.settings.full_width_on_mobile == true %} collection-wrapper--full-width-on-mobile{% endif %}
-    spacing-style
-  "
+    spacing-style collection__item"
 
   style="
-    --grid--margin--mobile: 0{% if section.settings.product_grid_width == 'centered' and section.settings.full_width_on_mobile == false %} var(--margin-lg){% else %} 0{% endif %};
+    --grid--margin--mobile: 0{% if section.settings.product_grid_width == 'centered' and section.settings.full_width_on_mobile != true %} var(--margin-lg){% else %} 0{% endif %};
     --grid-column--desktop: var(--{% if section.settings.product_grid_width == 'centered' %}centered{% else %}full-width{% endif %});
     --grid-column--mobile: var(--{% if section.settings.full_width_on_mobile %}full-width{% else %}{% if section.settings.product_grid_width == 'centered' %}centered{% else %}full-width{% endif %}{% endif %});
-    --padding-inline-start: {{ section.settings.padding-inline-start }}px;
-    --padding-inline-end: {{ section.settings.padding-inline-end }}px;
+    --padding-inline-start: {{ section.settings.padding-inline-start | default: 0 }}px;
+    --padding-inline-end: {{ section.settings.padding-inline-end | default: 0 }}px;
   "
 >
-  <div
-    style="
+  <div class="collection__item-wrap" style="
       grid-column: var(--full-width);
       --product-grid-gap-mobile: {{ section.settings.columns_gap_vertical | at_most: 12 }}px {{ section.settings.columns_gap_horizontal | at_most: 12 }}px;
       --product-grid-gap-desktop: {{ section.settings.columns_gap_vertical }}px {{ section.settings.columns_gap_horizontal }}px;
@@ -124,7 +122,7 @@
         <h4 class="main-collection-grid__title">{{ title }}</h4>
       {% endif %}
       <ul
-        class="product-grid product-grid--{{ section.id }} product-grid--{{ section.settings.layout_type }} {% if section.settings.mobile_product_card_size == 'large' %} product-grid-mobile--large{% endif %}"
+        class="product-grid product-grid--{{ section.id }} product-grid--{{ section.settings.layout_type }} {% if section.settings.mobile_product_card_size == 'large' %} product-grid-mobile--large{% endif %} collection__loop"
         data-testid="product-grid"
         product-grid-view="default"
         ref="grid"

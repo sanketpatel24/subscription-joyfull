@@ -1,0 +1,117 @@
+{%- for collection_custom_grid_banner_block_selections in collection_custom_grid_banner_block_selections -%}
+    {%- liquid
+        assign desktop_image_video = collection_custom_grid_banner_block_selections.desktop_image_video.value
+        assign mobile_image_video = collection_custom_grid_banner_block_selections.mobile_image_video.value
+        assign banner_badged_text = collection_custom_grid_banner_block_selections.banner_badged_text.value
+        assign banner_heading_text = collection_custom_grid_banner_block_selections.banner_heading_text.value
+        assign banner_caption_text = collection_custom_grid_banner_block_selections.banner_caption_text
+        assign banner_button_text = collection_custom_grid_banner_block_selections.banner_button_text.value
+        assign banner_button_link = collection_custom_grid_banner_block_selections.banner_button_link.value
+        assign block_content_color = collection_custom_grid_banner_block_selections.block_content_color.value
+        assign display_box_half_width = collection_custom_grid_banner_block_selections.display_box_half_width.value
+        assign desktop_position_number = collection_custom_grid_banner_block_selections.desktop_position_number.value
+        assign mobile_position_number = collection_custom_grid_banner_block_selections.mobile_position_number.value
+        assign banner_image_alt = banner_heading_text | strip_html | escape
+    -%}
+    
+    {%- if desktop_image_video != blank or mobile_image_video != blank or banner_heading_text != blank or banner_caption_text != blank or banner_button_link != blank -%}
+        <li class="product-grid__item collection__custom-block collection__banner-body collection__banner-body-{{ forloop.index }}{% if display_box_half_width == true %} collection__banner-width-half{% endif %}" data-desktop-position="{{ desktop_position_number }}" data-mobile-position="{{ mobile_position_number }}">
+            {%- style -%}
+                .collection__banner-body-{{ forloop.index }} {
+                    {%- if block_content_color != blank -%}
+                        --block-content-color: {{ block_content_color }};
+                    {%- endif -%}
+                }
+            {%- endstyle -%}
+            <div class="collection__banner-body-wrap">
+                {%- if desktop_image_video != blank or mobile_image_video != blank -%}
+                    {% if mobile_image_video != blank %}
+                        {% assign video_class = "video--desktop" %}
+                    {% else %}
+                        {% assign video_class = "video--desktop video--mobile" %}
+                    {% endif %}
+                    {%- if desktop_image_video != blank -%}
+                        <div class="collection__banner-media{% if mobile_image_video != blank %} show--desktop{% endif %}">
+                            <div class="collection__banner-media-wrap">
+                                {%- if desktop_image_video contains "files" -%}
+                                    {% render 'responsive-image-lazyload',
+                                        desktop_image: desktop_image_video,
+                                        mobile_image: desktop_image_video,
+                                        alt: banner_image_alt,
+                                        class: 'custom--image',
+                                        sizes: '(max-width: 749px) 100vw, 100vw'
+                                    %}
+                                {%- else -%}
+                                    {% render 'responsive-video-lazyload',
+                                        video_url: desktop_image_video,
+                                        class: video_class
+                                    %}
+                                {%- endif -%}
+                            </div>
+                        </div>
+                    {%- endif -%}
+                    {%- if mobile_image_video != blank -%}
+                        <div class="collection__banner-media show--mobile">
+                            <div class="collection__banner-media-wrap">
+                                {%- if mobile_image_video contains "files" -%}
+                                    {% render 'responsive-image-lazyload',
+                                        desktop_image: mobile_image_video,
+                                        mobile_image: mobile_image_video,
+                                        alt: banner_image_alt,
+                                        class: 'custom--image',
+                                        sizes: '(max-width: 749px) 100vw, 100vw'
+                                    %}
+                                {%- else -%}
+                                    {% render 'responsive-video-lazyload',
+                                        video_url: mobile_image_video,
+                                        class: 'video--mobile'
+                                    %} 
+                                {%- endif -%}
+                            </div>
+                        </div>
+                    {%- endif -%}
+                {%- endif -%}
+                {%- if banner_badged_text != blank -%}
+                    <div class="collection__banner-badged">
+                        <div class="badge-small collection__banner-badged-wrap">
+                            {{ banner_badged_text | escape }}
+                        </div>
+                    </div>
+                {%- endif -%}
+                {%- if banner_heading_text != blank or banner_caption_text != blank or banner_button_link != blank -%}
+                    <div class="collection__banner-detail">
+                        <div class="collection__banner-detail-wrap">
+                            {%- if banner_heading_text != blank and banner_caption_text != blank -%}
+                                <div class="collection__banner-content">
+                                    <div class="collection__banner-content-wrap">                                        
+                                        {%- if banner_heading_text != blank -%}
+                                            <div class="heading-s bold collection__banner-content-wrap-title">
+                                                {{ banner_heading_text | escape }}
+                                            </div>
+                                        {%- endif -%}
+                                        {%- if banner_caption_text != blank -%}
+                                            <div class="text-common collection__banner-content-wrap-infos">
+                                                {{ banner_caption_text | metafield_tag }}
+                                            </div>
+                                        {%- endif -%}
+                                    </div>
+                                </div>
+                            {%- endif -%}  
+                            {%- if banner_button_text != blank and banner_button_link != blank -%}
+                                <div class="collection__banner-button">
+                                    <div class="collection__banner-button-wrap">
+                                        {%- render 'button-common-style',                                                  
+                                            main_button_text: banner_button_text, 
+                                            main_button_link: banner_button_link,
+                                            main_button_style: grid_block_button_style
+                                        -%}
+                                    </div>
+                                </div>
+                            {%- endif -%}
+                        </div>
+                    </div>
+                {%- endif -%}
+            </div>
+        </li>
+    {%- endif -%}
+{%- endfor -%}

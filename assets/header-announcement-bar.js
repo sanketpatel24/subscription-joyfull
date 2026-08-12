@@ -1,5 +1,7 @@
 document.querySelectorAll('.header-announcement-bar-slider').forEach(el => {
     if (!el.classList.contains('swiper-initialized')) {
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
         new Swiper(el, {
             loop: true,
             grabCursor: true,
@@ -10,6 +12,10 @@ document.querySelectorAll('.header-announcement-bar-slider').forEach(el => {
             autoHeight:!1,
             watchOverflow:!0,
             threshold:10,
+            keyboard:{
+                enabled:!0,
+                onlyInViewport:!0
+            },
             mousewheel:{
                 forceToAxis:!0
             },
@@ -18,9 +24,10 @@ document.querySelectorAll('.header-announcement-bar-slider').forEach(el => {
             fadeEffect: {
                 crossFade: true,
             },
-            autoplay: {
+            autoplay: prefersReducedMotion ? false : {
                 delay: 3000,
                 disableOnInteraction: false,
+                pauseOnMouseEnter: true,
             }
         })
     }

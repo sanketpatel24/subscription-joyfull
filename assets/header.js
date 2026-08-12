@@ -268,16 +268,18 @@ onDocumentLoaded(() => {
 
   // Update header group height on resize of any child
   if (headerGroup) {
-    const resizeObserver = new ResizeObserver((entries) => {
-      const headerGroupHeight = entries.reduce((totalHeight, entry) => {
-        if (
-          entry.target !== header ||
-          (header.hasAttribute('transparent') && header.parentElement?.nextElementSibling)
-        ) {
-          return totalHeight + (entry.borderBoxSize[0]?.blockSize ?? 0);
-        }
-        return totalHeight;
-      }, 0);
+    const resizeObserver = new ResizeObserver(() => {
+      let headerGroupHeight = 0;
+
+      for (const element of headerGroup.children) {
+        if (!(element instanceof HTMLElement) || element === header) continue;
+        headerGroupHeight += element.offsetHeight;
+      }
+
+      if (header instanceof HTMLElement && header.hasAttribute('transparent') && header.parentElement?.nextElementSibling) {
+        headerGroupHeight += header.offsetHeight;
+      }
+
       // The initial height is calculated using the .offsetHeight property, which returns an integer.
       // We round to the nearest integer to avoid unnecessaary reflows.
       const roundedHeaderGroupHeight = Math.round(headerGroupHeight);

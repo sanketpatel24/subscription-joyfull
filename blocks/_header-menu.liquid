@@ -1,4 +1,3 @@
-
 {%- doc -%}
   Renders a header menu block.
 
@@ -20,10 +19,11 @@
       {{ block.shopify_attributes }}
     >
       {% render 'header-drawer',
-        linklist: block_settings.menu,
+        linklist: block_settings.mobile_main_menu,
         data_header_drawer_type: 'mobile-drawer',
         block: block,
-        section: section
+        section: section,
+        mobile_inner_menu: block_settings.mobile_inner_menu
       %}
     </div>
 
@@ -92,10 +92,50 @@
     %}
 
     {% capture children %}
-      {% for link in block_settings.menu.links %}
+      {%- liquid
+        assign link_count = 0
+        for link in block.settings.menu.links
+          assign link_count = link_count | plus: 1
+        endfor
+
+        assign link_count_half = link_count | divided_by: 2.0 | ceil
+      -%}
+
+      {% if right_menu_item == "yes" %}
+        {%- assign offset = link_count_half %}
+      {% else %}
+        {%- assign limit = link_count_half %}
+      {% endif %}
+
+      {%- liquid
+        unless limit
+          assign limit = block.settings.menu.links.size
+        endunless
+        unless offset
+          assign offset = 0
+        endunless
+      -%}
+      
+      {% for link in block.settings.menu.links limit: limit offset: offset %}
+        
+        {% assign custom_megamenu = false  %}
+
+        {% assign nav_megamenu_selections = shop.metaobjects.nav_megamenu_selections.values %}
+        {% paginate shop.metaobjects.nav_megamenu_selections.values by 100 %}
+          {% for nav_megamenu_selections in nav_megamenu_selections %}
+
+            {% assign link_title = link.title | handleize %}
+            {% assign main_menu_title_text = nav_megamenu_selections.main_menu_title_text.value | handleize %}
+            
+            {% if main_menu_title_text == link_title %}
+              {%- assign custom_megamenu = true -%}
+            {% endif %}
+          {% endfor %}
+        {% endpaginate %}
+
         <li
           role="presentation"
-          class="menu-list__list-item"
+          class="menu-list__list-item{% if custom_megamenu %} custom-mega-menu__common custom-mega-menu__common-wide{% else %} custom-mega-menu__common custom-mega-menu__common-list{% endif %}"
           on:focus="/activate"
           on:blur="/deactivate"
           on:pointerenter="/activate"
@@ -104,7 +144,7 @@
           <a
             href="{{ link.url }}"
             data-skip-node-update="true"
-            class="menu-list__link{% if link.active %} menu-list__link--active{% endif %}"
+            class="menu-list__link{% if link.active %} menu-list__link--active{% endif %}{% if custom_megamenu %} custom-mega-menu__title-link{% endif %}"
             {%- if link.links != blank -%}
               aria-controls="submenu-{{ forloop.index }}"
               aria-haspopup="true"
@@ -115,13 +155,20 @@
             {% endif %}
             ref="menuitem"
           >
-            <span class="menu-list__link-title">{{- link.title -}}</span>
+            <span class="menu-list__link-title text-2 text-2--caps">
+              {{- link.title -}}
+              {% if custom_megamenu %}
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4 5.75L8.5 10.25L13 5.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              {% endif %}
+            </span>
           </a>
-          {%- if link.links != blank -%}
+          {%- if link.links != blank or custom_megamenu -%}
             <div class="menu-list__submenu{{ background_color_classes }}" ref="submenu[]">
               <div
                 id="submenu-{{ forloop.index }}"
-                class="menu-list__submenu-inner"
+                class="menu-list__submenu-inner {% if custom_megamenu %} mega-menu-custom {% endif %}"
                 style="{% render 'submenu-font-styles', settings: block_settings %}"
               >
                 {% assign list_id = 'MegaMenuList-' | append: forloop.index %}
@@ -133,39 +180,33 @@
                     {% render 'mega-menu-list',
                       parent_link: link,
                       id: list_id,
+                      block: block,
                       section: section,
                       grid_columns_count: 6,
                       grid_columns_count_tablet: 4,
                       grid_columns_count_collection_images: 8,
                       menu_content_type: menu_content_type,
                       content_aspect_ratio: ratio,
-                      image_border_radius: image_border_radius
+                      image_border_radius: image_border_radius,
+                      custom_megamenu: custom_megamenu
                     %}
                   </div>
+                </div>
+                <div class="mega-menu-curve">
+                  <svg width="1440" height="72" viewBox="0 0 1440 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 0V50.7882L33.1898 54.1262L37.4997 54.7556C37.4497 54.7556 37.3897 54.7365 37.3097 54.7079C37.3697 54.7222 37.4297 54.7413 37.4997 54.7556L88.2294 59.2237C177.289 67.0726 267.508 71.0209 358.937 71.8697C424.647 72.4801 488.896 70.9589 553.866 67.0249C615.476 63.2912 674.075 56.4627 732.995 47.4646C849.044 29.7353 997.603 25.0002 1118.33 27.9614L1152.97 28.8102C1155.2 29.7162 1158.42 29.3443 1161.18 29.3014L1165.17 29.2394C1257.65 32.5916 1349.73 38.929 1440 49.1049L1440 0H0Z" fill="{{ effective_submenu_color }}"/>
+                  </svg>
                 </div>
               </div>
             </div>
           {%- endif -%}
         </li>
       {% endfor %}
-      <li
-        class="menu-list__list-item"
-        role="presentation"
-        slot="more"
-        on:focus="/activate"
-        on:blur="/deactivate"
-        on:pointerenter="/activate"
-        on:pointerleave="/deactivate"
-      >
-        <button role="listitem" class="menu-list__link button-unstyled">
-          <span class="menu-list__link-title">{{ 'actions.more' | t }}</span>
-        </button>
-      </li>
     {% endcapture %}
 
     <header-menu
       ref="headerMenu"
-      class="header-menu"
+      class="header-menu header-menu__body"
       {{ block.shopify_attributes }}
       data-hydration-key="header-menu"
     >
@@ -175,15 +216,15 @@
           aria-label="{{ 'accessibility.header_navigation_label' | t }}"
           style="{% render 'menu-font-styles', settings: block_settings, menu_type: 'mega_menu' %}"
         >
-          {% assign class = 'overflow-menu' | append: background_color_classes %}
-          {% render 'overflow-list',
-            class: class,
-            ref: 'overflowMenu',
-            children: children,
-            minimum-items: 2,
-            data-testid: 'header-menu-overflow-list',
-            attributes: 'data-skip-node-update'
-          %}
+          <ul
+            class="menu-list__list list-unstyled{{ background_color_classes }}"
+            role="list"
+            ref="overflowMenu"
+            data-testid="header-menu-list"
+            data-skip-node-update
+          >
+            {{ children }}
+          </ul>
         </nav>
       </div>
 
@@ -196,7 +237,7 @@
 {% endcase %}
 
 {% style %}
-  .header__underlay {
+  #header-component {
     --color-submenu: rgb({{effective_submenu_color.rgb}});
   }
 {% endstyle %}
@@ -208,9 +249,11 @@
     align-items: center;
   }
 
-  #header-component[data-menu-style='drawer'] .header__drawer {
-    display: flex;
-    min-height: var(--header-drawer-min-height);
+  @media (min-width: 0px) and (max-width: 989px) {
+    #header-component[data-menu-style='drawer'] .header__drawer {
+      display: flex;
+      min-height: var(--header-drawer-min-height);
+    }
   }
 
   @media screen and (min-width: 750px) {
@@ -354,7 +397,7 @@
   .menu-list:where(:has(.menu-list__list-item:focus-within)),
   .menu-list:where(:has(.menu-list__list-item:not([aria-hidden='true']) .menu-list__link--active)) {
     .menu-list__link {
-      color: rgb(var(--menu-top-level-font-color-rgb) / var(--opacity-subdued-text));
+      color: rgb(var(--menu-top-level-font-color-rgb));
     }
   }
 
@@ -410,7 +453,8 @@
     padding-inline: var(--padding-inline);
     /* Clip path starts at header height so it doesn't mess with the pointer events in the header */
     clip-path: rect(var(--header-height) 100% var(--full-open-header-height) 0); /* stylelint-disable-line */
-    transition: clip-path var(--submenu-animation-speed) var(--ease-out-cubic); /* stylelint-disable-line */
+    transition: clip-path var(--submenu-animation-speed) var(--ease-out-cubic),
+      visibility 0s calc(var(--submenu-animation-speed) * 0.75); /* stylelint-disable-line */
   }
 
   [data-submenu-overlap-bottom-row] {
@@ -430,6 +474,7 @@
     --submenu-content-opacity: 1;
 
     visibility: visible;
+    transition: clip-path var(--submenu-animation-speed) var(--ease-out-cubic);
   }
 
   .overflow-menu::part(overflow) {
@@ -524,9 +569,9 @@
     display: inline-flex;
     padding: var(--padding-2xs) 0;
 
-    &:hover {
+    /*&:hover {
       color: var(--menu-child-active-font-color);
-    }
+    }*/
   }
 
   .mega-menu__link--parent {
@@ -710,8 +755,36 @@
     {
       "type": "link_list",
       "id": "menu",
-      "label": "t:settings.menu",
+      "label": "Desktop Main Menu",
       "default": "main-menu"
+    },
+    {
+      "type": "link_list",
+      "id": "mobile_main_menu",
+      "label": "Mobile Main Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "link_list",
+      "id": "mobile_inner_menu",
+      "label": "Mobile Inner Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "select",
+      "id": "common_button_style",
+      "label": "Common Button Style",
+      "default": "primary-button",
+      "options": [
+        {
+          "label": "Primary Button",
+          "value": "primary-button"
+        },
+        {
+          "label": "Secondary Button",
+          "value": "secondary-button"
+        }
+      ]
     },
     {
       "type": "header",
@@ -910,6 +983,19 @@
     {
       "type": "header",
       "content": "t:content.mobile_layout"
+    },
+    {
+      "type": "color",
+      "id": "background_color_mobile_menu",
+      "label": "Mobile menu background",
+      "info": "Overrides the Appearance background color above, for the mobile menu drawer only.",
+      "placeholder": "t:settings.default"
+    },
+    {
+      "type": "color",
+      "id": "text_color_mobile_menu",
+      "label": "Mobile menu text",
+      "placeholder": "t:settings.default"
     },
     {
       "type": "checkbox",

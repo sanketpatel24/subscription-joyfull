@@ -169,5 +169,14 @@
 @media (min-width: 750px) and (max-width: 992px) {
   .about-founder-story__heading{
     font-size: 32px;
+    max-width:100%;
   }
+  .about-founder-story__media {
+    --about-founder-media-padding-bottom: 101.5%;
+    position: absolute;
+    inset-block-start: 170px;
+    inset-inline-end: 50.5%;
+    width: 20rem;
+    transform: translate(50%);
+}
 }

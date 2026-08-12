@@ -59,6 +59,7 @@ html[scroll-lock] .page-wrapper {
     scroll-behavior: smooth;
     scrollbar-width: thin;
     scrollbar-color: rgb(var(--color-foreground-rgb) / var(--opacity-40)) var(--color-background);
+    scrollbar-gutter: stable;
   }
 
   .page-wrapper--drawer-open shopify-account::part(dialog) {
@@ -895,9 +896,8 @@ summary::-webkit-details-marker {
   display: none;
 }
 
-/* When header is transparent, pull the first main content section up to sit under the floating header */
 body:has(.header[transparent]) .content-for-layout > .shopify-section:first-child {
-  margin-top: calc(var(--header-group-height) * -1);
+  margin-top: 0;
 }
 
 body:has(.header[transparent]) #header-group > .header-section {
@@ -1458,10 +1458,6 @@ summary {
   cursor: pointer;
   list-style: none;
   padding-block: var(--padding-sm);
-}
-
-summary:hover {
-  color: rgb(var(--color-foreground-rgb) / var(--opacity-80));
 }
 
 summary .svg-wrapper {

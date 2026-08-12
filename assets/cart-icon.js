@@ -72,9 +72,6 @@ class CartIcon extends Component {
    * @param {boolean} [animate=true] - Whether to animate the bubble.
    */
   renderCartBubble = async (itemCount, animate = true) => {
-    this.refs.cartBubbleCount.classList.toggle('hidden', itemCount === 0);
-    this.refs.cartBubble.classList.toggle('visually-hidden', itemCount === 0);
-
     this.currentCartCount = itemCount;
 
     this.classList.toggle('header-actions__cart-icon--has-cart', itemCount > 0);

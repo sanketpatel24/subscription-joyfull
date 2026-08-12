@@ -1,0 +1,515 @@
+{{ 'index-content-marquee-bar.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'index-content-marquee-bar.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign benefits = section.settings.select_marquee
+  if benefits == blank and product != blank
+    assign benefits = product.metafields.custom.product_benefits_marquee.value
+  endif
+
+  assign scroll_speed = section.settings.scroll_speed
+  assign enable_infinite_loop = section.settings.enable_infinite_loop
+  assign pause_on_hover = section.settings.pause_on_hover
+  assign accessible_label = section.settings.accessible_label | default: 'Product benefits'
+-%}
+
+{%- if benefits != blank -%}
+  {%- liquid
+    assign sine_samples = '0,0.259,0.5,0.707,0.866,0.966,1,0.966,0.866,0.707,0.5,0.259,0,-0.259,-0.5,-0.707,-0.866,-0.966,-1,-0.966,-0.866,-0.707,-0.5,-0.259,0' | split: ','
+    assign wave_steps = 24
+    assign wave_breakpoints = 'mobile,desktop' | split: ','
+  -%}
+
+  {%- for wave_breakpoint in wave_breakpoints -%}
+    {%- liquid
+      if wave_breakpoint == 'desktop'
+        assign wave_amplitude = section.settings.desktop_wave_amplitude
+        assign wave_band_height = section.settings.desktop_wave_band_height
+        assign wave_length = section.settings.desktop_wave_length
+        assign wave_phase = section.settings.desktop_wave_phase
+      else
+        assign wave_amplitude = section.settings.mobile_wave_amplitude
+        assign wave_band_height = section.settings.mobile_wave_band_height
+        assign wave_length = section.settings.mobile_wave_length
+        assign wave_phase = section.settings.mobile_wave_phase
+      endif
+
+      assign wave_phase_offset = wave_length | times: wave_phase | divided_by: 100.0 | round: 2
+      assign wave_box_height = wave_amplitude | times: 2 | plus: wave_band_height
+      assign wave_mid = wave_box_height | divided_by: 2.0
+      assign wave_half_band = wave_band_height | divided_by: 2.0
+      assign wave_top_edge = ''
+      assign wave_bottom_edge = ''
+    -%}
+
+    {%- for step in (0..wave_steps) -%}
+      {%- liquid
+        assign wave_x = wave_length | times: step | divided_by: 24.0 | round: 2
+        assign wave_shift = sine_samples[step] | times: 1.0 | times: wave_amplitude
+        assign wave_top_y = wave_mid | minus: wave_shift | minus: wave_half_band | round: 2
+        assign wave_bottom_y = wave_mid | minus: wave_shift | plus: wave_half_band | round: 2
+      -%}
+      {%- capture wave_top_point -%}L{{ wave_x }},{{ wave_top_y }}{%- endcapture -%}
+      {%- capture wave_bottom_point -%}L{{ wave_x }},{{ wave_bottom_y }}{%- endcapture -%}
+      {%- assign wave_top_edge = wave_top_edge | append: wave_top_point -%}
+      {%- assign wave_bottom_edge = wave_bottom_point | append: wave_bottom_edge -%}
+    {%- endfor -%}
+
+    {%- liquid
+      assign wave_path = wave_top_edge | replace_first: 'L', 'M' | append: wave_bottom_edge | append: 'Z'
+    -%}
+    {%- capture wave_svg -%}<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 {{ wave_length }} {{ wave_box_height }}' preserveAspectRatio='none'><path d='{{ wave_path }}' fill='black'/></svg>{%- endcapture -%}
+    {%- assign wave_mask = wave_svg | replace: '<', '%3C' | replace: '>', '%3E' | replace: '"', '%22' | replace: '#', '%23' | replace: ' ', '%20' -%}
+
+    {%- if wave_breakpoint == 'desktop' -%}
+      {%- assign desktop_wave_mask = wave_mask -%}
+      {%- assign desktop_wave_box_height = wave_box_height -%}
+      {%- assign desktop_wave_phase_offset = wave_phase_offset -%}
+    {%- else -%}
+      {%- assign mobile_wave_mask = wave_mask -%}
+      {%- assign mobile_wave_box_height = wave_box_height -%}
+      {%- assign mobile_wave_phase_offset = wave_phase_offset -%}
+    {%- endif -%}
+  {%- endfor -%}
+
+  {%- style -%}
+    #shopify-section-{{ section.id }} {
+      {%- if section.settings.section_background_color != blank %}
+        --product-benefits-marquee-section-background: {{ section.settings.section_background_color }};
+      {%- endif %}
+      {%- if section.settings.marquee_background_color != blank %}
+        --product-benefits-marquee-band-background: {{ section.settings.marquee_background_color }};
+      {%- endif %}
+      --product-benefits-marquee-padding-start: {{ section.settings.mobile_top_padding }}px;
+      --product-benefits-marquee-padding-end: {{ section.settings.mobile_bottom_padding }}px;
+      --product-benefits-marquee-margin-start: {{ section.settings.mobile_top_margin }}px;
+      --product-benefits-marquee-margin-end: {{ section.settings.mobile_bottom_margin }}px;
+      --product-benefits-marquee-font-size: {{ section.settings.mobile_text_size }}px;
+      --product-benefits-marquee-gap: {{ section.settings.mobile_item_gap }}px;
+      --product-benefits-marquee-icon-size: {{ section.settings.mobile_icon_size }}px;
+      --product-benefits-marquee-dot-size: {{ section.settings.mobile_dot_size }}px;
+      --product-benefits-marquee-amplitude: {{ section.settings.mobile_wave_amplitude }}px;
+      --product-benefits-marquee-wavelength: {{ section.settings.mobile_wave_length }}px;
+      --product-benefits-marquee-phase: {{ mobile_wave_phase_offset }}px;
+      --product-benefits-marquee-wave-height: {{ mobile_wave_box_height }}px;
+      --product-benefits-marquee-wave-mask: url("data:image/svg+xml,{{ mobile_wave_mask }}");
+    }
+
+    @media (min-width: 990px) {
+      #shopify-section-{{ section.id }} {
+        --product-benefits-marquee-padding-start: {{ section.settings.desktop_top_padding }}px;
+        --product-benefits-marquee-padding-end: {{ section.settings.desktop_bottom_padding }}px;
+        --product-benefits-marquee-margin-start: {{ section.settings.desktop_top_margin }}px;
+        --product-benefits-marquee-margin-end: {{ section.settings.desktop_bottom_margin }}px;
+        --product-benefits-marquee-font-size: {{ section.settings.desktop_text_size }}px;
+        --product-benefits-marquee-gap: {{ section.settings.desktop_item_gap }}px;
+        --product-benefits-marquee-icon-size: {{ section.settings.desktop_icon_size }}px;
+        --product-benefits-marquee-dot-size: {{ section.settings.desktop_dot_size }}px;
+        --product-benefits-marquee-amplitude: {{ section.settings.desktop_wave_amplitude }}px;
+        --product-benefits-marquee-wavelength: {{ section.settings.desktop_wave_length }}px;
+        --product-benefits-marquee-phase: {{ desktop_wave_phase_offset }}px;
+        --product-benefits-marquee-wave-height: {{ desktop_wave_box_height }}px;
+        --product-benefits-marquee-wave-mask: url("data:image/svg+xml,{{ desktop_wave_mask }}");
+      }
+    }
+  {%- endstyle -%}
+
+  {%- capture benefits_sequence -%}
+    {%- for benefit in benefits -%}
+      {%- liquid
+        assign benefit_text = benefit.text.value | strip
+        assign benefit_icon = benefit.icon.value
+        assign benefit_text_color = benefit.text_color.value
+        assign benefit_background_color = benefit.background_color.value
+      -%}
+      {%- capture benefit_icon_tag -%}
+        {%- if benefit_icon != blank -%}
+          {{-
+            benefit_icon
+            | image_url: width: 96
+            | image_tag:
+              widths: '24, 48, 72, 96',
+              sizes: '24px',
+              loading: 'lazy',
+              decoding: 'async',
+              class: 'product-benefits-marquee-icon-image',
+              alt: ''
+          -}}
+        {%- endif -%}
+      {%- endcapture -%}
+      {%- assign benefit_icon_tag = benefit_icon_tag | strip -%}
+      {%- if benefit_text != blank or benefit_icon_tag != blank -%}
+        {%- capture benefit_style -%}
+          {%- if benefit_text_color != blank -%}--product-benefits-marquee-item-color:{{ benefit_text_color }};{%- endif -%}
+          {%- if benefit_background_color != blank -%}--product-benefits-marquee-item-background:{{ benefit_background_color }};{%- endif -%}
+        {%- endcapture -%}
+        <div
+          class="product-benefits-marquee-item"
+          data-product-benefits-marquee-item
+          {% if benefit_style != blank %}style="{{ benefit_style | strip }}"{% endif %}
+        >
+          {%- if benefit_text != blank -%}
+            <span class="product-benefits-marquee-content{% if benefit_background_color != blank %} product-benefits-marquee-content--filled{% endif %}">
+              <span class="product-benefits-marquee-text" aria-label="{{ benefit_text | escape }}">
+                {%- assign benefit_characters = benefit_text | split: '' -%}
+                {%- for character in benefit_characters -%}
+                  <span class="product-benefits-marquee-character" data-product-benefits-marquee-element aria-hidden="true">{%- if character == ' ' -%}&nbsp;{%- else -%}{{ character | escape }}{%- endif -%}</span>
+                {%- endfor -%}
+              </span>
+            </span>
+          {%- endif -%}
+          {%- if benefit_icon_tag != blank -%}
+            <span class="product-benefits-marquee-icon" data-product-benefits-marquee-element>{{ benefit_icon_tag }}</span>
+          {%- elsif section.settings.show_dot_separator -%}
+            <span class="product-benefits-marquee-dot" data-product-benefits-marquee-element><svg width="5" height="4" viewBox="0 0 5 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M1.57881 3.81204C1.0194 3.75309 0.604569 3.55226 0.334307 3.20955C0.0718142 2.86767 -0.0360996 2.47529 0.0105657 2.03243C0.0670552 1.49633 0.291199 1.00933 0.682996 0.571413C1.07479 0.133497 1.58147 -0.0527135 2.20303 0.0127816C2.72359 0.0676338 3.17378 0.342889 3.55362 0.838547C3.94123 1.33502 4.10351 1.88239 4.04047 2.48064C4.01673 2.70595 3.89669 2.91326 3.68035 3.10257C3.47177 3.2927 3.22845 3.43989 2.95037 3.54413C2.68088 3.64143 2.41773 3.71582 2.16091 3.76732C1.91269 3.81187 1.71866 3.82677 1.57881 3.81204Z" fill="var(--color-onyx)"/>
+</svg>
+</span>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+
+  <section
+    class="product-benefits-marquee"
+    aria-label="{{ accessible_label | escape }}"
+    data-product-benefits-marquee
+    data-speed="{{ scroll_speed }}"
+    data-loop="{{ enable_infinite_loop }}"
+    data-pause-on-hover="{{ pause_on_hover }}"
+  >
+    <ul class="product-benefits-marquee-summary">
+      {%- for benefit in benefits -%}
+        {%- if benefit.text.value != blank -%}
+          <li>{{ benefit.text.value | escape }}</li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+
+    <div class="product-benefits-marquee-band" aria-hidden="true"></div>
+
+    <div class="product-benefits-marquee-viewport" aria-hidden="true" data-product-benefits-marquee-viewport>
+      <div class="product-benefits-marquee-track" data-product-benefits-marquee-track>
+        <div class="product-benefits-marquee-group" data-product-benefits-marquee-group>
+          {{- benefits_sequence -}}
+        </div>
+        {%- if enable_infinite_loop -%}
+          <div class="product-benefits-marquee-group" data-product-benefits-marquee-clone>
+            {{- benefits_sequence -}}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+    "name": "Index Content Marquee Bar",
+    "class": "index-content-marquee-bar__section",
+    "tag": "div",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Content Settings"
+        },
+        {
+            "type": "text",
+            "id": "accessible_label",
+            "label": "Accessible Label",
+            "default": "Product benefits",
+            "info": "Announced by screen readers as the name of this region."
+        },
+        {
+            "type": "metaobject_list",
+            "id": "select_marquee",
+            "label": "Select marquee",
+            "info": "Leave blank on the product page to use each product's own benefits metafield instead.",
+            "metaobject_type": "product_benefit"
+        },
+        {
+            "type": "header",
+            "content": "Color Settings"
+        },
+        {
+            "type": "color",
+            "id": "section_background_color",
+            "label": "Section Background Color",
+            "default": "#FFF9F0"
+        },
+        {
+            "type": "color",
+            "id": "marquee_background_color",
+            "label": "Marquee Background Color",
+            "default": "#8FC9C9"
+        },
+        {
+            "type": "header",
+            "content": "Motion Settings"
+        },
+        {
+            "type": "range",
+            "id": "scroll_speed",
+            "label": "Scroll Speed",
+            "min": 10,
+            "max": 200,
+            "step": 5,
+            "unit": "px",
+            "default": 40,
+            "info": "Pixels travelled per second."
+        },
+        {
+            "type": "checkbox",
+            "id": "enable_infinite_loop",
+            "label": "Enable Infinite Loop",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "pause_on_hover",
+            "label": "Pause On Hover",
+            "default": true,
+            "info": "Applies to devices with a fine pointer only."
+        },
+        {
+            "type": "header",
+            "content": "Item Settings"
+        },
+        {
+            "type": "checkbox",
+            "id": "show_dot_separator",
+            "label": "Show Dot Separator",
+            "default": true,
+            "info": "Used only for benefits with no Icon. When a benefit has an Icon, that image replaces the dot."
+        },
+        {
+            "type": "range",
+            "id": "desktop_text_size",
+            "label": "Desktop Text Size",
+            "min": 12,
+            "max": 44,
+            "step": 1,
+            "unit": "px",
+            "default": 24
+        },
+        {
+            "type": "range",
+            "id": "desktop_item_gap",
+            "label": "Desktop Item Spacing",
+            "min": 8,
+            "max": 80,
+            "step": 2,
+            "unit": "px",
+            "default": 20
+        },
+        {
+            "type": "range",
+            "id": "desktop_icon_size",
+            "label": "Desktop Icon Size",
+            "min": 12,
+            "max": 64,
+            "step": 1,
+            "unit": "px",
+            "default": 12
+        },
+        {
+            "type": "range",
+            "id": "desktop_dot_size",
+            "label": "Desktop Dot Size",
+            "min": 2,
+            "max": 16,
+            "step": 1,
+            "unit": "px",
+            "default": 5
+        },
+        {
+            "type": "range",
+            "id": "mobile_text_size",
+            "label": "Mobile Text Size",
+            "min": 10,
+            "max": 32,
+            "step": 1,
+            "unit": "px",
+            "default": 24
+        },
+        {
+            "type": "range",
+            "id": "mobile_item_gap",
+            "label": "Mobile Item Spacing",
+            "min": 6,
+            "max": 56,
+            "step": 2,
+            "unit": "px",
+            "default": 18
+        },
+        {
+            "type": "range",
+            "id": "mobile_icon_size",
+            "label": "Mobile Icon Size",
+            "min": 10,
+            "max": 48,
+            "step": 1,
+            "unit": "px",
+            "default": 20
+        },
+        {
+            "type": "range",
+            "id": "mobile_dot_size",
+            "label": "Mobile Dot Size",
+            "min": 2,
+            "max": 12,
+            "step": 1,
+            "unit": "px",
+            "default": 5
+        },
+        {
+            "type": "header",
+            "content": "==== Wave Settings ===="
+        },
+        {
+            "type": "range",
+            "id": "desktop_wave_band_height",
+            "label": "Desktop Wave Thickness",
+            "min": 24,
+            "max": 120,
+            "step": 1,
+            "unit": "px",
+            "default": 56
+        },
+        {
+            "type": "range",
+            "id": "desktop_wave_amplitude",
+            "label": "Desktop Wave Amplitude",
+            "min": 0,
+            "max": 48,
+            "step": 1,
+            "unit": "px",
+            "default": 25
+        },
+        {
+            "type": "range",
+            "id": "desktop_wave_length",
+            "label": "Desktop Wave Length",
+            "min": 320,
+            "max": 1800,
+            "step": 20,
+            "unit": "px",
+            "default": 1660
+        },
+        {
+            "type": "range",
+            "id": "desktop_wave_phase",
+            "label": "Desktop Wave Start Point",
+            "min": 0,
+            "max": 100,
+            "step": 5,
+            "unit": "%",
+            "default": 55,
+            "info": "Where the wave begins at the left edge. 25% starts on a crest, 75% starts in a dip."
+        },
+        {
+            "type": "range",
+            "id": "mobile_wave_band_height",
+            "label": "Mobile Wave Thickness",
+            "min": 20,
+            "max": 90,
+            "step": 1,
+            "unit": "px",
+            "default": 48
+        },
+        {
+            "type": "range",
+            "id": "mobile_wave_amplitude",
+            "label": "Mobile Wave Amplitude",
+            "min": 0,
+            "max": 32,
+            "step": 1,
+            "unit": "px",
+            "default": 13
+        },
+        {
+            "type": "range",
+            "id": "mobile_wave_length",
+            "label": "Mobile Wave Length",
+            "min": 200,
+            "max": 1000,
+            "step": 25,
+            "unit": "px",
+            "default": 375
+        },
+        {
+            "type": "range",
+            "id": "mobile_wave_phase",
+            "label": "Mobile Wave Start Point",
+            "min": 0,
+            "max": 100,
+            "step": 5,
+            "unit": "%",
+            "default": 50,
+            "info": "Where the wave begins at the left edge. 25% starts on a crest, 75% starts in a dip."
+        },
+        {
+            "type": "header",
+            "content": "Padding Settings"
+        },
+        {
+            "type": "number",
+            "id": "desktop_top_padding",
+            "label": "Desktop Top Padding",
+            "default": 0
+        },
+        {
+            "type": "number",
+            "id": "desktop_bottom_padding",
+            "label": "Desktop Bottom Padding",
+            "default": 0
+        },
+        {
+            "type": "number",
+            "id": "mobile_top_padding",
+            "label": "Mobile Top Padding",
+            "default": 0
+        },
+        {
+            "type": "number",
+            "id": "mobile_bottom_padding",
+            "label": "Mobile Bottom Padding",
+            "default": 0
+        },
+        {
+            "type": "header",
+            "content": "Margin Settings"
+        },
+        {
+            "type": "number",
+            "id": "desktop_top_margin",
+            "label": "Desktop Top Margin",
+            "default": 0
+        },
+        {
+            "type": "number",
+            "id": "desktop_bottom_margin",
+            "label": "Desktop Bottom Margin",
+            "default": 0
+        },
+        {
+            "type": "number",
+            "id": "mobile_top_margin",
+            "label": "Mobile Top Margin",
+            "default": 0
+        },
+        {
+            "type": "number",
+            "id": "mobile_bottom_margin",
+            "label": "Mobile Bottom Margin",
+            "default": 0
+        }
+    ],
+    "presets": [
+        {
+            "name": "Index Content Marquee Bar"
+        }
+    ]
+}
+{% endschema %}

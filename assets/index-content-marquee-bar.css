@@ -1,0 +1,164 @@
+.product-benefits-marquee {
+  --product-benefits-marquee-chip-radius: 6.25rem;
+  position: relative;
+  z-index: var(--layer-flat);
+  display: grid;
+  grid-template-columns: 100%;
+  overflow: hidden;
+  padding-block: var(--product-benefits-marquee-padding-start, var(--spacing-12))
+    var(--product-benefits-marquee-padding-end, var(--spacing-12));
+  background: var(--product-benefits-marquee-section-background, var(--color-off-white));
+  margin-top: var(--product-benefits-marquee-margin-start);
+  margin-bottom: var(--product-benefits-marquee-margin-end);
+}
+
+.product-benefits-marquee-summary {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  list-style: none;
+}
+
+.product-benefits-marquee-band,
+.product-benefits-marquee-viewport {
+  grid-column: 1;
+  grid-row: 1;
+  height: var(--product-benefits-marquee-wave-height, var(--spacing-62));
+}
+
+.product-benefits-marquee-band {
+  z-index: var(--layer-flat);
+  background-color: var(--product-benefits-marquee-band-background, var(--color-aqua));
+  -webkit-mask-image: var(--product-benefits-marquee-wave-mask);
+  mask-image: var(--product-benefits-marquee-wave-mask);
+  -webkit-mask-repeat: repeat-x;
+  mask-repeat: repeat-x;
+  -webkit-mask-position: calc(var(--product-benefits-marquee-phase, 0px) * -1) center;
+  mask-position: calc(var(--product-benefits-marquee-phase, 0px) * -1) center;
+  -webkit-mask-size: var(--product-benefits-marquee-wavelength, 420px) 100%;
+  mask-size: var(--product-benefits-marquee-wavelength, 420px) 100%;
+  pointer-events: none;
+}
+
+.product-benefits-marquee-viewport {
+  position: relative;
+  z-index: var(--layer-raised);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.product-benefits-marquee-track {
+  position: relative;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  width: max-content;
+  will-change: transform;
+}
+
+.product-benefits-marquee-group {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.product-benefits-marquee-item {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: var(--spacing-21);
+  padding-inline-end: var(--spacing-21);
+  color: var(--product-benefits-marquee-item-color, var(--color-onyx));
+  white-space: nowrap;
+  backface-visibility: hidden;
+}
+
+.product-benefits-marquee-content {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-8);
+}
+
+.product-benefits-marquee-content--filled {
+  padding: var(--spacing-4) var(--spacing-12);
+  border-radius: var(--product-benefits-marquee-chip-radius);
+  background: var(--product-benefits-marquee-item-background, transparent);
+}
+
+.product-benefits-marquee-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: var(--spacing-5);
+  height: var(--spacing-4);
+}
+
+.product-benefits-marquee-icon-image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.product-benefits-marquee-text {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-burned-pancakes--family);
+  font-size: var(--font-size-24);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+.product-benefits-marquee-character {
+  display: inline-block;
+  flex: 0 0 auto;
+  backface-visibility: hidden;
+  transform-origin: center;
+}
+
+.product-benefits-marquee-dot {
+  flex: 0 0 auto;
+  width: var(--spacing-5);
+  height: var(--spacing-4);
+}
+
+.product-benefits-marquee[data-loop='false'] .product-benefits-marquee-viewport {
+  justify-content: center;
+}
+
+@keyframes product-benefits-marquee-scroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.product-benefits-marquee[data-loop='true'] .product-benefits-marquee-track {
+  animation: product-benefits-marquee-scroll var(--product-benefits-marquee-fallback-duration, 32s) linear infinite;
+}
+
+.product-benefits-marquee[data-enhanced='true'] .product-benefits-marquee-track {
+  animation: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .product-benefits-marquee[data-pause-on-hover='true']:hover .product-benefits-marquee-track {
+    animation-play-state: paused;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-benefits-marquee-track {
+    animation: none;
+  }
+}

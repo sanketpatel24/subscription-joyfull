@@ -20,6 +20,9 @@
     open_column_span tracks when a vertical column in the mega menu is open. Links will be stacked
     in the column until the code closes the column span.
   endcomment
+
+  assign block_settings = block.settings
+
   assign open_column_span = false
   assign column_count = 0
   assign links_before_wrap = 10
@@ -343,4 +346,238 @@
         {% endfor %}
       </ul>
     </span>
+  {% when 'text' %}
+    {% if custom_megamenu %}
+      <div class="megamenu-list__body">
+        <div class="megamenu-list__body-wrap">
+          {%- if shop.metaobjects.nav_megamenu_selections.values -%}          
+            {%- assign nav_megamenu_selections = shop.metaobjects.nav_megamenu_selections.values -%}
+            {%- paginate shop.metaobjects.nav_megamenu_selections.values by 100 -%}
+              {%- for nav_megamenu_selections in nav_megamenu_selections -%}
+                {%- assign link_title = parent_link.title | handleize -%}
+                {%- assign main_menu_title_text = nav_megamenu_selections.main_menu_title_text.value | handleize -%}                    
+                {% if main_menu_title_text == link_title %}
+                  {%- liquid
+                    assign select_card_block_list = nav_megamenu_selections.select_card_block_list.value
+                    assign select_grid_block_list = nav_megamenu_selections.select_grid_block_list.value
+                    assign common_button_text = nav_megamenu_selections.common_button_text.value
+                    assign common_button_link = nav_megamenu_selections.common_button_link.value
+                    assign common_button_style = block_settings.common_button_style
+                  -%}
+                  {%- if select_card_block_list != blank or common_button_link != blank -%}
+                    <div class="megamenu-list__part">
+                      <div class="megamenu-list__part-wrap">
+                        {%- if select_card_block_list != blank -%}
+                          <div class="megamenu-list__loop">
+                            <div class="megamenu-list__loop-wrap">
+                              {%- for select_card_block_list in select_card_block_list -%}
+                                {%- liquid
+                                  assign desktop_image_video = select_card_block_list.desktop_image_video.value
+                                  assign mobile_image_video = select_card_block_list.mobile_image_video.value
+                                  assign custom_heading_text = select_card_block_list.custom_heading_text.value
+                                  assign custom_redirect_link = select_card_block_list.custom_redirect_link.value
+                                -%}
+                                {%- if desktop_image_video != blank or mobile_image_video != blank or custom_heading_text != blank -%}
+                                  <div class="megamenu-list__card">
+                                    {%- if custom_redirect_link != blank -%}
+                                      <a href="{{ custom_redirect_link }}">
+                                    {%- endif -%}
+                                        <div class="megamenu-list__card-wrap">
+                                          {%- if desktop_image_video != blank or mobile_image_video != blank -%}
+                                            {%- if mobile_image_video != blank -%}
+                                              {%- assign video_class = 'video--desktop' -%}
+                                            {%- else -%}
+                                              {%- assign video_class = 'video--desktop video--mobile' -%}
+                                            {%- endif -%}
+                                            {%- if desktop_image_video != blank -%}
+                                              <div class="megamenu-list__card-wrap-media{% if mobile_image_video != blank %} show--desktop{% endif %}">
+                                                <div class="megamenu-list__card-wrap-media-wrap">
+                                                  {%- if desktop_image_video contains 'files' -%}
+                                                    {% render 'responsive-image-lazyload',
+                                                      desktop_image: desktop_image_video,
+                                                      mobile_image: desktop_image_video,
+                                                      class: 'custom--image',
+                                                      sizes: '(max-width: 749px) 100vw, 100vw'
+                                                    %}
+                                                  {%- else -%}
+                                                    {% render 'responsive-video-lazyload',
+                                                      video_url: desktop_image_video,
+                                                      class: video_class
+                                                    %}
+                                                  {%- endif -%}
+                                                </div>
+                                              </div>
+                                            {%- endif -%}
+                                            {%- if mobile_image_video != blank -%}
+                                              <div class="megamenu-list__card-wrap-media show--mobile">
+                                                <div class="megamenu-list__card-wrap-media-wrap">
+                                                  {%- if mobile_image_video contains 'files' -%}
+                                                    {% render 'responsive-image-lazyload',
+                                                      desktop_image: mobile_image_video,
+                                                      mobile_image: mobile_image_video,
+                                                      class: 'custom--image',
+                                                      sizes: '(max-width: 749px) 100vw, 100vw'
+                                                    %}
+                                                  {%- else -%}
+                                                    {% render 'responsive-video-lazyload',
+                                                      video_url: mobile_image_video,
+                                                      class: 'video--mobile'
+                                                    %}
+                                                  {%- endif -%}
+                                                </div>
+                                              </div>
+                                            {%- endif -%}
+                                          {%- endif -%}
+                                          {%- if custom_heading_text != blank -%}
+                                            <div class="megamenu-list__card-wrap-title">
+                                              <div class="subtitle-2 megamenu-list__card-wrap-title-wrap">
+                                                {{ custom_heading_text }}
+                                              </div>
+                                            </div>
+                                          {%- endif -%}
+                                        </div>
+                                    {%- if custom_redirect_link != blank -%}
+                                      </a>
+                                    {%- endif -%}
+                                  </div>
+                                {%- endif -%}
+                              {%- endfor -%}
+                            </div>
+                          </div>
+                        {%- endif -%}
+                        {%- if common_button_text != blank and common_button_link != blank -%}
+                          <div class="megamenu-list__link">
+                            <div class="megamenu-list__link-wrap">
+                              {%- render 'button-common-style',
+                                main_button_text: common_button_text,
+                                main_button_link: common_button_link,
+                                main_button_style: common_button_style
+                              -%}
+                            </div>
+                          </div>
+                        {%- endif -%}
+                      </div>
+                    </div>
+                  {%- endif -%}
+                  {%- if select_grid_block_list != blank -%}
+                    <div class="megamenu-list__item">
+                      <div class="megamenu-list__item-wrap">
+                        <div class="swiper megamenu-list-grid-slider">
+                          <div class="swiper-wrapper">
+                            {%- for select_grid_block_list in select_grid_block_list -%}
+                              {%- liquid
+                                assign desktop_image_video = select_grid_block_list.desktop_image_video.value
+                                assign mobile_image_video = select_grid_block_list.mobile_image_video.value
+                                assign custom_badged_text = select_grid_block_list.custom_badged_text.value
+                                assign custom_subtext_text = select_grid_block_list.custom_subtext_text.value
+                                assign custom_heading_text = select_grid_block_list.custom_heading_text.value
+                                assign custom_caption_text = select_grid_block_list.custom_caption_text
+                                assign custom_redirect_link = select_grid_block_list.custom_redirect_link.value
+                              -%}
+                              {%- if desktop_image_video != blank or mobile_image_video != blank or custom_heading_text != blank or custom_caption_text != blank -%}
+                                <div class="swiper-slide megamenu-list__grid">
+                                  {%- if custom_redirect_link != blank -%}
+                                    <a href="{{ custom_redirect_link }}">
+                                  {%- endif -%}
+                                      <div class="megamenu-list__grid-wrap">
+                                        {%- if desktop_image_video != blank or mobile_image_video != blank -%}
+                                          <div class="megamenu-list__grid-wrap-both">
+                                            <div class="megamenu-list__grid-wrap-both-wrap">
+                                              {%- if desktop_image_video != blank or mobile_image_video != blank -%}
+                                                {%- if mobile_image_video != blank -%}
+                                                  {%- assign video_class = 'video--desktop' -%}
+                                                {%- else -%}
+                                                  {%- assign video_class = 'video--desktop video--mobile' -%}
+                                                {%- endif -%}
+                                                {%- if desktop_image_video != blank -%}
+                                                  <div class="megamenu-list__grid-wrap-media{% if mobile_image_video != blank %} show--desktop{% endif %}">
+                                                    <div class="megamenu-list__grid-wrap-media-wrap">
+                                                      {%- if desktop_image_video contains 'files' -%}
+                                                        {% render 'responsive-image-lazyload',
+                                                          desktop_image: desktop_image_video,
+                                                          mobile_image: desktop_image_video,
+                                                          class: 'custom--image',
+                                                          sizes: '(max-width: 749px) 100vw, 100vw'
+                                                        %}
+                                                      {%- else -%}
+                                                        {% render 'responsive-video-lazyload',
+                                                          video_url: desktop_image_video,
+                                                          class: video_class
+                                                        %}
+                                                      {%- endif -%}
+                                                    </div>
+                                                  </div>
+                                                {%- endif -%}
+                                                {%- if mobile_image_video != blank -%}
+                                                  <div class="megamenu-list__grid-wrap-media show--mobile">
+                                                    <div class="megamenu-list__grid-wrap-media-wrap">
+                                                      {%- if mobile_image_video contains 'files' -%}
+                                                        {% render 'responsive-image-lazyload',
+                                                          desktop_image: mobile_image_video,
+                                                          mobile_image: mobile_image_video,
+                                                          class: 'custom--image',
+                                                          sizes: '(max-width: 749px) 100vw, 100vw'
+                                                        %}
+                                                      {%- else -%}
+                                                        {% render 'responsive-video-lazyload',
+                                                          video_url: mobile_image_video,
+                                                          class: 'video--mobile'
+                                                        %}
+                                                      {%- endif -%}
+                                                    </div>
+                                                  </div>
+                                                {%- endif -%}
+                                              {%- endif -%}
+                                              {%- if custom_badged_text != blank -%}
+                                                <div class="megamenu-list__grid-wrap-badge">
+                                                  <div class="badge-small megamenu-list__grid-wrap-badge-wrap">
+                                                    {{ custom_badged_text }}
+                                                  </div>
+                                                </div>
+                                              {%- endif -%}
+                                              {%- if custom_subtext_text != blank -%}
+                                                <div class="megamenu-list__grid-wrap-texts">
+                                                  <div class="badge-small megamenu-list__grid-wrap-texts-wrap">
+                                                    {{ custom_subtext_text }}
+                                                  </div>
+                                                </div>
+                                              {%- endif -%}
+                                            </div>
+                                          </div>
+                                        {%- endif -%}
+                                        {%- if custom_heading_text != blank or custom_caption_text != blank -%}
+                                          <div class="megamenu-list__grid-wrap-block">
+                                            <div class="megamenu-list__grid-wrap-block-wrap">
+                                              {%- if custom_heading_text != blank -%}
+                                                <div class="subtitle-2 megamenu-list__grid-wrap-title">
+                                                  {{ custom_heading_text }}
+                                                </div>
+                                              {%- endif -%}
+                                              {%- if custom_caption_text != blank -%}
+                                                <div class="text-2 megamenu-list__grid-wrap-infos">
+                                                  {{ custom_caption_text | metafield_tag }}
+                                                </div>
+                                              {%- endif -%}
+                                            </div>
+                                          </div>
+                                        {%- endif -%}
+                                      </div>
+                                  {%- if custom_redirect_link != blank -%}
+                                    </a>
+                                  {%- endif -%}
+                                </div>
+                              {%- endif -%}
+                            {%- endfor -%}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  {%- endif -%}
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endpaginate -%}                          
+          {%- endif -%}
+        </div>
+      </div>    
+    {% endif %}
 {% endcase %}

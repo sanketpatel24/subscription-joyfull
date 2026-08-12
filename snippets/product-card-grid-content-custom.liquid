@@ -14,8 +14,10 @@
 <div class="product-card-content__body">
     <div class="product-card-content__body-wrap">
         {%- if product.metafields.judgeme.badge -%}
-            <div class="jdgm-widget jdgm-preview-badge text-3 product-card-content__review" data-id="{{ product.id }}" data-product-title="{{ product.title | escape }}" data-auto-install='false'>
-                {{ product.metafields.judgeme.badge }}
+            <div class="product-card-content__review">
+                <div class='jdgm-widget jdgm-preview-badge text-3' data-id='{{ product.id }}' data-auto-install='false'>
+                    {{ product.metafields.judgeme.badge }}
+                </div>
             </div>
         {%- endif -%}
         {%- if product_title != blank -%}

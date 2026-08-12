@@ -16,10 +16,22 @@
 
     assign main_common_video = block.settings.main_common_video
     assign main_common_image = block.settings.main_common_image
-    assign main_custom_image_1 = block.settings.main_custom_image_1
-    assign main_custom_text_1 = block.settings.main_custom_text_1
-    assign main_custom_image_2 = block.settings.main_custom_image_2
-    assign main_custom_text_2 = block.settings.main_custom_text_2
+    assign product_image_1 = block.settings.product_image_1
+    assign product_title_1 = block.settings.product_title_1
+    assign product_link_1 = block.settings.product_link_1
+    assign product_image_2 = block.settings.product_image_2
+    assign product_title_2 = block.settings.product_title_2
+    assign product_link_2 = block.settings.product_link_2
+
+    if forloop_index == 1
+        assign img_loading = 'eager'
+        assign img_fetchpriority = 'high'
+        assign img_rel = 'preload'
+    else
+        assign img_loading = 'lazy'
+        assign img_fetchpriority = 'low'
+        assign img_rel = ''
+    endif
 -%}
 
 {%- style -%}
@@ -33,8 +45,8 @@
     }
 {%- endstyle -%}
 
-{%- if main_desktop_video != blank or main_desktop_image != blank or main_mobile_video != blank or main_mobile_image != blank or custom_text != blank or heading_text != blank or details_text != blank or button_link != blank or main_common_video != blank or main_common_image != blank or main_custom_image_1 != blank or main_custom_text_1 != blank or main_custom_image_2 != blank or main_custom_text_2 != blank -%}
-    <div class="swiper-slide slideshow-split slideshow-split__{{ block.id }}">
+{%- if main_desktop_video != blank or main_desktop_image != blank or main_mobile_video != blank or main_mobile_image != blank or custom_text != blank or heading_text != blank or details_text != blank or button_link != blank or main_common_video != blank or main_common_image != blank or product_image_1 != blank or product_title_1 != blank or product_image_2 != blank or product_title_2 != blank -%}
+    <div class="swiper-slide slideshow-split slideshow-split__{{ block.id }}" data-need-transparent-header="false">
         <div class="slideshow-split__body">
             {%- if main_desktop_video != blank or main_desktop_image != blank or main_mobile_video != blank or main_mobile_image != blank -%}
                 {% if main_mobile_video != blank or main_mobile_image != blank %}
@@ -56,9 +68,9 @@
                                     mobile_image: main_desktop_image,
                                     class: 'custom--image',
                                     sizes: '(max-width: 749px) 100vw, 100vw',
-                                    fetchpriority: 'high',
-                                    loading: 'eager',
-                                    rel: 'preload'                                                                            
+                                    fetchpriority: img_fetchpriority,
+                                    loading: img_loading,
+                                    rel: img_rel
                                 %}
                             {%- endif -%}
                         </div>
@@ -78,16 +90,16 @@
                                     mobile_image: main_mobile_image,
                                     class: 'custom--image',
                                     sizes: '(max-width: 749px) 100vw, 100vw',
-                                    fetchpriority: 'high',
-                                    loading: 'eager',
-                                    rel: 'preload'                                                                            
+                                    fetchpriority: img_fetchpriority,
+                                    loading: img_loading,
+                                    rel: img_rel
                                 %}
                             {%- endif -%}
                         </div>
                     </div>
                 {%- endif -%}
             {%- endif -%}
-            {%- if custom_text != blank or heading_text != blank or details_text != blank or button_link != blank or main_common_video != blank or main_common_image != blank or main_custom_image_1 != blank or main_custom_text_1 != blank or main_custom_image_2 != blank or main_custom_text_2 != blank -%}
+            {%- if custom_text != blank or heading_text != blank or details_text != blank or button_link != blank or main_common_video != blank or main_common_image != blank or product_image_1 != blank or product_title_1 != blank or product_image_2 != blank or product_title_2 != blank -%}
                 <div class="slideshow-split__right">
                     <div class="slideshow-split__right-wrap">
                         {%- if custom_text != blank or heading_text != blank or details_text != blank or button_link != blank -%}
@@ -95,23 +107,23 @@
                                 <div class="slideshow-split__list-wrap">
                                     {%- if custom_text != blank -%}
                                         <div class="title-small title-small--caps slideshow-split__list-text">
-                                            {{ custom_text | newline_to_br }}
-                                        </div>                                    
+                                            {{ custom_text | escape | newline_to_br }}
+                                        </div>
                                     {%- endif -%}
                                     {%- if heading_text != blank -%}
-                                        <div class="heading-l slideshow-split__list-title">
+                                        <div class="slideshow-split__list-title">
                                             {%- if forloop_index == 1 -%}
-                                                <{{ main_heading_size }}>
+                                                <{{ main_heading_size }} class="heading-l">
                                             {%- else -%}
-                                                <span>
+                                                <h2 class="heading-l">
                                             {%- endif -%}
-                                                    {{ heading_text | newline_to_br }}
+                                                    {{ heading_text | escape | newline_to_br }}
                                             {%- if forloop_index == 1 -%}
                                                 </{{ main_heading_size }}>
                                             {%- else -%}
-                                                </span>
+                                            </h2>
                                             {%- endif -%}
-                                        </div>                                    
+                                        </div>
                                     {%- endif -%}
                                     {%- if details_text != blank -%}
                                         <div class="text-common slideshow-split__list-info">
@@ -130,7 +142,7 @@
                                 </div>
                             </div>
                         {%- endif -%}
-                        {%- if main_common_video != blank or main_common_image != blank or main_custom_image_1 != blank or main_custom_text_1 != blank or main_custom_image_2 != blank or main_custom_text_2 != blank -%}
+                        {%- if main_common_video != blank or main_common_image != blank or product_image_1 != blank or product_title_1 != blank or product_image_2 != blank or product_title_2 != blank -%}
                             <div class="slideshow-split__part">
                                 <div class="slideshow-split__part-wrap">
                                     {%- if main_common_video != blank or main_common_image != blank -%}
@@ -147,60 +159,78 @@
                                                         mobile_image: main_common_image,
                                                         class: 'custom--image',
                                                         sizes: '(max-width: 749px) 100vw, 100vw',
-                                                        fetchpriority: 'high',
-                                                        loading: 'eager',
-                                                        rel: 'preload'
+                                                        fetchpriority: img_fetchpriority,
+                                                        loading: img_loading,
+                                                        rel: img_rel
                                                     %}
                                                 {%- endif -%}
                                             </div>
                                         </div>
                                     {%- endif -%}
-                                    {%- if main_custom_image_1 != blank or main_custom_text_1 != blank or main_custom_image_2 != blank or main_custom_text_2 != blank -%}
+                                    {%- if product_image_1 != blank or product_title_1 != blank or product_image_2 != blank or product_title_2 != blank -%}
                                         <div class="slideshow-split__part-block">
                                             <div class="slideshow-split__part-block-wrap">
-                                                {%- if main_custom_image_1 != blank or main_custom_text_1 != blank -%}
+                                                {%- if product_image_1 != blank or product_title_1 != blank -%}
                                                     <div class="slideshow-split__part-block-both">
-                                                        {%- if main_custom_image_1 != blank -%}
-                                                            <div class="slideshow-split__part-block-both-image">
-                                                                {% render 'responsive-image-lazyload',
-                                                                    desktop_image: main_custom_image_1,
-                                                                    mobile_image: main_custom_image_1,
-                                                                    class: 'Custom_icon_new',
-                                                                    sizes: '(max-width: 749px) 100vw, 100vw',
-                                                                    alt: 'custom--image',
-                                                                    fetchpriority: 'high',
-                                                                    loading: 'eager',
-                                                                    rel: 'preload'
-                                                                %}
-                                                            </div>
+                                                        {%- if product_image_1 != blank -%}
+                                                        <a href="{{ product_link_1 | escape }}">
                                                         {%- endif -%}
-                                                        {%- if main_custom_text_1 != blank -%}
-                                                            <div class="slideshow-split__part-block-both-title">
-                                                                {{ main_custom_text_1 | newline_to_br }}
-                                                            </div>
+                                                            {%- if product_image_1 != blank -%}
+                                                                {%- assign product_alt_1 = product_title_1 | strip_html | escape -%}
+                                                                <div class="slideshow-split__part-block-both-image">
+                                                                    {% render 'responsive-image-lazyload',
+                                                                        desktop_image: product_image_1,
+                                                                        mobile_image: product_image_1,
+                                                                        class: 'Custom_icon_new',
+                                                                        sizes: '192px',
+                                                                        desktop_widths: '192, 384',
+                                                                        mobile_widths: '192, 384',
+                                                                        alt: product_alt_1,
+                                                                        fetchpriority: img_fetchpriority,
+                                                                        loading: img_loading,
+                                                                        rel: img_rel
+                                                                    %}
+                                                                </div>
+                                                            {%- endif -%}
+                                                            {%- if product_title_1 != blank -%}
+                                                                <div class="subtitle-2 subtitle-2--caps slideshow-split__part-block-both-title">
+                                                                    {{ product_title_1 | escape | newline_to_br }}
+                                                                </div>
+                                                            {%- endif -%}
+                                                        {%- if product_image_1 != blank -%}
+                                                        </a>
                                                         {%- endif -%}
                                                     </div>
                                                 {%- endif -%}
-                                                {%- if main_custom_image_2 != blank or main_custom_text_2 != blank -%}
+                                                {%- if product_image_2 != blank or product_title_2 != blank -%}
                                                     <div class="slideshow-split__part-block-both">
-                                                        {%- if main_custom_image_2 != blank -%}
-                                                            <div class="slideshow-split__part-block-both-image">
-                                                                {% render 'responsive-image-lazyload',
-                                                                    desktop_image: main_custom_image_2,
-                                                                    mobile_image: main_custom_image_2,
-                                                                    class: 'Custom_icon_new',
-                                                                    sizes: '(max-width: 749px) 100vw, 100vw',
-                                                                    alt: 'custom--image',
-                                                                    fetchpriority: 'high',
-                                                                    loading: 'eager',
-                                                                    rel: 'preload'
-                                                                %}
-                                                            </div>
+                                                        {%- if product_image_2 != blank -%}
+                                                        <a href="{{ product_link_2 | escape }}">
                                                         {%- endif -%}
-                                                        {%- if main_custom_text_2 != blank -%}
-                                                            <div class="slideshow-split__part-block-both-title">
-                                                                {{ main_custom_text_2 | newline_to_br }}
-                                                            </div>
+                                                            {%- if product_image_2 != blank -%}
+                                                                {%- assign product_alt_2 = product_title_2 | strip_html | escape -%}
+                                                                <div class="slideshow-split__part-block-both-image">
+                                                                    {% render 'responsive-image-lazyload',
+                                                                        desktop_image: product_image_2,
+                                                                        mobile_image: product_image_2,
+                                                                        class: 'Custom_icon_new',
+                                                                        sizes: '192px',
+                                                                        desktop_widths: '192, 384',
+                                                                        mobile_widths: '192, 384',
+                                                                        alt: product_alt_2,
+                                                                        fetchpriority: img_fetchpriority,
+                                                                        loading: img_loading,
+                                                                        rel: img_rel
+                                                                    %}
+                                                                </div>
+                                                            {%- endif -%}
+                                                            {%- if product_title_2 != blank -%}
+                                                                <div class="subtitle-2 subtitle-2--caps slideshow-split__part-block-both-title">
+                                                                    {{ product_title_2 | escape | newline_to_br }}
+                                                                </div>
+                                                            {%- endif -%}
+                                                        {%- if product_image_2 != blank -%}
+                                                        </a>
                                                         {%- endif -%}
                                                     </div>
                                                 {%- endif -%}

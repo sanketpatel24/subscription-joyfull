@@ -222,7 +222,7 @@
         display:flex;
         padding:0;
     }
-    slideshow-slides{
+    .product-information slideshow-slides{
         gap:var(--spacing-8);
         padding:0 var(--spacing-8);
     }
@@ -636,4 +636,10 @@ body .pdp_review_section #judgeme_product_reviews .jm-reviewer-info__details p.j
     order: -1;
     margin: 0 0 16px;
 }
+}
+
+.add-to-cart-compare-price {
+    opacity: .6;
+    text-decoration: line-through;
+    margin-inline-end: .2em;
 }

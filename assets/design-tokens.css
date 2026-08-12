@@ -152,6 +152,7 @@
      in swatches but required for body copy, borders, surfaces)
      ---------------------------------------------------------------------- */
   --color-white: #FFFFFF;
+  --color-black: #000000;
   --color-text-body: var(--color-onyx);
   --color-text-muted: var(--color-moss);
   --color-border: var(--color-sand);

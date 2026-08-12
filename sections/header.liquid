@@ -1,14 +1,12 @@
-{% comment %}
 {{ 'header.css' | asset_url | stylesheet_tag }}
 {{ 'header-drawer.css' | asset_url | stylesheet_tag }}
 {{ 'Product-grid.css' | asset_url | stylesheet_tag }}
-{% endcomment %}
 
 {% liquid
-  assign order = 'logo,menu,localization,search,drawer_search,actions'
+  assign order = 'logo,menu,right_menu,localization,search,drawer_search,actions'
 
   if shop.customer_accounts_enabled
-    assign order = 'drawer_search,logo,menu,localization,search,actions'
+    assign order = 'drawer_search,logo,menu,right_menu,localization,search,actions'
   endif
 
   assign rows = 'top,bottom' | split: ','
@@ -25,12 +23,15 @@
   if section.settings.enable_transparent_header_home and template.name == 'index'
     assign transparent = 'always'
     assign transparent_text_color_setting = section.settings.text_color_transparent_home
+    assign transparent_background_color_setting = section.settings.background_color_transparent_home
   elsif section.settings.enable_transparent_header_product and template.name == 'product'
     assign transparent = 'always'
     assign transparent_text_color_setting = section.settings.text_color_transparent_product
+    assign transparent_background_color_setting = section.settings.background_color_transparent_product
   elsif section.settings.enable_transparent_header_collection and template.name == 'collection'
     assign transparent = 'always'
     assign transparent_text_color_setting = section.settings.text_color_transparent_collection
+    assign transparent_background_color_setting = section.settings.background_color_transparent_collection
   endif
 
   if section.settings.enable_sticky_header == 'always'
@@ -92,6 +93,10 @@
     content_for 'block', type: '_header-menu', id: 'header-menu'
   endcapture
 
+  capture right_menu
+    content_for 'block', type: '_header-menu', id: 'header-menu', right_menu_item: "yes"
+  endcapture
+
   capture drawer_menu
     content_for 'block', type: '_header-menu', id: 'header-menu', variant: 'mobile'
   endcapture
@@ -112,23 +117,23 @@
   if section.settings.localization_position == 'left'
     if section.settings.search_position == 'left'
       if shop.customer_accounts_enabled
-        assign order = 'drawer_search,logo,search,localization,menu,actions'
+        assign order = 'drawer_search,logo,search,localization,menu,right_menu,actions'
       else
-        assign order = 'logo,search,localization,menu,drawer_search,actions'
+        assign order = 'logo,search,localization,menu,right_menu,drawer_search,actions'
       endif
     else
       if shop.customer_accounts_enabled
-        assign order = 'drawer_search,logo,localization,menu,search,actions'
+        assign order = 'drawer_search,logo,localization,menu,right_menu,search,actions'
       else
-        assign order = 'logo,localization,menu,search,drawer_search,actions'
+        assign order = 'logo,localization,menu,right_menu,search,drawer_search,actions'
       endif
     endif
   else
     if section.settings.search_position == 'left'
       if shop.customer_accounts_enabled
-        assign order = 'drawer_search,logo,search,menu,localization,actions'
+        assign order = 'drawer_search,logo,search,menu,right_menu,localization,actions'
       else
-        assign order = 'logo,search,menu,localization,drawer_search,actions'
+        assign order = 'logo,search,menu,right_menu,localization,drawer_search,actions'
       endif
     endif
   endif
@@ -263,6 +268,7 @@
             %}
             <span
               class="icon-flag"
+              aria-hidden="true"
               style="
                 background-image: url({{- localization.country | image_url: width: 32 }});
                 --size-shadow: {{ shadow_size }}px;
@@ -317,7 +323,7 @@
 
 <script type="application/ld+json">
   {
-    "@context": "http://schema.org",
+    "@context": "https://schema.org",
     "@type": "Organization",
     "name": {{ shop.name | json }},
     {% if settings.logo %}
@@ -329,7 +335,7 @@
 
 <header-component
   id="header-component"
-  class="{{ class }}"
+  class="{{ class }} header__body"
   data-theme-color="rgb({{ section.settings.background_color_top.rgb | default: settings.page_background_color.rgb }})"
   data-bubble-style="{{ section.settings.bubble_style }}"
   {% if transparent %}
@@ -346,6 +352,9 @@
   {% if background_transparent_color_value %}
     data-transparent-background="{{ background_transparent_color_value }}"
   {% endif %}
+  {% if transparent and transparent_background_color_setting != blank %}
+    data-transparent-bar
+  {% endif %}
   style="
     --color-background-top-row: rgba({{ section.settings.background_color_top.rgba | default: settings.page_background_color.rgba }});
     --color-background-bottom-row: rgba({{ section.settings.background_color_bottom.rgba | default: settings.page_background_color.rgba }});
@@ -353,6 +362,9 @@
       --color-transparent-text: {{ text_color_transparent }};
       --color-transparent-text-rgb: {{ text_color_transparent.rgb }};
       --color-transparent-text-contrast: {{ transparent_text_contrast }};
+    {% endif %}
+    {% if transparent and transparent_background_color_setting != blank %}
+      --color-transparent-background: rgba({{ transparent_background_color_setting.rgba }});
     {% endif %}
     {% if cart_bubble_color_override %}
       --cart-bubble-background: {{ cart_bubble_background }};
@@ -371,7 +383,7 @@
     class="header__underlay header__underlay-open"
   ></div>
   {%- if request.page_type == 'index' -%}
-    <h1 class="visually-hidden">{{ shop.name }}</h1>
+    <p class="visually-hidden">{{ shop.name }}</p>
   {%- endif -%}
   {% for row in rows %}
     {% liquid
@@ -438,6 +450,7 @@
         first: first,
         logo: logo,
         menu: menu,
+        right_menu: right_menu,
         actions: actions,
         localization: localization_markup,
         search: search,
@@ -454,7 +467,7 @@
           style="{{ style | strip }}"
         {%- endif -%}
       >
-        <div class="header__columns spacing-style">
+        <div class="header__columns page-width spacing-style">
           {{ content }}
         </div>
       </div>
@@ -509,8 +522,10 @@
     }
   }
 
-  #header-component[data-menu-style='drawer'] .header__column {
-    display: contents;
+  @media (min-width: 0px) and (max-width: 989px) {
+    #header-component[data-menu-style='drawer'] .header__column {
+      display: contents;
+    }
   }
 
   @media screen and (min-width: 750px) {
@@ -539,6 +554,7 @@
     z-index: var(--layer-overlay);
 
     &[transparent='not-sticky'][data-sticky-state='active'],
+    &[data-slide-wants-transparent='false'],
     &:has(.menu-list__link:not([aria-haspopup]):hover) {
       --header-logo-display: unset;
       --header-logo-inverse-display: unset;
@@ -552,7 +568,9 @@
     }
 
     /** For transparent header, apply transparent text color to rows when menu is not hovered */
-    &:not([data-sticky-state='active']):not(:has(.menu-list__link:is(:hover, [aria-expanded='true']))) .header__row {
+    &:not([data-sticky-state='active']):not([data-slide-wants-transparent='false']):not(
+        :has(.menu-list__link:is(:hover, [aria-expanded='true']))
+      ):not(:has(.menu-drawer-container.menu-open)) .header__row {
       --color-foreground: var(--color-transparent-text);
       --color-foreground-rgb: var(--color-transparent-text-rgb);
       --color-border: var(--color-transparent-text);
@@ -563,7 +581,7 @@
 
     /* Swap the cart bubble in transparent state only when using the default
        style. Custom bubble colors apply unchanged across header states. */
-    &[data-bubble-style='default']:not([data-sticky-state='active']):not(
+    &[data-bubble-style='default']:not([data-sticky-state='active']):not([data-slide-wants-transparent='false']):not(
         :has(.menu-list__link:is(:hover, [aria-expanded='true']))
       )
       .header__row {
@@ -574,7 +592,8 @@
     /* Multiple selectors for performance: each simple :has() check is faster than one complex selector with multiple conditions */
     &:has(.mega-menu__list:hover),
     &:has(.menu-list__link:is(:hover, [aria-expanded='true'])),
-    &:has(.menu-list__list-item[slot='overflow'] .menu-list__link:is(:hover, [aria-expanded='true'])) {
+    &:has(.menu-list__list-item[slot='overflow'] .menu-list__link:is(:hover, [aria-expanded='true'])),
+    &:has(.menu-drawer-container.menu-open) {
       --header-logo-display: unset;
       --header-logo-inverse-display: unset;
       --color-foreground: inherit;
@@ -584,6 +603,38 @@
       --color-border: inherit;
       --color-border-rgb: inherit;
       --header-content-transition-timing: var(--submenu-animation-speed) var(--ease-out-cubic);
+    }
+  }
+
+  .header:has(.menu-list__submenu:hover),
+  .header:has(.menu-list__link[aria-expanded='true'] ~ .menu-list__submenu) {
+    --color-background-top-row: var(--color-submenu, var(--color-background-top-row));
+    --color-background-bottom-row: var(--color-submenu, var(--color-background-bottom-row));
+  }
+
+  .header[transparent][data-transparent-bar]:not([data-sticky-state='active']) {
+    --closed-underlay-height: 100%;
+
+    :is(.header__underlay-closed, .header__underlay-open) {
+      --color-background-top-row: var(--color-transparent-background);
+      --color-background-bottom-row: var(--color-transparent-background);
+    }
+  }
+
+  #header-component[data-transparent-bar][data-slide-wants-transparent='true']:not([data-sticky-state='active']) {
+    --closed-underlay-height: 0px;
+
+    :is(.header__underlay-closed, .header__underlay-open) {
+      --color-background-top-row: transparent;
+      --color-background-bottom-row: transparent;
+    }
+  }
+
+  #header-component[data-transparent-bar]:has(.menu-list__submenu:hover),
+  #header-component[data-transparent-bar]:has(.menu-list__link[aria-expanded='true'] ~ .menu-list__submenu) {
+    :is(.header__underlay-closed, .header__underlay-open) {
+      --color-background-top-row: var(--color-submenu);
+      --color-background-bottom-row: var(--color-submenu);
     }
   }
 
@@ -679,18 +730,10 @@
     background: linear-gradient(
       var(--color-background-top-row) 0 var(--top-row-height),
       var(--color-background-bottom-row) var(--top-row-height) var(--header-height),
-      var(--color-submenu) var(--header-height) 100%
+      var(--color-submenu) var(--header-height) calc(100% - var(--mega-menu-curve-height, 0px)),
+      transparent calc(100% - var(--mega-menu-curve-height, 0px)) 100%
     );
     /* header-height is updated via js, the transition works automagically */
-    transition: height var(--submenu-animation-speed) var(--ease-out-cubic);
-  }
-
-  .header__underlay-open::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    box-shadow: var(--shadow-popover);
-    clip-path: inset(var(--header-height) 0 -100px 0); /* stylelint-disable-line */
     transition: height var(--submenu-animation-speed) var(--ease-out-cubic);
   }
 
@@ -718,7 +761,8 @@
     .header__underlay-open {
       background: linear-gradient(
         var(--color-background-top-row) 0 var(--top-row-height),
-        var(--color-submenu) var(--top-row-height) 100%
+        var(--color-submenu) var(--top-row-height) calc(100% - var(--mega-menu-curve-height, 0px)),
+        transparent calc(100% - var(--mega-menu-curve-height, 0px)) 100%
       );
     }
 
@@ -761,10 +805,12 @@
     }
   }
 
-  #header-component[data-menu-style='drawer'] .header__row--top:not(.divider--page-width),
-  #header-component[data-menu-style='drawer'] .header__row--top.divider--page-width .header__columns {
-    border-bottom-width: var(--border-bottom-width-mobile);
-    border-bottom-color: var(--border-bottom-color-mobile);
+  @media (min-width: 0px) and (max-width: 989px) {
+    #header-component[data-menu-style='drawer'] .header__row--top:not(.divider--page-width),
+    #header-component[data-menu-style='drawer'] .header__row--top.divider--page-width .header__columns {
+      border-bottom-width: var(--border-bottom-width-mobile);
+      border-bottom-color: var(--border-bottom-color-mobile);
+    }
   }
 
   .header__row.divider--page-width:not(.section--page-width) .header__columns {
@@ -889,35 +935,37 @@
 
   /* not ideal but we need to duplicate these styles for when touch comes into play
     We could avoid the duplication using js to set the data-menu-style attribute on small screens instead of using @media queries */
-  #header-component[data-menu-style='drawer'] .header__columns {
-    --header-template-columns: var(--header-mobile-bookend) var(--header-mobile-bookend) 1fr
-      var(--header-mobile-bookend) var(--header-mobile-bookend);
+  @media (min-width: 0px) and (max-width: 989px) {
+    #header-component[data-menu-style='drawer'] .header__columns {
+      --header-template-columns: var(--header-mobile-bookend) var(--header-mobile-bookend) 1fr
+        var(--header-mobile-bookend) var(--header-mobile-bookend);
 
-    grid-template-areas: 'leftA leftB center rightA rightB';
-    grid-column: span 3;
-    column-gap: 0;
-    align-items: center;
-    padding-block: 0;
-    padding-inline: 0 var(--padding-3xs);
+      grid-template-areas: 'leftA leftB center rightA rightB';
+      grid-column: span 3;
+      column-gap: 0;
+      align-items: center;
+      padding-block: 0;
+      padding-inline: 0 var(--padding-3xs);
 
-    .header-logo {
-      grid-area: center;
-    }
+      .header-logo {
+        grid-area: center;
+      }
 
-    &:not(:has(header-actions)) .search-action {
-      grid-area: leftB;
-    }
+      &:not(:has(header-actions)) .search-action {
+        grid-area: leftB;
+      }
 
-    &:not(:has(shopify-account)) .search-action {
-      grid-area: rightA;
-    }
+      &:not(:has(shopify-account)) .search-action {
+        grid-area: rightA;
+      }
 
-    .search-action {
-      grid-area: leftB;
-    }
+      .search-action {
+        grid-area: leftB;
+      }
 
-    header-actions {
-      grid-area: rightB;
+      header-actions {
+        grid-area: rightB;
+      }
     }
   }
 
@@ -936,7 +984,7 @@
       header-menu:not(:hover),
       .header-actions__action:not(:hover),
       .header__icon--menu:not(:hover) {
-        opacity: var(--opacity-subdued-text);
+        /*opacity: var(--opacity-subdued-text);*/
         transition: opacity var(--animation-speed) var(--animation-easing);
       }
     }
@@ -1005,10 +1053,10 @@
   }
 
   /* Optimize layout performance for hidden menus */
-  .header-menu .menu-list__submenu {
+  /*.header-menu .menu-list__submenu {
     content-visibility: auto;
     contain-intrinsic-size: 0px 500px;
-  }
+  }*/
 
   /* Force visibility when open/animating and in overflow submenu to prevent layout issues */
   .header-menu details[open] .menu-list__submenu,
@@ -1224,7 +1272,7 @@
         {
           "value": "left",
           "label": "t:options.left"
-        },
+        }/*,
         {
           "value": "center",
           "label": "t:options.center"
@@ -1232,9 +1280,29 @@
         {
           "value": "right",
           "label": "t:options.right"
-        }
+        }*/
       ],
       "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "right_menu_position",
+      "label": "Split menu position",
+      "options": [
+        /*{
+          "value": "left",
+          "label": "t:options.left"
+        },
+        {
+          "value": "center",
+          "label": "t:options.center"
+        },*/
+        {
+          "value": "right",
+          "label": "t:options.right"
+        }
+      ],
+      "default": "right"
     },
     {
       "type": "select",
@@ -1244,11 +1312,11 @@
         {
           "value": "top",
           "label": "t:options.top"
-        },
+        }/*,
         {
           "value": "bottom",
           "label": "t:options.bottom"
-        }
+        }*/
       ],
       "default": "top"
     },
@@ -1705,6 +1773,13 @@
       "visible_if": "{{ section.settings.enable_transparent_header_home }}"
     },
     {
+      "type": "color",
+      "id": "background_color_transparent_home",
+      "label": "Transparent header background",
+      "placeholder": "t:settings.default",
+      "visible_if": "{{ section.settings.enable_transparent_header_home }}"
+    },
+    {
       "type": "header",
       "content": "t:content.product_page"
     },
@@ -1729,6 +1804,13 @@
       "visible_if": "{{ section.settings.enable_transparent_header_product }}"
     },
     {
+      "type": "color",
+      "id": "background_color_transparent_product",
+      "label": "Transparent header background",
+      "placeholder": "t:settings.default",
+      "visible_if": "{{ section.settings.enable_transparent_header_product }}"
+    },
+    {
       "type": "header",
       "content": "t:content.collection_page"
     },
@@ -1749,6 +1831,13 @@
       "type": "color",
       "id": "text_color_transparent_collection",
       "label": "t:settings.text_color_transparent",
+      "placeholder": "t:settings.default",
+      "visible_if": "{{ section.settings.enable_transparent_header_collection }}"
+    },
+    {
+      "type": "color",
+      "id": "background_color_transparent_collection",
+      "label": "Transparent header background",
       "placeholder": "t:settings.default",
       "visible_if": "{{ section.settings.enable_transparent_header_collection }}"
     }

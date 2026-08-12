@@ -1,0 +1,102 @@
+{%- for collection_custom_grid_review_block_selections in collection_custom_grid_review_block_selections -%}
+    {%- liquid
+        assign desktop_image_video = collection_custom_grid_review_block_selections.desktop_image_video.value
+        assign mobile_image_video = collection_custom_grid_review_block_selections.mobile_image_video.value
+        assign review_details_text = collection_custom_grid_review_block_selections.review_details_text
+        assign review_author_text = collection_custom_grid_review_block_selections.review_author_text.value
+        assign review_button_text = collection_custom_grid_review_block_selections.review_button_text.value
+        assign review_button_link = collection_custom_grid_review_block_selections.review_button_link.value
+        assign desktop_position_number = collection_custom_grid_review_block_selections.desktop_position_number.value
+        assign mobile_position_number = collection_custom_grid_review_block_selections.mobile_position_number.value
+        assign review_image_alt = review_author_text | strip_html | escape
+    -%}
+    {%- if desktop_image_video != blank or mobile_image_video != blank or review_details_text != blank or review_author_text != blank or review_button_link != blank -%}
+        <li class="product-grid__item collection__custom-block collection__review-body" data-desktop-position="{{ desktop_position_number }}" data-mobile-position="{{ mobile_position_number }}">
+            <div class="collection__review-body-wrap">
+                {%- if desktop_image_video != blank or mobile_image_video != blank -%}
+                    {% if mobile_image_video != blank %}
+                        {% assign video_class = "video--desktop" %}
+                    {% else %}
+                        {% assign video_class = "video--desktop video--mobile" %}
+                    {% endif %}
+                    {%- if desktop_image_video != blank -%}
+                        <div class="collection__review-media{% if mobile_image_video != blank %} show--desktop{% endif %}">
+                            <div class="collection__review-media-wrap">
+                                {%- if desktop_image_video contains "files" -%}
+                                    {% render 'responsive-image-lazyload',
+                                        desktop_image: desktop_image_video,
+                                        mobile_image: desktop_image_video,
+                                        alt: review_image_alt,
+                                        class: 'custom--image',
+                                        sizes: '(max-width: 749px) 100vw, 100vw'
+                                    %}
+                                {%- else -%}
+                                    {% render 'responsive-video-lazyload',
+                                        video_url: desktop_image_video,
+                                        class: video_class
+                                    %}
+                                {%- endif -%}
+                            </div>
+                        </div>
+                    {%- endif -%}
+                    {%- if mobile_image_video != blank -%}
+                        <div class="collection__review-media show--mobile">
+                            <div class="collection__review-media-wrap">
+                                {%- if mobile_image_video contains "files" -%}
+                                    {% render 'responsive-image-lazyload',
+                                        desktop_image: mobile_image_video,
+                                        mobile_image: mobile_image_video,
+                                        alt: review_image_alt,
+                                        class: 'custom--image',
+                                        sizes: '(max-width: 749px) 100vw, 100vw'
+                                    %}
+                                {%- else -%}
+                                    {% render 'responsive-video-lazyload',
+                                        video_url: mobile_image_video,
+                                        class: 'video--mobile'
+                                    %} 
+                                {%- endif -%}
+                            </div>
+                        </div>
+                    {%- endif -%}
+                {%- endif -%}
+                {%- if review_details_text != blank or review_author_text != blank or review_button_link != blank -%}
+                    <div class="collection__review-detail">
+                        <div class="collection__review-detail-wrap">
+                            {%- if review_details_text != blank and review_author_text != blank -%}
+                                <div class="collection__review-content">
+                                    <div class="collection__review-content-wrap">
+                                        <div class="collection__review-content-wrap-icon" aria-hidden="true">
+                                            {{ 'collection-block-review-star.svg' | inline_asset_content }}
+                                        </div>
+                                        {%- if review_details_text != blank -%}
+                                            <div class="badge-large collection__review-content-wrap-info">
+                                                {{ review_details_text | metafield_tag }}
+                                            </div>
+                                        {%- endif -%}
+                                        {%- if review_author_text != blank -%}
+                                            <div class="badge-large bold collection__review-content-wrap-text">
+                                                {{ review_author_text | escape }}
+                                            </div>
+                                        {%- endif -%}                              
+                                    </div>
+                                </div>
+                            {%- endif -%}
+                            {%- if review_button_text != blank and review_button_link != blank -%}
+                                <div class="collection__review-button">
+                                    <div class="collection__review-button-wrap">
+                                        {%- render 'button-common-style',                                                  
+                                            main_button_text: review_button_text, 
+                                            main_button_link: review_button_link,
+                                            main_button_style: grid_block_button_style
+                                        -%}
+                                    </div>
+                                </div>
+                            {%- endif -%}
+                        </div>
+                    </div>
+                {%- endif -%}
+            </div>
+        </li>
+    {%- endif -%}
+{%- endfor -%}

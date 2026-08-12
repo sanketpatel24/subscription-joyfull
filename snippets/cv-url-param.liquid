@@ -1,0 +1,67 @@
+{%- comment -%}
+	URL parameter parser helper
+
+	Parameters:
+	- param_name: string - The URL parameter name to extract
+
+	Usage:
+	Single value:
+	{% capture sort_param %}{% render 'cv-url-param', param_name: 'sort' %}{% endcapture %}
+
+	Comma-separated values:
+	{% capture featured_param %}{% render 'cv-url-param', param_name: 'featured' %}{% endcapture %}
+	{% assign featured_handles = featured_param | split: '::' %}
+
+	Returns:
+	- param_value: string - Single values returned as-is, comma-separated values cleaned and joined with '::'
+{%- endcomment -%}
+
+{%- assign param_value = blank -%}
+
+{%- if param_name != blank -%}
+	{%- capture contentForQuerystring -%}{{ content_for_header }}{%- endcapture -%}
+	{%- assign pageUrl = contentForQuerystring
+		| split: '"pageurl":"'
+		| last
+		| split: '"'
+		| first
+		| split: '.myshopify.com'
+		| last
+		| replace: '\/', '/'
+		| replace: '%20', ' '
+		| replace: '\u0026', '&'
+	-%}
+	{%- assign pageQuerystring = pageUrl | split: '?' | last -%}
+	{%- assign parameters = pageQuerystring | split: '&' -%}
+
+	{%- for parameter in parameters -%}
+		{%- assign parameter_arr = parameter | split: '=' -%}
+		{%- if parameter_arr[0] == param_name -%}
+			{%- assign raw_value = parameter_arr[1] | url_decode | strip -%}
+			{%- comment -%} Clean comma-separated values by splitting, stripping, and reconstituting {%- endcomment -%}
+			{%- if raw_value contains ',' -%}
+				{%- assign value_items = raw_value | split: ',' -%}
+				{%- assign clean_values = '' -%}
+				{%- for item in value_items -%}
+					{%- assign clean_item = item | strip -%}
+					{%- if clean_item != blank -%}
+						{%- if clean_values == blank -%}
+							{%- assign clean_values = clean_item -%}
+						{%- else -%}
+							{%- assign clean_values = clean_values
+								| append: '::'
+								| append: clean_item
+							-%}
+						{%- endif -%}
+					{%- endif -%}
+				{%- endfor -%}
+				{%- assign param_value = clean_values -%}
+			{%- else -%}
+				{%- assign param_value = raw_value -%}
+			{%- endif -%}
+			{%- break -%}
+		{%- endif -%}
+	{%- endfor -%}
+{%- endif -%}
+
+{{ param_value }}

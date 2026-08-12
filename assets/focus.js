@@ -69,7 +69,7 @@ export function trapFocus(container) {
   document.addEventListener('focusin', trapFocusHandlers.focusin, true);
 
   // Finally, put focus where you want it.
-  container.focus();
+  container.focus({ preventScroll: true });
 }
 
 /**

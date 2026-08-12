@@ -63,7 +63,11 @@
   width: 100%;
   height: 100%;
 }
-
+.happy-parents-pets__media img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
 .happy-parents-pets__image,
 .happy-parents-pets__video {
   object-fit: cover;

@@ -1,0 +1,343 @@
+{%- liquid
+    assign background_color = section.settings.background_color
+    assign information_color = section.settings.information_color
+    assign desktop_top_padding = section.settings.desktop_top_padding
+    assign desktop_bottom_padding = section.settings.desktop_bottom_padding
+    assign mobile_top_padding = section.settings.mobile_top_padding
+    assign mobile_bottom_padding = section.settings.mobile_bottom_padding
+
+    assign main_heading_size = section.settings.main_heading_size
+    assign main_heading_text = section.settings.main_heading_text
+    assign main_button_text = section.settings.main_button_text
+    assign main_button_link = section.settings.main_button_link
+    assign main_button_style = section.settings.main_button_style
+
+    assign main_collection_list = section.settings.main_collection_list
+    assign main_product_limit = section.settings.main_product_limit
+-%}
+
+{%- if main_collection_list != blank -%}
+    {{ 'index-feature-collections.css' | asset_url | stylesheet_tag }}
+    <script src="{{ 'index-feature-collections.js' | asset_url }}" defer></script>
+
+    {%- style -%}
+        #shopify-section-{{ section.id }} .feature {
+            {%- if background_color != blank -%}
+                --background-color: {{ background_color }};
+            {%- endif -%}
+            {%- if information_color != blank -%}
+                --information-color: {{ information_color }};
+            {%- endif -%}
+            {%- if desktop_top_padding != blank -%}
+                --desktop-top-padding: {{ desktop_top_padding }}px;
+            {%- endif -%}
+            {%- if desktop_bottom_padding != blank -%}
+                --desktop-bottom-padding: {{ desktop_bottom_padding }}px;
+            {%- endif -%}
+            {%- if mobile_top_padding != blank -%}
+                --mobile-top-padding: {{ mobile_top_padding }}px;
+            {%- endif -%}
+            {%- if mobile_bottom_padding != blank -%}
+                --mobile-bottom-padding: {{ mobile_bottom_padding }}px;
+            {%- endif -%}
+        }
+    {%- endstyle -%}
+
+    <section class="feature">
+        <div class="page-width">
+            <div class="feature__body">
+                <div class="feature__body-wrap Tabs_lazy_main_new">
+                    {%- if main_heading_text != blank or main_collection_list != blank or main_button_link != blank -%}
+                        <div class="feature__side">
+                            <div class="feature__side-wrap">
+                                {%- if main_heading_text != blank -%}
+                                    <div class="feature__title">
+                                        <div class="feature__title-wrap">
+                                            <{{ main_heading_size }} class="heading-m">
+                                                {{ main_heading_text | escape | newline_to_br }}
+                                            </{{ main_heading_size }}>
+                                        </div>
+                                    </div>
+                                {%- endif -%}
+                                {%- if main_collection_list != blank -%}
+                                    <div class="feature__lists">
+                                        <div class="feature__lists-wrap">
+                                            <div class="tab common_tab_new">
+                                                <div class="swiper index-feature-collections-title-slider">
+                                                    <div class="swiper-wrapper" role="tablist" aria-label="{{ 'content.collection_tabs' | t }}">
+                                                        {%- for main_collection_list in main_collection_list -%}
+                                                            {%- assign tab_dom_id = 'tab_' | append: section.id | replace: '-', '_' | append: '_' | append: forloop.index0 -%}
+                                                            <div
+                                                                class="swiper-slide feature__lists-wrap-text tablinks Tabs_lazy_inner_new{% if forloop.first %} active{% endif %}"
+                                                                tab_id="{{ tab_dom_id }}"
+                                                                id="{{ tab_dom_id }}_tab"
+                                                                role="tab"
+                                                                aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+                                                                aria-controls="{{ tab_dom_id }}_panel"
+                                                                tabindex="0"
+                                                            >
+                                                                <div class="subtitle-2 subtitle-2--caps bold feature__lists-wrap-text-wrap">
+                                                                    {%- if main_collection_list.metafields.custom.collection_tab_custom_heading_text != blank -%}
+                                                                        {{ main_collection_list.metafields.custom.collection_tab_custom_heading_text | escape }}
+                                                                    {%- else -%}
+                                                                        {{ main_collection_list.title | escape }}
+                                                                    {%- endif -%}
+                                                                </div>
+                                                            </div>
+                                                        {%- endfor -%}
+                                                        {%- if main_button_text != blank and main_button_link != blank -%}
+                                                            <div class="swiper-slide feature__lists-wrap-text show--desktop" role="presentation">
+                                                                <div class="subtitle-2 subtitle-2--caps bold feature__lists-wrap-text-wrap">
+                                                                    <a href="{{ main_button_link | escape }}">
+                                                                        {{ main_button_text | escape }}
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        {%- endif -%}
+                                                    </div>
+                                                    <div class="swiper-scrollbar"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {%- endif -%}
+                            </div>
+                        </div>
+                    {%- endif -%}
+                    {%- if main_collection_list != blank -%}
+                        <div class="feature__loop">
+                            <div class="feature__loop-wrap">
+                                {%- for main_collection_list in main_collection_list -%}
+                                    {%- assign tab_dom_id = 'tab_' | append: section.id | replace: '-', '_' | append: '_' | append: forloop.index0 -%}
+                                    <div class="tabcontent {{ tab_dom_id }}_open"
+                                        id="{{ tab_dom_id }}_panel"
+                                        role="tabpanel"
+                                        aria-labelledby="{{ tab_dom_id }}_tab"
+                                        tabindex="0"
+                                        {% if forloop.first %}
+                                            style="display:block;"
+                                        {% endif %}
+                                        {% unless forloop.first %}
+                                            data-collection-handle="{{ main_collection_list.handle }}"
+                                            data-lazy="true"
+                                            data-products-limit="{{ main_product_limit }}"
+                                        {% endunless %}
+                                    >
+                                        <div class="feature__block">
+                                            {%- assign home_grid_custom_image_or_video = main_collection_list.metafields.custom.home_grid_custom_image_or_video.value -%}
+                                            {%- if home_grid_custom_image_or_video != blank -%}
+                                                <div class="product__grid-item show--desktop">
+                                                    <div class="feature__media show--desktop">
+                                                        <div class="feature__media-wrap">
+                                                            {%- if home_grid_custom_image_or_video contains "files" -%}
+                                                                {% render 'responsive-image-lazyload',
+                                                                    desktop_image: home_grid_custom_image_or_video,
+                                                                    mobile_image: home_grid_custom_image_or_video,
+                                                                    alt: main_collection_list.title,
+                                                                    class: 'custom--image',
+                                                                    sizes: '(max-width: 749px) 100vw, 100vw'
+                                                                %}
+                                                            {%- else -%}
+                                                                {% render 'responsive-video-lazyload',
+                                                                    video_url: home_grid_custom_image_or_video,
+                                                                    class: 'video--desktop video--mobile'
+                                                                %}
+                                                            {%- endif -%}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {%- endif -%}
+                                            <div class="feature__block-wrap">
+                                                <div class="swiper index-feature-collections-items-slider">
+                                                    <div class="swiper-wrapper">
+                                                        {%- if forloop.first -%}
+                                                            {%- for product in main_collection_list.products limit: main_product_limit -%}
+                                                                <div class="swiper-slide product__grid-item">
+                                                                    {% content_for 'block', type: '_product-card', id: 'static-product-card', closest.product: product %}
+                                                                </div>
+                                                            {%- endfor -%}
+                                                        {%- else -%}
+                                                            {% render 'cv-loader' %}
+                                                        {%- endif -%}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {%- endfor -%}
+                            </div>
+                        </div>
+                    {%- endif -%}
+                    {%- if main_button_text != blank and main_button_link != blank -%}
+                        <div class="feature__button show--mobile">
+                            <div class="feature__button-wrap">
+                                {%- render 'button-common-style',
+                                    main_button_text: main_button_text,
+                                    main_button_link: main_button_link,
+                                    main_button_style: main_button_style
+                                -%}
+                            </div>
+                        </div>
+                    {%- endif -%}
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="{{ 'index-tab-collections-lazy.js' | asset_url }}" defer></script>
+{%- endif -%}
+
+{% schema %}
+{
+    "name": "Index Feature Collections",
+    "class": "index-feature-collections__section",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Color Settings"
+        },
+        {
+            "type": "color",
+            "id": "background_color",
+            "label": "Background Color",
+            "default": "#FFF9F0"
+        },
+        {
+            "type": "color",
+            "id": "information_color",
+            "label": "Information Color"
+        },
+        {
+            "type": "header",
+            "content": "Layout Settings"
+        },
+        {
+            "type": "number",
+            "id": "desktop_top_padding",
+            "label": "Desktop Top Padding",
+            "default": 88
+        },
+        {
+            "type": "number",
+            "id": "desktop_bottom_padding",
+            "label": "Desktop Bottom Padding",
+            "default": 62
+        },
+        {
+            "type": "number",
+            "id": "mobile_top_padding",
+            "label": "Mobile Top Padding",
+            "default": 32
+        },
+        {
+            "type": "number",
+            "id": "mobile_bottom_padding",
+            "label": "Mobile Bottom Padding",
+            "default": 32
+        },
+        {
+            "type": "header",
+            "content": "==== Content Settings ===="
+        },
+        {
+            "type": "select",
+            "id": "main_heading_size",
+            "label": "Select Main Heading Size",
+            "default": "h2",
+            "options": [
+                {
+                    "label": "H1",
+                    "value": "h1"
+                },
+                {
+                    "label": "H2",
+                    "value": "h2"
+                },
+                {
+                    "label": "H3",
+                    "value": "h3"
+                },
+                {
+                    "label": "H4",
+                    "value": "h4"
+                },
+                {
+                    "label": "H5",
+                    "value": "h5"
+                },
+                {
+                    "label": "H6",
+                    "value": "h6"
+                },
+                {
+                    "label": "Span",
+                    "value": "span"
+                }
+            ]
+        },
+        {
+            "type": "textarea",
+            "id": "main_heading_text",
+            "label": "Add Main Heading Text",
+            "default": "The crowd pleasers"
+        },
+        {
+            "type": "collection_list",
+            "id": "main_collection_list",
+            "label": "Add Main Collection List"
+        },
+        {
+            "type": "range",
+            "id": "main_product_limit",
+            "label": "Select Main Product Limit",
+            "min": 1,
+            "max": 12,
+            "step": 1,
+            "default": 8
+        },
+        {
+            "type": "text",
+            "id": "main_button_text",
+            "label": "Add Main Button Text",
+            "default": "Shop All"
+        },
+        {
+            "type": "url",
+            "id": "main_button_link",
+            "label": "Add Main Button Link",
+            "default": "/"
+        },
+        {
+            "type": "select",
+            "id": "main_button_style",
+            "label": "Select Main Button Style",
+            "default": "primary-button",
+            "options": [
+                {
+                    "label": "Primary Button",
+                    "value": "primary-button"
+                },
+                {
+                    "label": "Secondary Button",
+                    "value": "secondary-button"
+                }
+            ]
+        }
+    ],
+    "blocks": [
+        {
+            "type": "@theme"
+        },
+        {
+            "type": "@app"
+        },
+        {
+            "type": "_divider"
+        }
+    ],
+    "presets": [
+        {
+            "name": "Index Feature Collections"
+        }
+    ]
+}
+{% endschema %}

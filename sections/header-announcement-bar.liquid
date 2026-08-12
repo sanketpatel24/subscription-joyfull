@@ -34,7 +34,7 @@
         }
     {%- endstyle -%}
 
-    <section class="announcement">
+    <section class="announcement" role="region" aria-roledescription="carousel" aria-label="Announcements">
         <div class="page-width">
             <div class="announcement__body">
                 <div class="swiper{% if section.blocks.size > 1 %} header-announcement-bar-slider{% endif %}">
@@ -43,7 +43,7 @@
                             {%- assign title = block.settings.title -%}
                             {%- if title != blank -%}
                                 <div class="swiper-slide announcement__block">
-                                    <div class="announcement__block-text">
+                                    <div class="text-2 text-2--caps bold announcement__block-text">
                                         {{ title }}
                                     </div>
                                 </div>  

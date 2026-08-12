@@ -50,7 +50,7 @@
         }
     {%- endstyle -%}
 
-    <section class="treats">
+    <section class="treats"{% if main_heading_text != blank %} aria-labelledby="treats-heading-{{ section.id }}"{% endif %}>
         <div class="treats__body">
             {%- if main_common_video != blank or main_desktop_image != blank or main_mobile_image != blank -%}
                 <div class="treats__media">
@@ -77,9 +77,9 @@
                         <div class="treats__detail-wrap">
                             {%- if main_heading_text != blank -%}
                                 <div class="treats__title">
-                                    <div class="heading-l treats__title-text">
-                                        <{{ main_heading_size }}>
-                                            {{ main_heading_text | newline_to_br }}
+                                    <div class="treats__title-text">
+                                        <{{ main_heading_size }} class="heading-l" id="treats-heading-{{ section.id }}">
+                                            {{ main_heading_text | escape | newline_to_br }}
                                         </{{ main_heading_size }}>
                                     </div>
                                 </div>
@@ -163,23 +163,60 @@
                         <div class="treats__block-wrap">
                             {%- if inner_heading_text != blank -%}
                                 <div class="title-small title-small--caps treats__text">
-                                    {{ inner_heading_text | newline_to_br }}
+                                    {{ inner_heading_text | escape | newline_to_br }}
                                 </div>
                             {%- endif -%}
                             {%- if section.blocks.size > 0 -%}
-                                <div class="treats__loop">
-                                    <div class="index-treats-logos-lists-marquee">
+                                <ul class="treats__logos-summary">
+                                    {%- for block in section.blocks -%}
+                                        {%- assign main_logo_image = block.settings.main_logo_image -%}
+                                        {%- if main_logo_image != blank -%}
+                                            {%- assign logo_name = main_logo_image.alt | default: main_logo_image | split: '/' | last | split: '.' | first | replace: '-', ' ' | replace: '_', ' ' -%}
+                                            <li>{{ logo_name | escape }}</li>
+                                        {%- endif -%}
+                                    {%- endfor -%}
+                                </ul>
+                                <div class="treats__loop show--desktop">
+                                    <div class="index-treats-logos-lists" aria-hidden="true">
+                                        {%- for block in section.blocks -%}
+                                            {%- assign main_logo_image = block.settings.main_logo_image -%}
+                                            {%- if main_logo_image != blank -%}
+                                                <div class="treats__logo">
+                                                    <div class="treats__logo-wrap">
+                                                        {% render 'responsive-image-lazyload',
+                                                            desktop_image: main_logo_image,
+                                                            mobile_image: main_logo_image,
+                                                            class: 'custom--image',
+                                                            sizes: '300px',
+                                                            desktop_widths: '300, 600',
+                                                            mobile_widths: '300, 600'
+                                                        %}
+                                                    </div>
+                                                </div>
+                                            {%- endif -%}
+                                        {%- endfor -%}
+                                    </div>
+                                </div>
+                                <div class="treats__loop show--mobile">
+                                    <div class="index-treats-logos-lists-marquee" aria-hidden="true">
                                         <span>
                                             {%- for block in section.blocks -%}
                                                 {%- assign main_logo_image = block.settings.main_logo_image -%}
+                                                {%- assign logo_width = block.settings.logo_width | default:110 -%}
+                                                {%- assign logo_width_2x = logo_width | times: 2 -%}
+                                                {%- assign logo_width_4x = logo_width | times: 4 -%}
+                                                {%- capture logo_sizes -%}{{ logo_width_2x }}px{%- endcapture -%}
+                                                {%- capture logo_widths -%}{{ logo_width_2x }}, {{ logo_width_4x }}{%- endcapture -%}
                                                 {%- if main_logo_image != blank -%}
-                                                    <div class="treats__logo">
+                                                    <div class="treats__logo" style="width: {{ logo_width }}px;">
                                                         <div class="treats__logo-wrap">
                                                             {% render 'responsive-image-lazyload',
                                                                 desktop_image: main_logo_image,
                                                                 mobile_image: main_logo_image,
                                                                 class: 'custom--image',
-                                                                sizes: '(max-width: 749px) 100vw, 100vw'
+                                                                sizes: logo_sizes,
+                                                                desktop_widths: logo_widths,
+                                                                mobile_widths: logo_widths
                                                             %}
                                                         </div>
                                                     </div>
@@ -224,7 +261,7 @@
             "type": "number",
             "id": "desktop_top_padding",
             "label": "Desktop Top Padding",
-            "default": 67
+            "default": 120
         },
         {
             "type": "number",
@@ -236,7 +273,7 @@
             "type": "number",
             "id": "mobile_top_padding",
             "label": "Mobile Top Padding",
-            "default": 91
+            "default": 128
         },
         {
             "type": "number",
@@ -368,6 +405,13 @@
                     "type": "image_picker",
                     "id": "main_logo_image",
                     "label": "Main Logo Image"
+                },
+                {
+                    "type": "number",
+                    "id": "logo_width",
+                    "label": "Logo width for mobile",
+                    "info": "Add logo width for mobile only",
+                    "default": 110
                 }
             ]
         }

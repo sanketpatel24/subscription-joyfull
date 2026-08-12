@@ -8,7 +8,6 @@
 
 {% liquid
   assign product_form_id = 'QuickAdd-ProductForm-' | append: product.id | append: '-' | append: block.id
-  assign add_to_cart_text = 'actions.add' | t
   assign choose_options_text = 'actions.choose' | t
   # Logic to determine which variant to use (matching swatch selection logic from product-card)
   assign variant = product.selected_or_first_available_variant
@@ -23,12 +22,22 @@
   if product.variants_count == 1 or product.options.size == 1 and product.selected_variant
     assign quick_add_button = 'add'
   endif
+
+  assign add_to_cart_text = 'actions.add' | t
+  assign quick_add_price = variant.price | money_without_trailing_zeros
+  if quick_add_price != blank
+    assign add_to_cart_text = add_to_cart_text | append: ' – ' | append: quick_add_price
+    if variant.compare_at_price > variant.price
+      assign quick_add_compare_price = variant.compare_at_price | money_without_trailing_zeros
+      assign add_to_cart_text = add_to_cart_text | append: ' <span class="compare-at-price">' | append: quick_add_compare_price | append: '</span>'
+    endif
+  endif
 %}
 
 <quick-add-component
   class="quick-add custom-color-quick-add"
   ref="quickAdd"
-  data-product-title="{{ product.title }}"
+  data-product-title="{{ product.title | escape }}"
   data-quick-add-button="{{ quick_add_button }}"
   data-product-options-count="{{ product.options.size }}"
 >
@@ -71,41 +80,42 @@
             - There is only one product option, and it is displayed as swatches on the product card, and no swatch is selected
             - There is more than one product option
       {% endcomment %}
-      {% render 'add-to-cart-button',
+      {% render 'add-to-cart-button-quick',
         add_to_cart_text: add_to_cart_text,
         class: 'button quick-add__button quick-add__button--add add-to-cart-button',
         can_add_to_cart: can_add_to_cart,
-        icon_only_on_mobile: true,
         product: product
       %}
 
-      <button
-        class="button quick-add__button quick-add__button--choose add-to-cart-button"
-        {% comment %} type="submit" is the default, so we explicitly set it to "button" to prevent the ProductFormComponent.handleSubmit from being triggered {% endcomment %}
-        type="button"
-        name="add"
-        on:click="quick-add-component/handleClick"
-      >
-        <span
-          class="add-to-cart-text"
+      {% comment %}
+        <button
+          class="button quick-add__button quick-add__button--choose add-to-cart-button"
+          {% comment %} type="submit" is the default, so we explicitly set it to "button" to prevent the ProductFormComponent.handleSubmit from being triggered {% endcomment %}
+          type="button"
+          name="add"
+          on:click="quick-add-component/handleClick"
         >
-          {% comment %} split the icon and the text with a grid transition {% endcomment %}
           <span
-            aria-hidden="true"
-            class="svg-wrapper add-to-cart-icon"
+            class="add-to-cart-text"
           >
-            {{- 'icon-add-to-cart.svg' | inline_asset_content -}}
-          </span>
-          <span class="add-to-cart-text__content is-visually-hidden-mobile">
-            <span>
-              {% comment %} use a double-nested span to bake the padding into the text {% endcomment %}
+            {% comment %} split the icon and the text with a grid transition {% endcomment %}
+            <span
+              aria-hidden="true"
+              class="svg-wrapper add-to-cart-icon"
+            >
+              {{- 'icon-add-to-cart.svg' | inline_asset_content -}}
+            </span>
+            <span class="add-to-cart-text__content is-visually-hidden-mobile">
               <span>
-                {{ choose_options_text }}
+                {% comment %} use a double-nested span to bake the padding into the text {% endcomment %}
+                <span>
+                  {{ choose_options_text }}
+                </span>
               </span>
             </span>
           </span>
-        </span>
-      </button>
+        </button>
+      {% endcomment %}
     {%- endform -%}
   </product-form-component>
 </quick-add-component>

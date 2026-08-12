@@ -25,7 +25,6 @@
 
 {%- if main_left_heading_text != blank or select_faqs_accordions != blank or left_custom_button_link != blank or custom_image_or_video != blank -%}
     {{ 'index-meta-faqs-accordion.css' | asset_url | stylesheet_tag }}
-    <script src="{{ 'index-meta-faqs-accordion.js' | asset_url }}" defer></script>
 
     {%- style -%}
         #shopify-section-{{ section.id }} .faqs {
@@ -55,12 +54,12 @@
             <div class="faqs__body">
                 <div class="faqs__side">
                     {%- if main_left_heading_text != blank or select_faqs_accordions != blank or left_custom_button_link != blank -%}
-                        <div class="faqs__block" style="background: {% if inner_background_color != blank %}{{ inner_background_color }}{% else %}#FFEFC8{% endif %};">
+                        <div class="faqs__block" style="background: {% if inner_background_color != blank %}{{ inner_background_color }}{% else %}var(--color-creme){% endif %};">
                             <div class="faqs__block-wrap">
                                 {%- if main_left_heading_text != blank -%}
                                     <div class="faqs__title">
-                                        <div class="heading-m faqs__title-wrap">
-                                            <{{ main_heading_size }}>
+                                        <div class="faqs__title-wrap">
+                                            <{{ main_heading_size }} class="heading-m">
                                                 {{ main_left_heading_text }}
                                             </{{ main_heading_size }}>
                                         </div>
@@ -80,8 +79,8 @@
                                                             <li>
                                                                 {%- if question != blank -%}
                                                                     <div class="question">
-                                                                        <h3>{{ question }}</h3>
-                                                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 5.75L7.5 10.25L3 5.75" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                                                                        <h3 class="subtitle-2">{{ question | escape }}</h3>
+                                                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path d="M12 5.75L7.5 10.25L3 5.75" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
                                                                     </div>
                                                                 {%- endif -%}
                                                                 {%- if answers != blank -%}

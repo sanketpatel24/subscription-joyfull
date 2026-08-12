@@ -1,4 +1,6 @@
 {%- liquid
+    assign custom_class = section.settings.custom_class
+
     assign background_color = section.settings.background_color
     assign information_color = section.settings.information_color
     assign desktop_top_padding = section.settings.desktop_top_padding
@@ -27,7 +29,6 @@
 
 {%- if left_common_video != blank or left_desktop_image != blank or left_mobile_image != blank or heading_text != blank or details_text_1 != blank or details_text_2 != blank or button_link != blank or section.blocks.size > 0 -%}
     {{ 'index-media-with-content.css' | asset_url | stylesheet_tag }}
-    <script src="{{ 'index-media-with-content.js' | asset_url }}" defer></script>
 
     {%- style -%}
         #shopify-section-{{ section.id }} .media-content {
@@ -52,7 +53,7 @@
         }
     {%- endstyle -%}
 
-    <section class="media-content{% if media_position == 'right' %} media-content__reverse{% endif %}">
+    <section class="media-content {{ custom_class | escape }} {% if media_position == 'right' %} media-content__reverse{% endif %}">
         <div class="media-content__body">
             {%- if main_common_video != blank or main_desktop_image != blank or main_mobile_image != blank -%}
                 <div class="media-content__media">
@@ -100,19 +101,19 @@
                                 <div class="media-content__right">
                                     <div class="media-content__right-wrap">
                                         {%- if heading_text != blank -%}
-                                            <div class="heading-m media-content__title">
-                                                <{{ heading_size }}>
-                                                    {{ heading_text | newline_to_br }}
+                                            <div class="media-content__title">
+                                                <{{ heading_size }} class="heading-m">
+                                                    {{ heading_text | escape | newline_to_br }}
                                                 </{{ heading_size }}>
                                             </div>
                                         {%- endif -%}
                                         {%- if details_text_1 != blank -%}
-                                            <div class="text-common media-content__detail{% if details_text_2 != blank %} show--desktop{% endif %}">
+                                            <div class="text-common media-content__info{% if details_text_2 != blank %} show--desktop{% endif %}">
                                                 {{ details_text_1 }}
                                             </div>
                                         {%- endif -%}
                                         {%- if details_text_2 != blank -%}
-                                            <div class="text-common media-content__detail show--mobile">
+                                            <div class="text-common media-content__info show--mobile">
                                                 {{ details_text_2 }}
                                             </div>
                                         {%- endif -%}
@@ -135,8 +136,9 @@
                                                                 desktop_image: logo_image,
                                                                 mobile_image: logo_image,
                                                                 class: 'custom--icon',
-                                                                sizes: '(max-width: 749px) 100vw, 100vw',
-                                                                alt: 'custom--image'
+                                                                sizes: '224px',
+                                                                desktop_widths: '224, 448',
+                                                                mobile_widths: '224, 448'
                                                             %}
                                                         </div>
                                                     {%- endif -%}
@@ -159,6 +161,12 @@
     "name": "Index Media With Content",
     "class": "index-media-with-content__section",
     "settings": [
+        {
+            "type": "textarea",
+            "id": "custom_class",
+            "label": "Custom class",
+            "info": "our_story_block"
+        },
         {
             "type": "header",
             "content": "==== Color Settings ===="

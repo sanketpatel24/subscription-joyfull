@@ -7,3 +7,4 @@
       padding: var(--mobile-top-padding) 0 var(--mobile-bottom-padding);
     }
 }
+.announcement__block-text{text-align:center; line-height:1.286; }

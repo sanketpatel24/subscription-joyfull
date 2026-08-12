@@ -1,8 +1,8 @@
 {%- unless settings.type_body_font.system? -%}
-  {{ settings.type_body_font | font_url | preload_tag: as: 'font', type: 'font/woff2', fetchpriority: 'high' }}
+  {{ settings.type_body_font | font_url | preload_tag: as: 'font', type: 'font/woff2', fetchpriority: 'auto' }}
 {%- endunless -%}
 {%- unless settings.type_subheading_font.system? -%}
-  {{ settings.type_subheading_font | font_url | preload_tag: as: 'font', type: 'font/woff2', fetchpriority: 'high' }}
+  {{ settings.type_subheading_font | font_url | preload_tag: as: 'font', type: 'font/woff2', fetchpriority: 'auto' }}
 {%- endunless -%}
 {%- unless settings.type_heading_font.system? -%}
   {{ settings.type_heading_font | font_url | preload_tag: as: 'font', type: 'font/woff2', fetchpriority: 'auto' }}
@@ -14,8 +14,8 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="{{ 'Figtree-Regular.woff2' | file_url }}" fetchpriority="high">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="{{ 'Figtree-Bold.woff2' | file_url }}" fetchpriority="high">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="{{ 'DaimitoCondensed-Bold.woff2' | file_url }}" fetchpriority="high">
-<link rel="preload" as="font" type="font/woff2" crossorigin href="{{ 'BurnedPancakes-Regular.woff2' | file_url }}" fetchpriority="high">
-<link rel="preload" as="font" type="font/woff2" crossorigin href="{{ 'BurnedPancakes-Bold.woff2' | file_url }}" fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="{{ 'BurnedPancakes-Regular.woff2' | file_url }}" fetchpriority="low">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="{{ 'BurnedPancakes-Bold.woff2' | file_url }}" fetchpriority="low">
 
 {%- style -%}
 

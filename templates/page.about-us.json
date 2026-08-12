@@ -116,6 +116,50 @@
         "mobile_bottom_padding": 28
       }
     },
+    "index_content_marquee_bar_wpDzHc": {
+      "type": "index-content-marquee-bar",
+      "name": "Index Content Marquee Bar",
+      "settings": {
+        "accessible_label": "",
+        "select_marquee": [
+          "no-fillers",
+          "vet-formulated",
+          "picky-pet-approved",
+          "gut-health-made-easy",
+          "science-backed"
+        ],
+        "section_background_color": "rgba(0,0,0,0)",
+        "marquee_background_color": "#8fc9c9",
+        "scroll_speed": 40,
+        "enable_infinite_loop": true,
+        "pause_on_hover": true,
+        "show_dot_separator": true,
+        "desktop_text_size": 24,
+        "desktop_item_gap": 20,
+        "desktop_icon_size": 12,
+        "desktop_dot_size": 5,
+        "mobile_text_size": 24,
+        "mobile_item_gap": 18,
+        "mobile_icon_size": 20,
+        "mobile_dot_size": 5,
+        "desktop_wave_band_height": 56,
+        "desktop_wave_amplitude": 25,
+        "desktop_wave_length": 1660,
+        "desktop_wave_phase": 55,
+        "mobile_wave_band_height": 48,
+        "mobile_wave_amplitude": 13,
+        "mobile_wave_length": 375,
+        "mobile_wave_phase": 50,
+        "desktop_top_padding": 36,
+        "desktop_bottom_padding": 60,
+        "mobile_top_padding": 36,
+        "mobile_bottom_padding": 70,
+        "desktop_top_margin": -53,
+        "desktop_bottom_margin": -53,
+        "mobile_top_margin": -37,
+        "mobile_bottom_margin": -37
+      }
+    },
     "about_research_proof_z9hkJa": {
       "type": "about-research-proof",
       "blocks": {
@@ -197,13 +241,58 @@
         "mobile_top_padding": 32,
         "mobile_bottom_padding": 32
       }
+    },
+    "index_feature_collections_AzbkRi": {
+      "type": "index-feature-collections",
+      "blocks": {
+        "static-product-card": {
+          "type": "_product-card",
+          "static": true,
+          "settings": {
+            "product_card_gap": 0,
+            "background_color": "",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_color": "",
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "name": "Index Feature Collections",
+      "settings": {
+        "background_color": "#fff9f0",
+        "information_color": "",
+        "desktop_top_padding": 88,
+        "desktop_bottom_padding": 62,
+        "mobile_top_padding": 32,
+        "mobile_bottom_padding": 32,
+        "main_heading_size": "h2",
+        "main_heading_text": "The crowd pleasers",
+        "main_collection_list": [
+          "gut-health-favorites",
+          "dogs",
+          "cats"
+        ],
+        "main_product_limit": 8,
+        "main_button_text": "Shop All",
+        "main_button_link": "shopify://collections/all",
+        "main_button_style": "primary-button"
+      }
     }
   },
   "order": [
     "main",
     "about_founder_story_EzrCiH",
     "about_quality_principles_JwTEMV",
+    "index_content_marquee_bar_wpDzHc",
     "about_research_proof_z9hkJa",
-    "about_team_6pnGny"
+    "about_team_6pnGny",
+    "index_feature_collections_AzbkRi"
   ]
 }

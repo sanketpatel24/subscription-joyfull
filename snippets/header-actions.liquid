@@ -28,10 +28,16 @@
     </span>
 
     <span
-      class="svg-wrapper {% if display_style != 'icon' %}desktop:hidden{% endif %}"
+      class="svg-wrapper header-actions__cart-icon-image header-actions__cart-icon-image--empty {% if display_style != 'icon' %}desktop:hidden{% endif %}"
       aria-hidden="true"
     >
-      {{ 'icon-cart.svg' | inline_asset_content }}
+      <img src="{{ 'icon-cart.svg' | asset_url }}" alt="cart" width="" height="" />
+    </span>
+    <span
+      class="svg-wrapper header-actions__cart-icon-image header-actions__cart-icon-image--fill {% if display_style != 'icon' %}desktop:hidden{% endif %}"
+      aria-hidden="true"
+    >
+      <img src="{{ 'icon-cart-fill.svg' | asset_url }}" alt="cart" width="" height="" />
     </span>
 
     {% render 'cart-bubble', limit: 100 %}
@@ -272,6 +278,18 @@
   .header-actions__cart-icon .cart-bubble__text {
     font-family: var(--font-paragraph--family);
     font-weight: var(--font-paragraph--weight);
+  }
+
+  .header-actions__cart-icon-image--fill {
+    display: none;
+  }
+
+  .header-actions__cart-icon--has-cart .header-actions__cart-icon-image--empty {
+    display: none;
+  }
+
+  .header-actions__cart-icon--has-cart .header-actions__cart-icon-image--fill {
+    display: inline-flex;
   }
 
   .header-actions__cart-icon.header-actions__cart-icon--has-cart svg {

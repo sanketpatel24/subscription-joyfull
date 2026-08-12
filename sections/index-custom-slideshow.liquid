@@ -27,7 +27,7 @@
         }
     {%- endstyle -%}
 
-    <section class="slideshow">
+    <section class="slideshow" role="region" aria-roledescription="carousel" aria-label="{{ 'accessibility.slideshow' | t }}">
         <div class="slideshow__body">
             <div class="swiper{% if section.blocks.size > 1 %} index-custom-slideshow-slider{% endif %}">
                 <div class="swiper-wrapper">
@@ -234,23 +234,35 @@
                 },
                 {
                     "type": "image_picker",
-                    "id": "main_custom_image_1",
-                    "label": "Main Custom Image-1"
+                    "id": "product_image_1",
+                    "label": "Product Image-1"
                 },
                 {
                     "type": "textarea",
-                    "id": "main_custom_text_1",
-                    "label": "Main Custom Text-1"
+                    "id": "product_title_1",
+                    "label": "Product Title-1"
+                },
+                {
+                    "type": "url",
+                    "id": "product_link_1",
+                    "label": "Product Link 1",
+                    "default": "/"
                 },
                 {
                     "type": "image_picker",
-                    "id": "main_custom_image_2",
-                    "label": "Main Custom Image-2"
+                    "id": "product_image_2",
+                    "label": "Product Image-2"
                 },
                 {
                     "type": "textarea",
-                    "id": "main_custom_text_2",
-                    "label": "Main Custom Text-2"
+                    "id": "product_title_2",
+                    "label": "Product Title-2"
+                },
+                {
+                    "type": "url",
+                    "id": "product_link_2",
+                    "label": "Product Link 2",
+                    "default": "/"
                 }
             ]
         },
@@ -282,6 +294,11 @@
                 {
                     "type": "header",
                     "content": "Media Settings"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "need_transperant_header",
+                    "label": "Need Transperant Header ?"
                 },
                 {
                     "type": "video",

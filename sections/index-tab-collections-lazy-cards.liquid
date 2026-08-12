@@ -1,0 +1,64 @@
+{%- comment -%}
+	AJAX endpoint section for lazy-loading tab collection cards.
+
+	This section renders just the <div class="swiper-slide"> elements for a
+	single collection's product cards. The parent section already contains the
+	.swiper container, .swiper-wrapper, and prev/next arrow SVGs — so this
+	endpoint only needs to supply the slides themselves.
+
+	The JS handler injects the response into the existing .swiper-wrapper via
+	innerHTML, then initializes (or re-initializes) Swiper.
+
+	It is designed to be fetched via:
+	  /collections/{handle}?section_id=index-tab-collections-lazy-cards&limit=...
+
+	URL parameters:
+	  - section_id: "index-tab-collections-lazy-cards" (standard Shopify param; tells Shopify
+	      to render this section in isolation).
+	  - limit: Number of products to render (read via cv-url-param.liquid).
+	      Defaults to 12.
+
+	The collection object is provided automatically by Shopify when the URL path
+	is /collections/{handle}.
+
+	Card-product render parameters ({% render 'card-product' %}):
+	  - card_product:         The product object from collection.products loop.
+	  - media_aspect_ratio:   "adapt" (hardcoded; matches homepage config).
+	  - image_shape:          "default" (hardcoded; matches homepage config).
+	  - show_secondary_image: true (hardcoded; matches homepage config).
+	  - show_vendor:          false (hardcoded; matches homepage config).
+	  - show_rating:          false (hardcoded; matches homepage config).
+	  - section_id:           section.id — this section's own ID. The original
+	                          sections pass block.id here, but since this endpoint
+	                          has no blocks the section ID is used instead. It is
+	                          only used for DOM scoping within the card.
+	  - quick_add:            "none" (hardcoded; matches homepage config).
+{%- endcomment -%}
+
+{%- comment -%} --- Read URL parameters --- {%- endcomment -%}
+{%- capture limit_raw -%}{%- render 'cv-url-param', param_name: 'limit' -%}{%- endcapture -%}
+{%- assign limit_str = limit_raw | strip -%}
+{%- if limit_str != blank -%}
+	{%- assign product_limit = limit_str | plus: 0 -%}
+{%- else -%}
+	{%- assign product_limit = 12 -%}
+{%- endif -%}
+
+{%- comment -%}
+	Shopify provides `collection` automatically when the URL is
+	/collections/{handle}?section_id=index-tab-collections-lazy-cards
+{%- endcomment -%}
+{%- if collection != blank and collection.products.size > 0 -%}
+	{%- for product in collection.products limit: product_limit -%}
+		<div class="swiper-slide product__grid-item">
+			{% content_for 'block', type: '_product-card', id: 'static-product-card', closest.product: product %}
+		</div>
+	{%- endfor -%}
+{%- endif -%}
+
+{% schema %}
+{
+	"name": "Tab Collection Cards",
+	"settings": []
+}
+{% endschema %}

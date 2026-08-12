@@ -22,7 +22,6 @@
 
 {%- if main_common_video != blank or main_desktop_image != blank or main_mobile_image != blank or heading_text != blank or details_text_1 != blank or details_text_2 != blank or button_link != blank -%}
     {{ 'index-why-subscribe-block.css' | asset_url | stylesheet_tag }}
-    <script src="{{ 'index-why-subscribe-block.js' | asset_url }}" defer></script>
 
     {%- style -%}
         #shopify-section-{{ section.id }} .subscribe {
@@ -49,7 +48,7 @@
 
     <section class="subscribe">
         <div class="page-width">
-            <div class="subscribe__body" style="background: {% if inner_background_color != blank %}{{ inner_background_color }}{% else %}#D2C6B7{% endif %};">
+            <div class="subscribe__body" style="background: {% if inner_background_color != blank %}{{ inner_background_color }}{% else %}var(--color-sand){% endif %};">
                 {%- if main_common_video != blank or main_desktop_image != blank or main_mobile_image != blank -%}
                     <div class="subscribe__media">
                         <div class="subscribe__media-wrap">
@@ -78,9 +77,9 @@
                                         {%- if heading_text != blank or details_text_1 != blank -%}
                                             <div class="subscribe__group">
                                                 {%- if heading_text != blank -%}
-                                                    <div class="heading-m subscribe__group-title">
-                                                        <{{ heading_size }}>
-                                                            {{ heading_text | newline_to_br }}
+                                                    <div class="subscribe__group-title">
+                                                        <{{ heading_size }} class="heading-m">
+                                                            {{ heading_text | escape | newline_to_br }}
                                                         </{{ heading_size }}>
                                                     </div>
                                                 {%- endif -%}

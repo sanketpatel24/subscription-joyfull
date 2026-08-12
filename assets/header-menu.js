@@ -1,5 +1,5 @@
 import { Component } from '@theme/component';
-import { debounce, onDocumentLoaded, setHeaderMenuStyle } from '@theme/utilities';
+import { debounce, lockScroll, onDocumentLoaded, setHeaderMenuStyle, unlockScroll } from '@theme/utilities';
 import { MegaMenuHoverEvent } from '@theme/events';
 
 /** Skim filter: pointer must dwell this long before MegaMenuHoverEvent fires. */
@@ -47,6 +47,7 @@ class HeaderMenu extends Component {
     this.#cleanupMutationObserver();
     clearTimeout(this.#hoverDispatchTimer);
     this.#hoverDispatchTimer = undefined;
+    unlockScroll(this);
   }
 
   /**
@@ -263,10 +264,22 @@ class HeaderMenu extends Component {
     }
 
     const headerVisibleHeight = this.#getHeaderVisibleHeight();
+    const submenuInner = submenu?.querySelector('.menu-list__submenu-inner');
+    const isSubmenuClamped = submenuInner ? submenuInner.scrollHeight > submenuInner.clientHeight + 1 : false;
+    const curveHeight = isSubmenuClamped ? 0 : submenu?.querySelector('.mega-menu-curve')?.offsetHeight || 0;
 
     this.headerComponent.style.setProperty('--submenu-height', `${finalHeight}px`);
+    this.headerComponent.style.setProperty('--mega-menu-curve-height', `${curveHeight}px`);
     this.#setFullOpenHeaderHeight(finalHeight, headerVisibleHeight);
     this.style.setProperty('--submenu-opacity', '1');
+    if(submenu)
+    {
+      document.body.classList.add("megamenu_open");
+      lockScroll(this);
+    } else {
+      document.body.classList.remove("megamenu_open");
+      unlockScroll(this);
+    }
     this.#startPointerTracking(item, previouslyActiveItem);
   };
 
@@ -308,8 +321,11 @@ class HeaderMenu extends Component {
     this.#hoverDispatchTimer = undefined;
 
     this.headerComponent?.style.setProperty('--submenu-height', '0px');
+    this.headerComponent?.style.setProperty('--mega-menu-curve-height', '0px');
     this.#setFullOpenHeaderHeight(0, 0);
     this.style.setProperty('--submenu-opacity', '0');
+    document.body.classList.remove("megamenu_open");
+    unlockScroll(this);
     this.dataset.overflowExpanded = 'false';
 
     const submenu = findSubmenu(item);

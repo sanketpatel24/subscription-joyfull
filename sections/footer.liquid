@@ -1,17 +1,69 @@
-
-
 {% liquid
   if section.settings.background_color != blank
     render 'contrast-override', background_color: section.settings.background_color, section_id: section.id
   endif
 %}
 
+{%- liquid
+  assign desktop_top_padding = section.settings.desktop_top_padding
+  assign desktop_bottom_padding = section.settings.desktop_bottom_padding
+  assign mobile_top_padding = section.settings.mobile_top_padding
+  assign mobile_bottom_padding = section.settings.mobile_bottom_padding
+
+  assign enable_social_icons = section.settings.enable_social_icons
+  assign enable_newsletter_form = section.settings.enable_newsletter_form
+  assign email_heading_size = section.settings.email_heading_size
+  assign email_heading_text = section.settings.email_heading_text
+  assign email_detail_text = section.settings.email_detail_text
+  assign email_input_placeholder = section.settings.email_input_placeholder
+  assign klaviyo_public_key = section.settings.klaviyo_public_key
+  assign klaviyo_list_id = section.settings.klaviyo_list_id
+  assign email_error_message = section.settings.email_error_message
+  assign email_success_message = section.settings.email_success_message
+  assign email_button_text = section.settings.email_button_text
+  
+  assign logo_background_color = section.settings.logo_background_color
+  assign footer_logo_image = section.settings.footer_logo_image
+  assign custom_desktop_image = section.settings.custom_desktop_image
+  assign custom_mobile_image = section.settings.custom_mobile_image
+
+  assign inner_background_color = section.settings.inner_background_color
+  assign enable_footer_copyright = section.settings.enable_footer_copyright
+  assign footer_copyright_text = section.settings.footer_copyright_text
+  assign footer_bottom_menu = section.settings.footer_bottom_menu
+-%}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} .footer__body {
+      {%- if desktop_top_padding != blank -%}
+          --desktop-top-padding: {{ desktop_top_padding }}px;
+      {%- endif -%}
+      {%- if desktop_bottom_padding != blank -%}
+          --desktop-bottom-padding: {{ desktop_bottom_padding }}px;
+      {%- endif -%}
+      {%- if mobile_top_padding != blank -%}
+          --mobile-top-padding: {{ mobile_top_padding }}px;
+      {%- endif -%}
+      {%- if mobile_bottom_padding != blank -%}
+          --mobile-bottom-padding: {{ mobile_bottom_padding }}px;
+      {%- endif -%}
+      {%- if inner_background_color != blank -%}
+          --inner-background-color: {{ inner_background_color }};
+      {%- endif -%}
+      {%- if logo_background_color != blank -%}
+          --logo-background-color: {{ logo_background_color }};
+      {%- endif -%}
+      
+  }
+{%- endstyle -%}
+
+{{ "footer.css" | asset_url | stylesheet_tag }}
+<script src="{{ 'footer.js' | asset_url }}" defer></script>
+
 <div
   class="section-background{% if section.settings.background_color != blank %} color-custom-{{ section.id }}{% endif %}"
 ></div>
-<div
-  class="section section--{{ section.settings.section_width }}{% if section.settings.background_color != blank %} color-custom-{{ section.id }}{% endif %}"
->
+<div class="section section--{{ section.settings.section_width }}{% if section.settings.background_color != blank %} color-custom-{{ section.id }}{% endif %} footer__body">
   {% liquid
     assign total_blocks = section.blocks.size
 
@@ -35,22 +87,194 @@
       assign has_isolated_grid_item_tablet = true
     endif
   %}
-  <div
-    class="
-      footer-content
-      spacing-style
-      {% if has_isolated_grid_item_desktop %}footer-content--isolated-grid-item-desktop{% endif %}
-      {% if has_isolated_grid_item_tablet %}footer-content--isolated-grid-item-tablet{% endif %}
-    "
-    style="
-      {%  render 'spacing-style', settings: section.settings %}
-      --footer-gap: {{ section.settings.gap }}px;
-      --grid-columns: {{ grid_columns }};
-      --last-row-count: {{ last_row_count }};
-      --tablet-last-row-count: {{ tablet_last_row_count }};
-    "
-  >
-    {% content_for 'blocks' %}
+  <div class="footer__body-wrap">
+    {%- if section.blocks.size > 0 or enable_newsletter_form == true -%}
+      <div class="footer__side">
+        <div class="page-width">
+          <div class="footer__side-wrap">
+            {%- if section.blocks.size > 0 -%}
+              <div class="footer__loop">
+                <div
+                  class="
+                    footer-content
+                    spacing-style
+                    {% if has_isolated_grid_item_desktop %}footer-content--isolated-grid-item-desktop{% endif %}
+                    {% if has_isolated_grid_item_tablet %}footer-content--isolated-grid-item-tablet{% endif %} footer__loop-wrap"
+                  style="
+                    {%  render 'spacing-style', settings: section.settings %}
+                    --footer-gap: {{ section.settings.gap }}px;
+                    --grid-columns: {{ grid_columns }};
+                    --last-row-count: {{ last_row_count }};
+                    --tablet-last-row-count: {{ tablet_last_row_count }};
+                  "
+                >
+                  {% content_for 'blocks' %}
+                </div>
+              </div>
+            {%- endif -%}
+            {%- if enable_newsletter_form == true and klaviyo_public_key != blank and klaviyo_list_id != blank -%}
+              <div class="footer__email">
+                <div class="footer__email-wrap">
+                  {%- if email_heading_text != blank -%}
+                    <div class="footer__email-wrap-title">
+                      <{{ email_heading_size }} class="heading-s bold">
+                        {{ email_heading_text | escape | newline_to_br }}
+                      </{{ email_heading_size }}>
+                    </div>
+                  {%- endif -%}
+                  {%- if email_detail_text != blank -%}
+                    <div class="text-common footer__email-wrap-info">
+                      {{ email_detail_text }}
+                    </div>
+                  {%- endif -%}
+                  {%- if klaviyo_public_key != blank and klaviyo_list_id != blank -%}
+                    <div class="footer__email-wrap-form">
+                      <form
+                        class="kl-footer-form"
+                        data-klaviyo-form="{{ section.id }}"
+                        data-public-key="{{ klaviyo_public_key | escape }}"
+                        data-list-id="{{ klaviyo_list_id | escape }}"
+                      >
+                        <div class="kl-footer-form-input">
+                          <label for="footer-email-{{ section.id }}" class="visually-hidden">
+                            {{ email_input_placeholder | escape }}
+                          </label>
+                          <input
+                            id="footer-email-{{ section.id }}"
+                            type="email"
+                            class="text-common bold kl-footer-input"
+                            placeholder="{{ email_input_placeholder | escape }}"
+                            autocomplete="email"
+                            required
+                          >
+                        </div>
+                        <button
+                          type="submit"
+                          class="kl-footer-submit common-button-flex"
+                        >
+                          <span class="button common-button">{{ email_button_text | escape }}</span>
+                          <span class="common-button-icon">
+                            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                              <rect width="48" height="48" rx="24" fill="var(--color-joy)"/>
+                              <path d="M31.7467 29.0986C31.4073 28.8435 31.0881 28.589 30.7287 28.3734C29.4718 27.5888 27.3371 24.4319 27.0172 23.9031C26.4586 22.9616 25.7403 22.2165 24.6035 22.0009C23.346 21.7656 21.9698 21.844 21.3307 22.9616C20.0141 25.2554 17.64 27.4912 16.9814 27.9026C16.5025 28.1967 16.0432 28.4908 15.5844 28.8046C15.0854 29.1573 14.7863 29.667 14.567 30.2162L14.5073 30.3929C14.5073 30.3929 14.447 30.5301 14.447 30.6085C14.3672 31.3733 14.4074 32.0986 14.7863 32.7849C15.4248 33.9612 16.9814 35.0399 18.1785 34.7452C18.438 34.6865 18.697 34.6278 18.9565 34.5889C19.5353 34.4907 20.1141 34.3727 20.6922 34.2948C21.2509 34.2164 21.8297 34.1379 22.4084 34.1181C23.5459 34.1181 24.7028 34.0786 25.8201 34.2948C26.2393 34.3727 26.6584 34.4122 27.0575 34.4907C27.6959 34.6278 28.3143 34.7847 28.9333 34.9416C29.7314 35.177 30.4893 34.6476 31.2075 34.2948C32.0854 33.863 32.6441 33.1179 32.864 32.1968C32.9834 31.7063 32.9834 31.1769 32.8238 30.6672C32.6246 30.0204 32.2852 29.4712 31.7467 29.04" fill="#2F261C"/>
+                              <path d="M35.0762 17.8643C34.6169 17.6289 34.0582 17.7469 33.639 18.041C33.3198 18.2566 33.0006 18.5111 32.7417 18.8052C32.2025 19.4131 31.8034 20.139 31.5043 20.9032C31.3246 21.3739 31.1455 21.8447 31.0254 22.3346C30.9255 22.7466 30.906 23.1976 30.8262 23.609C30.7263 24.1582 30.8262 24.6877 30.9456 25.1974C31.2649 26.4916 32.0033 27.4912 33.3003 27.9619C34.2379 28.3147 35.5551 28.1973 36.3727 27.6092C37.0714 27.1187 37.5302 26.4323 37.8293 25.6483C38.2083 24.6284 38.2083 19.4131 35.0957 17.884" fill="#2F261C"/>
+                              <path d="M24.961 18.1583C25.22 18.9818 25.6794 19.6879 26.3976 20.1976C26.8168 20.4916 27.2956 20.6485 27.794 20.6683C28.2332 20.6683 28.6719 20.5898 29.0709 20.4132C29.9092 20.0604 30.5873 19.4914 31.0065 18.6877C31.146 18.4134 31.266 18.1193 31.4256 17.7666C31.4853 17.3348 31.5852 16.8646 31.5852 16.3741C31.5852 15.6291 31.4853 14.884 31.266 14.1587C31.0064 13.2957 30.6476 12.2566 30.089 11.5115C29.59 10.845 28.9911 10.3353 28.1333 10.1197C27.5351 9.96276 26.9959 10.0801 26.4774 10.355C25.9785 10.6293 25.6391 11.0606 25.3796 11.5511C25.22 11.8254 25.1207 12.3548 25.0007 12.6489C24.8014 13.2172 24.6814 13.806 24.6217 14.3941C24.562 14.8253 24.562 15.2565 24.562 15.6878C24.562 16.0603 24.5419 16.4526 24.6016 16.8251C24.6613 17.2761 24.8015 17.7073 24.941 18.1391" fill="#2F261C"/>
+                              <path d="M16.6835 17.6099C16.8431 18.3938 17.2622 19.0215 17.8611 19.5707C18.3997 20.0606 19.0381 20.3158 19.7564 20.4721C20.1555 20.5505 20.5344 20.4721 20.8939 20.3744C21.4123 20.2175 21.8314 19.9037 22.1909 19.4922C22.6295 19.0017 22.9488 18.4531 23.1486 17.8452C23.2881 17.4134 23.4276 16.9624 23.4678 16.4923C23.5477 15.5508 23.5873 14.6099 23.4276 13.669C23.3478 13.1198 23.2284 12.5119 23.0286 11.9825C22.8489 11.4728 22.5699 10.9823 22.1708 10.6098C21.4921 9.98272 20.6544 9.86473 19.796 10.1396C19.1777 10.3355 18.6592 10.7475 18.24 11.2572C17.7015 11.904 17.2823 12.7078 17.0027 13.4923C16.9832 13.5708 16.943 13.669 16.9034 13.7469C16.664 14.3943 16.564 15.0609 16.4842 15.7275C16.4641 15.9826 16.4641 16.2569 16.4842 16.5312C16.5238 16.8846 16.6037 17.2373 16.664 17.5901" fill="#2F261C"/>
+                              <path d="M17.06 24.3745C17.1794 23.8648 17.2593 23.3354 17.1795 22.7868C17.0997 22.355 17.0801 21.9237 16.9802 21.5123C16.8602 21.0218 16.6811 20.551 16.5014 20.0809C16.2022 19.3161 15.8032 18.5908 15.264 17.9829C15.0051 17.6888 14.6859 17.4337 14.3666 17.2181C13.9274 16.924 13.3888 16.8066 12.91 17.0414C9.81692 18.5908 9.77732 23.8061 10.1764 24.8255C10.4755 25.61 10.9147 26.2964 11.633 26.7863C12.4707 27.3744 13.7678 27.4727 14.7054 27.1391C16.0024 26.6689 16.7408 25.649 17.06 24.3745Z" fill="#2F261C"/>
+                            </svg>
+                          </span>
+                        </button>
+                      </form>
+                      <p class="text-common bold kl-footer-error" data-error="{{ section.id }}" role="alert" hidden>
+                        {{ email_error_message | escape }}
+                      </p>
+                      <p
+                        class="text-common bold kl-footer-success"
+                        data-success="{{ section.id }}"
+                        role="status"
+                        hidden
+                      >
+                        {{ email_success_message | escape }}
+                      </p>
+                    </div>
+                  {%- endif -%}                  
+                </div>
+              </div>
+            {%- endif -%}
+          </div>
+          {%- if enable_social_icons == true -%}
+            <div class="footer__icons show--mobile">
+              <div class="footer__icons-wrap">
+                {%- render 'footer-custom-social-icons', class: 'footer__social-icons' -%}
+              </div>
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+    {%- if footer_logo_image != blank or custom_desktop_image != blank or custom_mobile_image != blank -%}
+      <div class="footer__item">
+        <div class="footer__item-wrap">
+          {%- if footer_logo_image != blank or custom_desktop_image != blank or custom_mobile_image != blank -%}
+            <div class="footer__part">
+              <div class="footer__back-wrap-wave">
+                <svg class="show--desktop" width="1440" height="72" viewBox="0 0 1440 72" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                  <path d="M886.134 4.975C951.103 1.041 1015.35 -0.480095 1081.06 0.130276C1172.49 0.979076 1262.71 4.92781 1351.77 12.7768L1402.5 17.2445L1406.81 17.8744L1440 21.2123V72.0004H0V22.8949C90.2693 33.0709 182.349 39.4089 274.828 42.7611L278.818 42.6986C281.578 42.6557 284.798 42.2839 287.028 43.1898L321.668 44.0385C442.397 46.9997 590.956 42.2647 707.005 24.5355C765.924 15.5374 824.524 8.70873 886.134 4.975Z" fill="{{  logo_background_color }}"/>
+                </svg>
+                <svg class="show--mobile" width="375" height="19" viewBox="0 0 375 19" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                  <path d="M230.764 1.29564C247.683 0.271163 264.415 -0.125023 281.526 0.0339189C305.336 0.254961 328.831 1.2829 352.023 3.32689L365.234 4.49095L366.356 4.65404L375 5.52415V18.7497H0V5.96165C23.5075 8.61163 47.4863 10.2625 71.5693 11.1355L72.6084 11.1189C73.3271 11.1077 74.1663 11.0109 74.7471 11.2468L83.7676 11.4685C115.207 12.2396 153.895 11.0064 184.116 6.38939C199.46 4.04616 214.72 2.26796 230.764 1.29564Z" fill="{{  logo_background_color }}"/>
+                </svg>
+              </div>
+              <div class="footer__part-bottom">
+                <div class="page-width">
+                  <div class="footer__part-wrap">
+                    {%- if footer_logo_image != blank -%}
+                      <div class="footer__logo">
+                        <div class="footer__logo-wrap">
+                          <a href="{{ routes.root_url }}">
+                            {% render 'responsive-image-lazyload',
+                              desktop_image: footer_logo_image,
+                              mobile_image: footer_logo_image,
+                              alt: shop.name,
+                              class: 'custom--image',
+                              sizes: '(max-width: 749px) 100vw, 100vw'
+                            %}
+                          </a>
+                        </div>
+                      </div>
+                    {%- endif -%}
+                    {%- if custom_desktop_image != blank or custom_mobile_image != blank -%}
+                      <div class="footer__image">
+                        <div class="footer__image-wrap">
+                          {% render 'responsive-image-lazyload',
+                            desktop_image: custom_desktop_image,
+                            mobile_image: custom_mobile_image,
+                            class: 'custom--image',
+                            sizes: '(max-width: 749px) 100vw, 100vw'
+                          %}
+                        </div>
+                      </div>
+                    {%- endif -%}
+                  </div>
+                </div>
+              </div>
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+    {%- if enable_footer_copyright == true or footer_bottom_menu != blank -%}
+      <div class="footer__both">
+        <div class="page-width">
+          <div class="footer__both-wrap">
+            {%- if enable_footer_copyright == true -%}
+              <div class="footer__text">
+                <div class="text-3 text-3--caps bold footer__text-wrap">
+                  <a href="{{ routes.root_url }}">Copyright &copy; {{ 'now' | date: '%Y' }} {{ footer_copyright_text | default: shop.name | escape }}</a>
+                </div>
+              </div>
+            {%- endif -%}
+            {%- if footer_bottom_menu != blank -%}
+              <div class="footer__list">
+                <div class="footer__list-wrap">
+                  <nav aria-label="{{ footer_bottom_menu.title | default: 'Footer' | escape }}">
+                    <ul>
+                      {%- for link in footer_bottom_menu.links -%}
+                        <li class="text-3 text-3--caps bold footer__list-wrap-menu">
+                          <a href="{{ link.url }}">
+                            {{ link.title | escape }}
+                          </a>
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </nav>
+                </div>
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    {%- endif -%}
   </div>
 </div>
 
@@ -102,7 +326,7 @@
 {% schema %}
 {
   "name": "t:names.footer",
-  "class": "section-wrapper",
+  "class": "section-wrapper footer__section",
   "blocks": [
     {
       "type": "_divider"
@@ -182,6 +406,185 @@
       "id": "background_color",
       "label": "t:settings.background_color",
       "default": "{{ settings.color_palette.foreground }}"
+    },
+    {
+      "type": "header",
+      "content": "Layout Settings"
+    },
+    {
+      "type": "number",
+      "id": "desktop_top_padding",
+      "label": "Desktop Top Padding",
+      "default": 56
+    },
+    {
+      "type": "number",
+      "id": "desktop_bottom_padding",
+      "label": "Desktop Bottom Padding",
+      "default": 56
+    },
+    {
+      "type": "number",
+      "id": "mobile_top_padding",
+      "label": "Mobile Top Padding",
+      "default": 24
+    },
+    {
+      "type": "number",
+      "id": "mobile_bottom_padding",
+      "label": "Mobile Bottom Padding",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Newsletter"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_newsletter_form",
+      "label": "Enable newsletter form",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "email_heading_size",
+      "label": "Email Heading Size",
+      "default": "h2",
+      "options": [
+        {
+          "label": "H1",
+          "value": "h1"
+        },
+        {
+          "label": "H2",
+          "value": "h2"
+        },
+        {
+          "label": "H3",
+          "value": "h3"
+        },
+        {
+          "label": "H4",
+          "value": "h4"
+        },
+        {
+          "label": "H5",
+          "value": "h5"
+        },
+        {
+          "label": "H6",
+          "value": "h6"
+        },
+        {
+          "label": "Span",
+          "value": "span"
+        }
+      ]
+    },
+    {
+      "type": "textarea",
+      "id": "email_heading_text",
+      "label": "Email heading text",
+      "default": "Unlock 10% off your first order"
+    },
+    {
+      "type": "richtext",
+      "id": "email_detail_text",
+      "label": "Email detail text",
+      "default": "<p>Receive pet health & wellness tips, plus exclusive offers. We’ll never spam you.</p>"
+    },
+    {
+      "type": "text",
+      "id": "email_input_placeholder",
+      "label": "Email input placeholder",
+      "default": "Email address"
+    },
+    {
+      "type": "text",
+      "id": "klaviyo_public_key",
+      "label": "Klaviyo public API key",
+      "info": "Find this in Klaviyo → Account → Settings → API Keys"
+    },
+    {
+      "type": "text",
+      "id": "klaviyo_list_id",
+      "label": "Klaviyo list id",
+      "info": "Find this in Klaviyo → Lists → select list → Settings"
+    },
+    {
+      "type": "text",
+      "id": "email_error_message",
+      "label": "Email error message",
+      "default": "Please enter a valid email"
+    },
+    {
+      "type": "text",
+      "id": "email_success_message",
+      "label": "Email success message",
+      "default": "Success! Thanks for signing up"
+    },
+    {
+      "type": "text",
+      "id": "email_button_text",
+      "label": "Email button text",
+      "default": "Submit"
+    },
+    {
+      "type": "header",
+      "content": "Custom Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_social_icons",
+      "label": "Enable Social Icons",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "logo_background_color",
+      "label": "Logo Background Color",
+      "default": "#FFEFC8"
+    },
+    {
+      "type": "image_picker",
+      "id": "footer_logo_image",
+      "label": "Footer Logo Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_desktop_image",
+      "label": "Custom Desktop Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_mobile_image",
+      "label": "Custom Mobile Image"
+    },
+    {
+      "type": "header",
+      "content": "Bottom Settings"
+    },
+    {
+      "type": "color",
+      "id": "inner_background_color",
+      "label": "Inner Background Color",
+      "default": "#FEC844"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_footer_copyright",
+      "label": "Enable Footer Copyright",
+      "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "footer_copyright_text",
+      "label": "Footer Copyright Text"
+    },
+    {
+      "type": "link_list",
+      "id": "footer_bottom_menu",
+      "label": "Footer Bottom Menu"
     },
     {
       "type": "header",

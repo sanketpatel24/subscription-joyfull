@@ -1,0 +1,73 @@
+/*
+ * cv-loader
+ *
+ * Accessible loading spinner component.
+ */
+
+/* ---- Scoped keyframes ---- */
+
+@keyframes cv-loader-rotator {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(270deg);
+	}
+}
+
+@keyframes cv-loader-dash {
+	0% {
+		stroke-dashoffset: 280;
+	}
+	50% {
+		stroke-dashoffset: 75;
+		transform: rotate(135deg);
+	}
+	100% {
+		stroke-dashoffset: 280;
+		transform: rotate(450deg);
+	}
+}
+
+/* ---- Container ---- */
+
+.cv-loader {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+}
+
+/* ---- Spinner (the <svg>) ---- */
+
+.cv-loader .spinner {
+	animation: cv-loader-rotator 1.4s linear infinite;
+}
+
+/* ---- Size variants ---- */
+
+.cv-loader--size-base .spinner {
+	width: 64px;
+	height: 64px;
+}
+
+.cv-loader--size-small .spinner {
+	width: 40px;
+	height: 40px;
+}
+
+/* ---- Path (the <circle> stroke) ---- */
+
+.cv-loader .path {
+	stroke-dasharray: 280;
+	stroke-dashoffset: 0;
+	transform-origin: center;
+	stroke: color-mix(in srgb, #081c3e 35%, transparent);
+	animation: cv-loader-dash 1.4s ease-in-out infinite;
+}
+
+@media screen and (forced-colors: active) {
+	.cv-loader .path {
+		stroke: CanvasText;
+	}
+}

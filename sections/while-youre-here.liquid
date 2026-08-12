@@ -57,11 +57,10 @@
           <div class="swiper-wrapper">
             {% for recommendation in recommended_products limit: section.settings.products_to_show %}
               <div class="while-youre-here__slide swiper-slide">
-                {% render 'product-card',
-                  product: recommendation,
-                  block: section,
-                  product_card_gap: 8,
-                  product_view_context: 'recommendation'
+                {% content_for 'block',
+                  type: '_product-card',
+                  id: 'static-product-card',
+                  closest.product: recommendation
                 %}
               </div>
             {% endfor %}

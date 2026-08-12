@@ -1,0 +1,99 @@
+{%- if collection_category_filter_list_selection != blank -%}
+  {%- assign main_category_filter_list = collection_category_filter_list_selection.main_category_filter_list.value -%}
+  {%- if main_category_filter_list != blank -%}
+    <div class="collection__side">
+      <div class="page-width">
+        <div class="collection__side-wrap">
+          {%- if main_heading_text != blank -%}
+            <div class="collection__title">
+              <div class="collection__title-wrap">
+                <{{ main_heading_size }} class="heading-m">
+                  {{ main_heading_text | escape | newline_to_br }}
+                </{{ main_heading_size }}>
+              </div>
+            </div>
+          {%- endif -%}
+          {%- if main_category_filter_list != blank -%}
+            <div class="collection__filter">
+              <div class="collection__filter-wrap">
+                <div class="swiper collection-category-filter-list-slider">
+                  <div class="swiper-wrapper" role="list">
+                    {%- for main_category_filter_list in main_category_filter_list -%}
+                      {%- liquid
+                        assign collection_category_filter_redirection_link = main_category_filter_list.url
+                        assign collection_category_filter_handle = main_category_filter_list.handle | split: '/' | last
+                        assign collection_category_filter_desktop_custom_image = main_category_filter_list.metafields.custom.collection_category_filter_desktop_custom_image.value
+                        assign collection_category_filter_mobile_custom_image = main_category_filter_list.metafields.custom.collection_category_filter_mobile_custom_image.value
+                        assign collection_category_filter_desktop_heading_text = main_category_filter_list.metafields.custom.collection_category_filter_desktop_heading_text
+                        assign collection_category_filter_mobile_heading_text = main_category_filter_list.metafields.custom.collection_category_filter_mobile_heading_text
+                        assign collection_category_filter_is_active = false
+                        if collection_request_path == collection_category_filter_handle
+                          assign collection_category_filter_is_active = true
+                        endif
+                        assign collection_category_filter_loading = 'lazy'
+                        assign collection_category_filter_fetchpriority = 'low'
+                        if forloop.first
+                          assign collection_category_filter_loading = 'eager'
+                          assign collection_category_filter_fetchpriority = 'high'
+                        endif
+                      -%}
+                      {%- if collection_category_filter_desktop_heading_text != blank or collection_category_filter_mobile_heading_text != blank or main_category_filter_list.title != blank or collection_category_filter_desktop_custom_image != blank or collection_category_filter_mobile_custom_image != blank -%}
+                        <div class="swiper-slide collection__filter-wrap-block" role="listitem">
+                          <a
+                            href="{{ collection_category_filter_redirection_link | escape }}"
+                            {%- if collection_category_filter_is_active %} class="active" aria-current="page"{% endif %}
+                          >
+                            <div class="collection__filter-wrap-block-wrap">
+                              {%- if collection_category_filter_desktop_heading_text != blank or collection_category_filter_mobile_heading_text != blank -%}
+                                {%- if collection_category_filter_desktop_heading_text != blank -%}
+                                  <div class="collection__filter-wrap-title{% if collection_category_filter_mobile_heading_text != blank %} show--desktop{% endif %}">
+                                    <div class="heading-s collection__filter-wrap-title-wrap">
+                                      {{ collection_category_filter_desktop_heading_text | escape | newline_to_br }}
+                                    </div>
+                                  </div>
+                                {%- endif -%}
+                                {%- if collection_category_filter_mobile_heading_text != blank -%}
+                                  <div class="collection__filter-wrap-title show--mobile">
+                                    <div class="heading-s collection__filter-wrap-title-wrap">
+                                      {{ collection_category_filter_mobile_heading_text | escape | newline_to_br }}
+                                    </div>
+                                  </div>
+                                {%- endif -%}
+                              {%- elsif main_category_filter_list.title != blank -%}
+                                <div class="collection__filter-wrap-title">
+                                  <div class="heading-s collection__filter-wrap-title-wrap">
+                                    {{ main_category_filter_list.title | escape }}
+                                  </div>
+                                </div>
+                              {%- endif -%}
+                              {%- if collection_category_filter_desktop_custom_image != blank or collection_category_filter_mobile_custom_image != blank -%}
+                                <div class="collection__filter-wrap-image">
+                                  <div class="collection__filter-wrap-image-wrap">
+                                    {% render 'responsive-image-lazyload',
+                                      desktop_image: collection_category_filter_desktop_custom_image,
+                                      mobile_image: collection_category_filter_mobile_custom_image,
+                                      alt: main_category_filter_list.title,
+                                      class: 'custom--image',
+                                      sizes: '(max-width: 749px) 100vw, 100vw',
+                                      fetchpriority: collection_category_filter_fetchpriority,
+                                      loading: collection_category_filter_loading
+                                    %}
+                                  </div>
+                                </div>
+                              {%- endif -%}
+                            </div>
+                          </a>
+                        </div>
+                      {%- endif -%}
+                    {%- endfor -%}
+                  </div>
+                  <div class="swiper-scrollbar"></div>
+                </div>
+              </div>
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+{%- endif -%}

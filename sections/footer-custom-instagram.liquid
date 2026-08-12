@@ -39,6 +39,7 @@
     {%- endstyle -%}
 
     <section class="instagram">
+        <h2 class="visually-hidden">Follow us on Instagram</h2>
         <div class="instagram__body">
             <div class="instagram__loop">
                 <div class="footer-custom-instagram-marquee">
@@ -49,7 +50,7 @@
                             {%- if column_image_video != blank -%}
                                 <div class="instagram__loop-media">
                                     {%- if column_redirect_link != blank -%}
-                                        <a href="{{ column_redirect_link }}">
+                                        <a href="{{ column_redirect_link | escape }}" aria-label="View on Instagram">
                                     {%- endif -%}
                                             <div class="instagram__loop-media-wrap">
                                                 {%- if column_image_video contains "files" -%}

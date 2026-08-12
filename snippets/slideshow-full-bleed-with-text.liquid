@@ -16,6 +16,16 @@
 
     assign custom_image_1 = block.settings.custom_image_1
     assign custom_image_2 = block.settings.custom_image_2
+
+    if forloop_index == 1
+        assign img_loading = 'eager'
+        assign img_fetchpriority = 'high'
+        assign img_rel = 'preload'
+    else
+        assign img_loading = 'lazy'
+        assign img_fetchpriority = 'low'
+        assign img_rel = ''
+    endif
 -%}
 
 {%- style -%}
@@ -30,7 +40,7 @@
 {%- endstyle -%}
 
 {%- if main_desktop_video != blank or main_desktop_image != blank or main_mobile_video != blank or main_mobile_image != blank or custom_text != blank or heading_text != blank or details_text != blank or button_link != blank or custom_image_1 != blank or custom_image_2 != blank -%}
-    <div class="swiper-slide slideshow-text slideshow-text__{{ block.id }}">
+    <div class="swiper-slide slideshow-text slideshow-text__{{ block.id }}" data-need-transparent-header="false">
         <div class="slideshow-text__body">
             {%- if main_desktop_video != blank or main_desktop_image != blank or main_mobile_video != blank or main_mobile_image != blank -%}
                 {% if main_mobile_video != blank or main_mobile_image != blank %}
@@ -52,9 +62,9 @@
                                     mobile_image: main_desktop_image,
                                     class: 'custom--image',
                                     sizes: '(max-width: 749px) 100vw, 100vw',
-                                    fetchpriority: 'high',
-                                    loading: 'eager',
-                                    rel: 'preload'                                                                            
+                                    fetchpriority: img_fetchpriority,
+                                    loading: img_loading,
+                                    rel: img_rel
                                 %}
                             {%- endif -%}
                         </div>
@@ -74,9 +84,9 @@
                                     mobile_image: main_mobile_image,
                                     class: 'custom--image',
                                     sizes: '(max-width: 749px) 100vw, 100vw',
-                                    fetchpriority: 'high',
-                                    loading: 'eager',
-                                    rel: 'preload'                                                                            
+                                    fetchpriority: img_fetchpriority,
+                                    loading: img_loading,
+                                    rel: img_rel
                                 %}
                             {%- endif -%}
                         </div>
@@ -92,23 +102,23 @@
                                     <div class="slideshow-text__list-wrap">
                                         {%- if custom_text != blank -%}
                                             <div class="title-small title-small--caps slideshow-text__list-wrap-text">
-                                                {{ custom_text | newline_to_br }}
-                                            </div>                                    
+                                                {{ custom_text | escape | newline_to_br }}
+                                            </div>
                                         {%- endif -%}
                                         {%- if heading_text != blank -%}
-                                            <div class="heading-l slideshow-text__list-wrap-title">
+                                            <div class="slideshow-text__list-wrap-title">
                                                 {%- if forloop_index == 1 -%}
-                                                    <{{ main_heading_size }}>
+                                                    <{{ main_heading_size }} class="heading-l">
                                                 {%- else -%}
-                                                    <span>
+                                                    <h2 class="heading-l">
                                                 {%- endif -%}
-                                                        {{ heading_text | newline_to_br }}
+                                                        {{ heading_text | escape | newline_to_br }}
                                                 {%- if forloop_index == 1 -%}
                                                     </{{ main_heading_size }}>
                                                 {%- else -%}
-                                                    </span>
+                                                </h2>
                                                 {%- endif -%}
-                                            </div>                                    
+                                            </div>
                                         {%- endif -%}
                                         {%- if details_text != blank -%}
                                             <div class="text-common slideshow-text__list-wrap-info">
@@ -136,11 +146,12 @@
                                                     desktop_image: custom_image_1,
                                                     mobile_image: custom_image_1,
                                                     class: 'Custom_icon_new',
-                                                    sizes: '(max-width: 749px) 100vw, 100vw',
-                                                    alt: 'custom--image',
-                                                    fetchpriority: 'high',
-                                                    loading: 'eager',
-                                                    rel: 'preload'
+                                                    sizes: '224px',
+                                                    desktop_widths: '224, 448',
+                                                    mobile_widths: '224, 448',
+                                                    fetchpriority: img_fetchpriority,
+                                                    loading: img_loading,
+                                                    rel: img_rel
                                                 %}
                                             </div>
                                         {%- endif -%}
@@ -150,11 +161,12 @@
                                                     desktop_image: custom_image_2,
                                                     mobile_image: custom_image_2,
                                                     class: 'Custom_icon_new',
-                                                    sizes: '(max-width: 749px) 100vw, 100vw',
-                                                    alt: 'custom--image',
-                                                    fetchpriority: 'high',
-                                                    loading: 'eager',
-                                                    rel: 'preload'
+                                                    sizes: '224px',
+                                                    desktop_widths: '224, 448',
+                                                    mobile_widths: '224, 448',
+                                                    fetchpriority: img_fetchpriority,
+                                                    loading: img_loading,
+                                                    rel: img_rel
                                                 %}
                                             </div>
                                         {%- endif -%}

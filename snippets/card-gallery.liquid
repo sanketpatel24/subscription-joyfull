@@ -61,11 +61,14 @@
       assign media_fit = block_settings.constrain_to_viewport
     endif
   endif
+
+  assign grid_primary_image = product.metafields.custom.grid_primary_custom_image.value
+  assign grid_hover_media = product.metafields.custom.grid_hover_image_or_video.value
 %}
 
 <div
   ref="cardGallery"
-  class="card-gallery card-gallery-{{ block.id }} spacing-style border-style{% if has_badges %} card-gallery--badge-{{ badge_position }}{% endif %}"
+  class="card-gallery card-gallery-{{ block.id }} spacing-style border-style{% if has_badges %} card-gallery--badge-{{ badge_position }}{% endif %} product-card-gallery__body"
   style="
     {% render 'border-override', settings: block_settings %}
     {% render 'spacing-style', settings: block_settings %}
@@ -82,7 +85,91 @@
   data-image-ratio="{{ block_settings.image_ratio }}"
   {{ block.shopify_attributes }}
 >
-  {%- if product.media.size > 0 -%}
+  {%- if grid_primary_image != blank -%}
+    {% liquid
+      assign custom_slide_count = 1
+      assign custom_loading = 'lazy'
+      if section.index == null or section.index < 5
+        assign custom_loading = 'eager'
+      endif
+
+      assign hover_media_type = 'video'
+      if grid_hover_media != blank
+        assign custom_slide_count = 2
+        if grid_hover_media contains "files"
+          assign hover_media_type = 'image'
+        endif
+      endif
+
+      assign custom_slideshow_attributes = 'data-generic-media-size="0"'
+      if settings.product_card_carousel == false
+        assign custom_slideshow_attributes = custom_slideshow_attributes | append: ' disabled="true"'
+      endif
+    %}
+    <a
+      class="contents"
+      ref="cardGalleryLink"
+      href="{{ product.selected_or_first_available_variant.url }}"
+      aria-label="{{- product.title | escape -}}"
+    >
+      {% capture primary_slide_children %}
+        <div class="product-media" style="--ratio: {{ grid_primary_image.aspect_ratio | default: 1 }}">
+          {% render 'responsive-image-lazyload',
+            desktop_image: grid_primary_image,
+            mobile_image: grid_primary_image,
+            alt: product.title,
+            class: 'product-media__image',
+            sizes: image_sizes,
+            loading: custom_loading
+          %}
+        </div>
+      {% endcapture %}
+      {% capture slides %}
+        {% render 'slideshow-slide',
+          slide_id: 'grid-primary-image',
+          index: 0,
+          class: 'product-media-container media-fit product-media-container--image',
+          children: primary_slide_children
+        %}
+        {%- if grid_hover_media != blank -%}
+          {% capture hover_slide_children %}
+            <div class="product-media" style="--ratio: {{ grid_hover_media.aspect_ratio | default: 1 }}">
+              {%- if hover_media_type == 'image' -%}
+                {% render 'responsive-image-lazyload',
+                  desktop_image: grid_hover_media,
+                  mobile_image: grid_hover_media,
+                  alt: product.title,
+                  class: 'product-media__image',
+                  sizes: image_sizes,
+                  loading: 'lazy'
+                %}
+              {%- else -%}
+                {% render 'responsive-video-lazyload',
+                  video_url: grid_hover_media,
+                  class: 'video--desktop video--mobile'
+                %}
+              {%- endif -%}
+            </div>
+          {% endcapture %}
+          {% assign hover_slide_class = 'product-media-container media-fit product-media-container--[media_type]' | replace: '[media_type]', hover_media_type %}
+          {% render 'slideshow-slide',
+            slide_id: 'grid-hover-media',
+            index: 1,
+            class: hover_slide_class,
+            children: hover_slide_children
+          %}
+        {%- endif -%}
+      {% endcapture %}
+      {% render 'slideshow',
+        ref: 'slideshow',
+        initial_slide: 0,
+        slides: slides,
+        slide_count: custom_slide_count,
+        show_arrows: false,
+        attributes: custom_slideshow_attributes
+      %}
+    </a>
+  {%- elsif product.media.size > 0 -%}
     {% liquid
       # Check if there are generic media that are not variant images
       assign variant_images = product.images | where: 'attached_to_variant?', true | map: 'src'
@@ -161,7 +248,7 @@
       class="contents"
       ref="cardGalleryLink"
       href="{{ product.selected_or_first_available_variant.url }}"
-      aria-label="{{- product.title -}}"
+      aria-label="{{- product.title | escape -}}"
     >
       {% render 'slideshow',
         ref: 'slideshow',
