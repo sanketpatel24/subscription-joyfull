@@ -7,7 +7,8 @@
     inset: 0;
     z-index:111;
 }
-theme-drawer[open] .cart-drawer__overlay {
+theme-drawer[open] .cart-drawer__overlay,
+theme-drawer:has(.theme-drawer__dialog--closing) .cart-drawer__overlay {
     opacity: .80;
     transition-timing-function: var(--animation-timing-fade-in);
 }
@@ -268,6 +269,13 @@ theme-drawer:not([open]) .cart-drawer__overlay {
     margin:var(--spacing-24) 0 0 0;
     padding:0 var(--spacing-40);
     height:var(--spacing-48);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:var(--spacing-10);
+}
+.cart-drawer--empty .cart-drawer__items .button.cart-items__empty-button .common-button-icon svg rect{
+    fill:none;
 }
 
 

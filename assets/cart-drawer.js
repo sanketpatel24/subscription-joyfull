@@ -32,6 +32,7 @@ class CartDrawerComponent extends Component {
     super.connectedCallback();
     document.addEventListener(StandardEvents.cartLinesUpdate, this.#handleCartLinesUpdate);
     this.#themeDrawer?.addEventListener(DrawerOpenEvent.eventName, this.#handleDrawerOpen);
+    window.addEventListener('pageshow', this.#handlePageShow);
 
     // The restore path sets [open] before this module loads, so the
     // theme-drawer:open event will have already fired. Use the attribute
@@ -45,7 +46,23 @@ class CartDrawerComponent extends Component {
     super.disconnectedCallback();
     document.removeEventListener(StandardEvents.cartLinesUpdate, this.#handleCartLinesUpdate);
     this.#themeDrawer?.removeEventListener(DrawerOpenEvent.eventName, this.#handleDrawerOpen);
+    window.removeEventListener('pageshow', this.#handlePageShow);
   }
+
+  /**
+   * bfcache restore (back/forward nav) can bring the page back with the
+   * drawer still marked open from before navigating away. `no-persist`
+   * skips the normal sessionStorage restore, but the DOM/bfcache snapshot
+   * itself still has [open] set — close it here so it animates shut
+   * instead of sitting open with no transition.
+   *
+   * @param {PageTransitionEvent} event
+   */
+  #handlePageShow = (event) => {
+    if (event.persisted && this.#themeDrawer?.isOpen) {
+      this.#themeDrawer.close();
+    }
+  };
 
   /**
    * Handles the theme-drawer opening — updates sticky state and wires up the installments CTA.

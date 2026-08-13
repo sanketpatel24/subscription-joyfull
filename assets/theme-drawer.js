@@ -313,17 +313,25 @@ export class ThemeDrawer extends Component {
     removeTrapFocus();
 
     const { panel } = this.refs;
+    const wasOpen = panel.open;
 
+    // Cancel any in-progress open animation before starting the close.
+    if (wasOpen) {
+      panel.classList.remove('theme-drawer__dialog--opening', 'theme-drawer__dialog--opening-inline-start');
+      panel.classList.add('theme-drawer__dialog--closing');
+    }
+
+    // Flip [open] and add the closing class in the same tick, before any
+    // layout-forcing call (e.g. unlockScroll) can flush an intermediate
+    // style with neither `[open]` nor `.theme-drawer__dialog--closing`
+    // matching — that gap otherwise snaps drawer-linked overlays (e.g.
+    // .cart-drawer__overlay) to hidden instead of fading them out in sync.
     this.removeAttribute('open');
     this.dispatchEvent(new DrawerCloseEvent());
 
     unlockScroll(panel);
 
-    if (panel.open) {
-      // Cancel any in-progress open animation before starting the close.
-      panel.classList.remove('theme-drawer__dialog--opening', 'theme-drawer__dialog--opening-inline-start');
-
-      panel.classList.add('theme-drawer__dialog--closing');
+    if (wasOpen) {
       await onAnimationEnd(panel, undefined, { subtree: false });
       panel.classList.remove('theme-drawer__dialog--closing');
     }
